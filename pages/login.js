@@ -3,7 +3,7 @@ import React from 'react';
 const Login = () => {
   return (
     <div>
-      <h1>Logga in på Loop</h1>
+      <h1>Logga in på Loop!</h1>
       <button>Logga in med Apple</button>
       <button>Logga in med Google</button>
       <form>
