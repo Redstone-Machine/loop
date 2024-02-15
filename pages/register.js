@@ -11,8 +11,12 @@ const RegisterPage = () => {
 
 
     const [username, setUsername] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [surname, setSurname] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [language, setLanguage] = useState('automatic');
+    const [theme, setTheme] = useState('automatic');
 
     const router = useRouter();
     
@@ -26,8 +30,12 @@ const RegisterPage = () => {
             },
             body: JSON.stringify({
               username: username,
-              password: password,
+              firstname: firstname,
+              surname: surname,
               email: email,
+              password: password,
+              language: language,
+              theme: theme,
             }),
           })
 
@@ -46,18 +54,39 @@ const RegisterPage = () => {
 
     return (
         <div>
-            <h1>Registrera dig</h1>
+            <h1>Create profile</h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Användarnamn:</label>
+                <label htmlFor="username">Username:</label>
                 <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <br />
-                <label htmlFor="email">E-post:</label> {/* Lägg till detta */}
+                <label htmlFor="firstname">First name:</label>
+                <input type="text" id="firstname" name="firstname" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
+                <br />
+                <label htmlFor="username">Surname:</label>
+                <input type="text" id="surname" name="surname" value={surname} onChange={(e) => setSurname(e.target.value)} />
+                <br />
+                <label htmlFor="email">Email:</label> {/* Lägg till detta */}
                 <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} /> {/* Lägg till detta */}
                 <br />
-                <label htmlFor="password">Lösenord:</label>
+                <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <br />
-                <button type="submit">Registrera dig</button>
+                <label htmlFor="language">Language:</label>
+                <select id="language" name="language" value={language} onChange={(e) => setLanguage(e.target.value)}>
+                    <option value="swedish">Svenska</option>
+                    <option value="english">English</option>
+                    <option value="automatic">Automatic</option>
+                </select>
+                <br />
+                <label htmlFor="theme">Theme:</label>
+                <select id="theme" name="theme" value={theme} onChange={(e) => setTheme(e.target.value)}>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="automatic">Automatic</option>
+                </select>
+                <br />
+                <button type="submit" disabled={!username || !firstname || !surname || !password || !email}>Register</button>
+                {/* <button type="submit">Registrera dig</button> */}
             </form>
         </div>
     );

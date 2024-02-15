@@ -49,10 +49,13 @@ model VerificationToken {
 
 model User {
   id            String   @id @default(cuid())
-  name          String   @unique
+  userName      String   @unique
+  firstName     String
+  surName       String
   email         String   @unique
   password      String
-  googleId      String?  
+  language          String   @default("Automatic")
+  theme             String   @default("Automatic")
   accounts      Account[]
   sessions      Session[]
   sentMessages    Message[] @relation("SentMessages")

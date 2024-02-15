@@ -55,7 +55,7 @@ const ChatPage = () => {
         if (userId) {
             fetch(`/api/getUserById?id=${userId}`)
                 .then(response => response.json())
-                .then(user => setUserName(user.name));
+                .then(user => setUserName(user.userName));
         }
     }, [userId]);
 

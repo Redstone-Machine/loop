@@ -43,7 +43,7 @@ export const authOptions = {
         // e.g. domain, username, password, 2FA token, etc.
         // You can pass any HTML attribute to the <input> tag through the object.
         credentials: {
-          name: { label: "Username", type: "text" },
+          username: { label: "Username", type: "text" },
           password: { label: "Password", type: "password" }
         },
 
@@ -52,7 +52,7 @@ export const authOptions = {
         //   const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
           const user = await prisma.user.findUnique({
             // where: { name: credentials.username },
-            where: { name: credentials.name },
+            where: { userName: credentials.username },
           })
 
 
@@ -141,6 +141,7 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
       authorization: {
         params: {
           prompt: "consent",
@@ -178,19 +179,38 @@ export const authOptions = {
 
   callbacks: {
     session: async (session, user) => {
+      // session.user.id = user.id; // Lägg till id till session.user
       console.log('Session:', session);
       console.log('User:', user);
+      
       return Promise.resolve(session);
     },
 
-    // jwt: async (token, user, account, profile, isNewUser) => {
-    //   if (user) {
-    //     token.id = user.id;
-    //   }
-    //   return Promise.resolve(token);
-    // },
+    jwt: async (token, user, account, profile, dbUser) => {
+      if (user) {
+        token.id = user.id;
+      } else if (dbUser) {
+        // const dbUser = await prisma.user.findUnique({
+        //   where: { email: profile.email },
+        // });
+        // if (dbUser) {
+          token.id = dbUser.id;
+        // }
+      }
+      return Promise.resolve(token);
+    },
 
-    async signIn({ user, profile }) {
+    async signIn({ user, account, profile }) {
+      if (account.provider === 'credentials') {
+        // Om provider är 'credentials', så har vi redan verifierat användaren i 'authorize'-callbacken
+        // Så vi kan bara returnera true för att logga in användaren
+        return Promise.resolve(true);
+      }
+      else if (account.provider === 'google') {
+        return Promise.resolve(true);
+      }
+
+       else if (account.provider === 'google') {
       if (profile) {
       console.log('Profile:', profile);
       const email = profile.email;
@@ -214,7 +234,8 @@ export const authOptions = {
 //        return false;
           return Promise.resolve(false);
       }
-     }
+   }
+    }
 
     }
 

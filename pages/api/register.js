@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 
 export default async function handle(req, res) {
   if (req.method === 'POST') {
-    const { username, password, email } = req.body
+    const { username, firstname, surname, email, password, language, theme } = req.body
 
 //     // Skapa en ny användare i databasen
 //     const user = await prisma.user.create({
@@ -29,9 +29,13 @@ export default async function handle(req, res) {
         // Skapa en ny användare i databasen
         const user = await prisma.user.create({
         data: {
-            name: username,
+            userName: username,
+            firstName: firstname,
+            surName: surname,
             email: email,
-            password: hashedPassword, // Kom ihåg att hash lösenordet innan du sparar det!
+            password: hashedPassword,
+            language: language,
+            theme: theme,
         },
         })
 
