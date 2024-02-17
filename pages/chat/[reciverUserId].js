@@ -1,3 +1,7 @@
+import { usePageSetup } from '../../hooks/usePageSetup';
+import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
+
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -6,58 +10,92 @@ import io from 'socket.io-client';
 
 
 const ChatPage = () => {
-    const { data: session } = useSession()
+
+    const { userId, userName, session, status, userLanguage, userTheme, theme, users, error } = usePageSetup();
+
+    const intl = useIntl();
+
+    // const { data: session } = useSession()
     // const { data, status } = useSession();
     // const session = data?.session;
     // const loading = status === "loading";
     const router = useRouter();
-    const { userId } = router.query;
 
-    const [userName, setUserName] = useState(null);
+    const { reciverUserId } = router.query;
+
+    console.log('reciverUserId:', reciverUserId);
+    
+    const [reciverUserName, setReciverUserName] = useState(null);
     const [messageText, setMessageText] = useState('');
-
     const [messages, setMessages] = useState([]);
-
 
 
     const [socket, setSocket] = useState(null);
 
+    // useEffect(() => {
+    //   const newSocket = io('http://localhost:3001'); // Replace with your server URL
+    //   setSocket(newSocket);
+
+    //   newSocket.on('connect', () => {
+    //     console.log('Connected to the server');
+    //   });
+
+    //   // Listen for incoming messages
+    //   newSocket.on('chat message', (message) => {
+    //     setMessages((prevMessages) => [...prevMessages, message]);
+    //   });
+  
+    //   return () => {
+    //     newSocket.close();
+    //   };
+    // }, []);
+    
     useEffect(() => {
       const newSocket = io('http://localhost:3001'); // Replace with your server URL
       setSocket(newSocket);
-
+    
       newSocket.on('connect', () => {
         console.log('Connected to the server');
       });
-
-      // Listen for incoming messages
-      newSocket.on('chat message', (message) => {
+    
+      // Define the message handler
+      const messageHandler = (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
-      });
-  
+    
+        // Show a notification if the user has granted permission
+        if (Notification.permission === 'granted') {
+          new Notification('New message', { body: message.content });
+        }
+      };
+    
+      // Add the message handler
+      newSocket.on('chat message', messageHandler);
+    
       return () => {
+        // Remove the message handler when the component unmounts
+        newSocket.off('chat message', messageHandler);
         newSocket.close();
       };
     }, []);
 
-    useEffect(() => {
-        if (session) {
-          console.log('User is logged in:', session)
-        } else {
-          console.log('User is not logged in')
-          router.push('/login');
-        }
-      }, [session])
+    // useEffect(() => {
+    //     if (session) {
+    //       console.log('User is logged in:', session)
+    //     } else {
+    //       console.log('User is not logged in')
+    //       router.push('/login');
+    //     }
+    //   }, [session])
 
 
 
     useEffect(() => {
-        if (userId) {
-            fetch(`/api/getUserById?id=${userId}`)
+        if (reciverUserId) {
+            fetch(`/api/getUserById?id=${reciverUserId}`)
                 .then(response => response.json())
-                .then(user => setUserName(user.userName));
+                .then(user => setReciverUserName(user.userName));
         }
-    }, [userId]);
+    }, [reciverUserId]);
 
 
 
@@ -67,13 +105,13 @@ const ChatPage = () => {
       event.preventDefault();
     
       console.log('Submitting message:', messageText);
-      console.log('Sender UserID:', session.token.sub);
-      console.log('Reciver UserID:', userId);
+      console.log('Sender UserID:', userId);
+      console.log('Reciver UserID:', reciverUserId);
     
       const message = {
         content: messageText,
-        userId: session.token.sub,
-        recipientId: userId,
+        userId: userId,
+        recipientId: reciverUserId,
       };
     
       // Send the message in real-time
@@ -136,40 +174,44 @@ const ChatPage = () => {
 
 
     useEffect(() => {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          console.log('Notification permission granted.');
-        } else {
-          console.log('Unable to get permission to notify.');
-        }
-      });
+      if (typeof Notification !== 'undefined') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            console.log('Notification permission granted.');
+          } else {
+            console.log('Unable to get permission to notify.');
+          }
+        });
+      } else {
+        console.log('Web Notifications not available');
+      }
     }, []);
 
 
-    useEffect(() => {
-      if (socket) {
-        socket.on('chat message', (message) => {
-          setMessages((prevMessages) => [...prevMessages, message]);
+    // useEffect(() => {
+    //   if (socket) {
+    //     socket.on('chat message', (message) => {
+    //       setMessages((prevMessages) => [...prevMessages, message]);
     
-          // Show a notification if the user has granted permission
-          if (Notification.permission === 'granted') {
-            new Notification('New message', { body: message.content });
-          }
-        });
-      }
-    }, [socket]);
+    //       // Show a notification if the user has granted permission
+    //       if (Notification.permission === 'granted') {
+    //         new Notification('New message', { body: message.content });
+    //       }
+    //     });
+    //   }
+    // }, [socket]);
     
     useEffect(() => {
-        if (session && userId) {
-          fetch(`/api/getMessages?senderId=${session.token.sub}&recipientId=${userId}`)
+        if (userId && reciverUserId) {
+          fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
             .then(response => response.json())
             .then(setMessages);
         }
-      }, [session, userId]);
+      }, [userId, reciverUserId]);
       
       useEffect(() => {
-        if (session && userId) {
-          fetch(`/api/getMessages?senderId=${session.token.sub}&recipientId=${userId}`)
+        if (userId && reciverUserId) {
+          fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
             .then(response => response.json())
             .then(setMessages);
         }
@@ -193,7 +235,7 @@ const ChatPage = () => {
 
     return (
         <div>
-          <h1>Chat between {session?.session?.user?.name} and {userName}</h1>
+          <h1><FormattedMessage id="chatTitlePart1" /> {userName} <FormattedMessage id="chatTitlePart2" /> {reciverUserName}</h1>
 
           {messages.map((message, index) => (
             <p key={index}>{message.content}</p>
@@ -213,9 +255,9 @@ const ChatPage = () => {
           type="text"
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Type a message"
+          placeholder={intl.formatMessage({ id: 'writeMessage' })}
         />
-        <button type="submit">Send</button>
+        <button type="submit"><FormattedMessage id="send" /></button>
       </form>
       {/* <style jsx>{`
       .sent {

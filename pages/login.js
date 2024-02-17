@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 
 // import Link from 'next/link';
 import { useState } from 'react';
@@ -98,23 +99,23 @@ const Login = () => {
 
   return (
     <div>
-      <h1>Logga in på Loop</h1>
-      <button>Logga in med Apple</button>
-      <button onClick={signInGoogle}>Logga in med Google</button>
+      <h1><FormattedMessage id="logInTitle" /></h1>
+      <button><FormattedMessage id="logInApple" /></button>
+      <button onClick={signInGoogle}><FormattedMessage id="logInGoogle" /></button>
       
 
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Användarnamn:</label>
+        <label htmlFor="username"><FormattedMessage id="username" />:</label>
         <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
         <br />
-        <label htmlFor="password">Lösenord:</label>
+        <label htmlFor="password"><FormattedMessage id="password" />:</label>
         <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <br />
-        <button type="submit">Logga in</button>
+        <button type="submit"><FormattedMessage id="signIn" /></button>
       </form>
 
       <button onClick={handleRegister}>
-      Registrera dig
+      <FormattedMessage id="register" />
       </button>
 
       {/* <Link href="/create-account">

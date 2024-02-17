@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
@@ -54,38 +56,38 @@ const RegisterPage = () => {
 
     return (
         <div>
-            <h1>Create profile</h1>
+            <h1><FormattedMessage id="registerTitle" /></h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username:</label>
+                <label htmlFor="username"><FormattedMessage id="username" />:</label>
                 <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <br />
-                <label htmlFor="firstname">First name:</label>
+                <label htmlFor="firstname"><FormattedMessage id="firstName" />:</label>
                 <input type="text" id="firstname" name="firstname" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
                 <br />
-                <label htmlFor="username">Surname:</label>
+                <label htmlFor="username"><FormattedMessage id="surname" />:</label>
                 <input type="text" id="surname" name="surname" value={surname} onChange={(e) => setSurname(e.target.value)} />
                 <br />
-                <label htmlFor="email">Email:</label> {/* Lägg till detta */}
+                <label htmlFor="email"><FormattedMessage id="email" />:</label> {/* Lägg till detta */}
                 <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} /> {/* Lägg till detta */}
                 <br />
-                <label htmlFor="password">Password:</label>
+                <label htmlFor="password"><FormattedMessage id="password" />:</label>
                 <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <br />
-                <label htmlFor="language">Language:</label>
+                <label htmlFor="language"><FormattedMessage id="language" />:</label>
                 <select id="language" name="language" value={language} onChange={(e) => setLanguage(e.target.value)}>
                     <option value="swedish">Svenska</option>
                     <option value="english">English</option>
-                    <option value="automatic">Automatic</option>
+                    <option value="automatic"><FormattedMessage id="automatic" /></option>
                 </select>
                 <br />
-                <label htmlFor="theme">Theme:</label>
+                <label htmlFor="theme"><FormattedMessage id="theme" />:</label>
                 <select id="theme" name="theme" value={theme} onChange={(e) => setTheme(e.target.value)}>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                    <option value="automatic">Automatic</option>
+                    <option value="light"><FormattedMessage id="light" /></option>
+                    <option value="dark"><FormattedMessage id="dark" /></option>
+                    <option value="automatic"><FormattedMessage id="automatic" /></option>
                 </select>
                 <br />
-                <button type="submit" disabled={!username || !firstname || !surname || !password || !email}>Register</button>
+                <button type="submit" disabled={!username || !firstname || !surname || !password || !email}><FormattedMessage id="registerButton" /></button>
                 {/* <button type="submit">Registrera dig</button> */}
             </form>
         </div>

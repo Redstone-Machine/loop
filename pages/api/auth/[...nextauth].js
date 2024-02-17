@@ -57,8 +57,8 @@ export const authOptions = {
 
 
           
-          console.log('This is the user:')
-          console.log(user) // Log the user
+          // console.log('This is the user:')
+          // console.log(user) // Log the user
 
           if (user) {
             const isValid = await bcrypt.compare(credentials.password, user.password)
@@ -67,7 +67,7 @@ export const authOptions = {
 
             if (isValid) {
               // Lösenordet är korrekt, returnera användaren
-              console.log('Right password...')
+              // console.log('Right password...')
               return Promise.resolve(user)
               //return { id: user.id, name: user.username }
             } else {
@@ -180,8 +180,8 @@ export const authOptions = {
   callbacks: {
     session: async (session, user) => {
       // session.user.id = user.id; // Lägg till id till session.user
-      console.log('Session:', session);
-      console.log('User:', user);
+      // console.log('Session:', session);
+      // console.log('User:', user);
       
       return Promise.resolve(session);
     },
@@ -212,7 +212,7 @@ export const authOptions = {
 
        else if (account.provider === 'google') {
       if (profile) {
-      console.log('Profile:', profile);
+      // console.log('Profile:', profile);
       const email = profile.email;
       const dbUser = await prisma.user.findUnique({
         where: {
@@ -222,7 +222,7 @@ export const authOptions = {
 
       if (dbUser) {
         // Om användaren finns, logga in dem
-        console.log('User exists:', dbUser);
+        // console.log('User exists:', dbUser);
         // user = dbUser;
         // console.log('user:', user);
         return Promise.resolve(dbUser);
