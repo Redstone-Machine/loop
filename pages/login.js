@@ -34,7 +34,8 @@ const Login = () => {
   const signInGoogle = async (event) => {
     signIn('google', {
       // callbackUrl: window.location.href,
-      callbackUrl: 'http://localhost:3000/main-page',
+      callbackUrl: '/main-page',
+      //callbackUrl: 'http://localhost:3000/main-page',
       redirect: false,
     })
     // router.push('/main-page');

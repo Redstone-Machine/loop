@@ -7,11 +7,11 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
 
-    console.log("test")
+    // console.log("test")
     if (req.method === 'POST') {
       const { content, userId, recipientId } = req.body;
   
-      console.log("test2")
+      // console.log("test2")
       if (!content || !userId || !recipientId) {
         return res.status(400).json({ error: 'Content, userId, and recipientId are required' });
       }
