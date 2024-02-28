@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import io from 'socket.io-client';
 
-
+require('dotenv').config();
 
 const ChatPage = () => {
 
@@ -53,7 +53,8 @@ const ChatPage = () => {
     // }, []);
     
     useEffect(() => {
-      const newSocket = io('http://localhost:3001'); // Replace with your server URL
+      console.log('process.env.SERVER_URL', process.env.NEXT_PUBLIC_EXTRA_URL);
+      const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Replace with your server URL
       setSocket(newSocket);
     
       newSocket.on('connect', () => {

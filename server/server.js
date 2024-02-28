@@ -1,17 +1,20 @@
 // server/server.js
+require('dotenv').config();
 const http = require('http');
 const server = http.createServer((req, res) => {
 // Handle HTTP requests if needed
 });
 
+console.log('Origin:', process.env.NEXT_PUBLIC_BASE_URL);
 
 const { Server } = require('socket.io');
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000', // Replace with your client URL
+    origin: process.env.NEXT_PUBLIC_BASE_URL, // Replace with your client URL
     methods: ['GET', 'POST']
   }
 });
+
 
 
 io.on('connection', (socket) => {
