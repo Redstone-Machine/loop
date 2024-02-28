@@ -85,15 +85,16 @@ const MainPage = () => {
             
             <h2> <FormattedMessage id="loop" /> </h2>
 
-            {loops && userId
-              ? loops
-                .map(loop => (
-                  <div key={loop.id}>
-                    <Link style={{ color: loop?.color, backgroundColor: '#ededed' }} href={`/loop/${loop.id}`}>
-                      {loop.name}
-                    </Link>
-                  </div>
-                ))
+            {loops
+              ? loops.length > 0
+                ? loops.map(loop => (
+                    <div key={loop.id}>
+                      <Link style={{ color: loop?.color, backgroundColor: '#ededed' }} href={`/loop/${loop.id}`}>
+                        {loop.name}
+                      </Link>
+                    </div>
+                  ))
+                : <div>Finns inga loops</div>
               : <div>Loading... loops</div>
             }
             
