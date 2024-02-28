@@ -15,6 +15,11 @@ export default {
     automatic: 'Automatic',
     light: 'Light',
     dark: 'Dark',
+    loop: 'Loops',
+    createLoop: 'Create a Loop',
+    color: 'Color',
+    name: 'Name',
+
 
   // login:
     logInTitle: 'Log in to Loop',
@@ -27,6 +32,9 @@ export default {
 
   // main:
     welcomeTitle: 'Welcome to Loop',
+    friendsTitle: 'Friends',
+    friendRequestsTitle: 'Friend Requests',
+    allUsersTitle: 'All Users',
 
   // chat:
     chatTitlePart1: 'Chat between you',
@@ -43,4 +51,17 @@ export default {
     changePassword: 'Change Password',
     deleteAccount: 'Delete Account',
   
+  // add-friends:
+    addFriendsTitle: 'Add Friends',
+    acceptFriendRequest: 'Accept',
+    addFriend: 'Add Friend',
+    friends: 'Friends',
+    pending: 'Pending',
+
+  // loop
+    loopTitle: 'Create a Loop',
+
+
+
+
 };

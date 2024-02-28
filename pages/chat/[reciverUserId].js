@@ -11,7 +11,7 @@ import io from 'socket.io-client';
 
 const ChatPage = () => {
 
-    const { userId, userName, session, status, userLanguage, userTheme, theme, users, error } = usePageSetup();
+    const { userId, userName, session, status, userLanguage, userTheme, theme } = usePageSetup();
 
     const intl = useIntl();
 
@@ -28,6 +28,8 @@ const ChatPage = () => {
     const [reciverUserName, setReciverUserName] = useState(null);
     const [messageText, setMessageText] = useState('');
     const [messages, setMessages] = useState([]);
+    const [sentMessages, setSentMessages] = useState([]);
+    const [receivedMessages, setReceivedMessages] = useState([]);
 
 
     const [socket, setSocket] = useState(null);
@@ -68,8 +70,15 @@ const ChatPage = () => {
         }
       };
     
-      // Add the message handler
-      newSocket.on('chat message', messageHandler);
+      // // Add the message handler
+      // newSocket.on('chat message', messageHandler);
+      newSocket.on('chat message', message => {
+        console.log('Received message:', message);
+        if (message.userId === reciverUserId) {
+          setReceivedMessages(prevMessages => [...prevMessages, message]);
+          setMessages(prevMessages => [...prevMessages, message]); // Add this line
+        }
+      });
     
       return () => {
         // Remove the message handler when the component unmounts
@@ -114,8 +123,10 @@ const ChatPage = () => {
         recipientId: reciverUserId,
       };
     
-      // Send the message in real-time
+      // // Send the message in real-time
+      // socket.emit('chat message', message);
       socket.emit('chat message', message);
+      setSentMessages(prevMessages => [...prevMessages, message]);
     
       const response = await fetch('/api/createMessage', {
         method: 'POST',
@@ -201,23 +212,36 @@ const ChatPage = () => {
     //   }
     // }, [socket]);
     
-    useEffect(() => {
-        if (userId && reciverUserId) {
-          fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
-            .then(response => response.json())
-            .then(setMessages);
-        }
-      }, [userId, reciverUserId]);
+    // useEffect(() => {
+    //     if (userId && reciverUserId) {
+    //       fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
+    //         .then(response => response.json())
+    //         .then(setMessages);
+    //     }
+    //   }, [userId, reciverUserId]);
       
-      useEffect(() => {
-        if (userId && reciverUserId) {
-          fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
-            .then(response => response.json())
-            .then(setMessages);
-        }
-      }, [messageText]);
-
-
+    //   useEffect(() => {
+    //     if (userId && reciverUserId) {
+    //       fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
+    //         .then(response => response.json())
+    //         .then(setMessages);
+    //     }
+    //   }, [messageText]);
+    useEffect(() => {
+      if (userId && reciverUserId) {
+        fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
+          .then(response => response.json())
+          .then(messages => {
+            const sent = messages.filter(message => message.senderId === userId);
+            const received = messages.filter(message => message.recipientId === userId);
+            const combined = [...sent, ...received];
+            combined.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            setSentMessages(sent);
+            setReceivedMessages(received);
+            setMessages(combined);
+          });
+      }
+    }, [userId, reciverUserId, messageText]);
 
 
 
@@ -237,9 +261,61 @@ const ChatPage = () => {
         <div>
           <h1><FormattedMessage id="chatTitlePart1" /> {userName} <FormattedMessage id="chatTitlePart2" /> {reciverUserName}</h1>
 
-          {messages.map((message, index) => (
+          {/* {messages.map((message, index) => (
             <p key={index}>{message.content}</p>
-        ))}
+        ))} */}
+
+{/* {sentMessages.map((message, index) => (
+  <p key={index} style={{textAlign: 'right'}}>
+    {message.content}
+  </p>
+))}
+
+{receivedMessages.map((message, index) => (
+  <p key={index} style={{textAlign: 'left'}}>
+    {message.content}
+  </p>
+))} */}
+
+{messages.map((message, index) => {
+  const messageClass = message.senderId === userId ? 'sent' : 'received';
+
+  return (
+    <p key={index} className={messageClass}>{message.content}</p>
+  );
+})}
+      <style jsx>{`
+        .sent {
+          text-align: right;
+          background-color: #dcf8c6;
+          margin-left: 40%;
+          margin-right: 20%;
+          border-radius: 5px;
+          padding: 10px;
+          color: black;
+        }
+
+        .received {
+          text-align: left;
+          background-color: #ffffff;
+          margin-right: 40%;
+          margin-left: 20%;
+          border-radius: 5px;
+          padding: 10px;
+          color: black;
+        }
+
+        @media (max-width: 600px) {
+          .sent {
+            margin-right: 0%;
+          }
+      
+          .received {
+            margin-left: 0%;
+          }
+        }
+      `}</style>
+
 
 {/* {messages.map((message, index) => {
   const messageClass = message.userId === session.token.sub ? 'sent' : 'received';
@@ -250,15 +326,16 @@ const ChatPage = () => {
 })} */}
 
 
+         
           <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
-          placeholder={intl.formatMessage({ id: 'writeMessage' })}
-        />
-        <button type="submit"><FormattedMessage id="send" /></button>
-      </form>
+            <input
+              type="text"
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              placeholder={intl.formatMessage({ id: 'writeMessage' })}
+            />
+            <button type="submit"><FormattedMessage id="send" /></button>
+          </form>
       {/* <style jsx>{`
       .sent {
         text-align: right;

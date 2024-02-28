@@ -8,7 +8,7 @@ import React from 'react';
 
 const SettingsPage = () => {
 
-    const { userId, userName, session, status, userLanguage, userTheme, theme, users, error, router } = usePageSetup();
+    const { userId, userName, session, status, userLanguage, userTheme, theme, router } = usePageSetup();
     
     return (
         <>

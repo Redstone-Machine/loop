@@ -1,0 +1,18 @@
+-- CreateTable
+CREATE TABLE "Loop" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "UserLoop" (
+    "userId" TEXT NOT NULL,
+    "loopId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("userId", "loopId"),
+    CONSTRAINT "UserLoop_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "UserLoop_loopId_fkey" FOREIGN KEY ("loopId") REFERENCES "Loop" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

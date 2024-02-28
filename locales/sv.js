@@ -15,6 +15,10 @@ export default {
     automatic: 'Automatiskt',
     light: 'Ljust',
     dark: 'Mörkt',
+    loop: 'Loops',
+    createLoop: 'Skapa en Loop',
+    color: 'Färg',
+    name: 'Namn',
 
   // login:
     logInTitle: 'Logga in på Loop',
@@ -27,6 +31,9 @@ export default {
 
   // main:
     welcomeTitle: 'Välkommen till Loop',
+    friendsTitle: 'Vänner',
+    friendRequestsTitle: 'Vännförfrågningar',
+    allUsersTitle: 'Alla användare',
 
   // chat:
     chatTitlePart1: 'Chatt mellan dig',
@@ -42,4 +49,16 @@ export default {
     changeUsername: 'Ändra användarnamn',
     changePassword: 'Ändra lösenord',
     deleteAccount: 'Ta bort konto',
+
+  // add-friends
+    addFriendsTitle: 'Lägg till vänner',
+    acceptFriendRequest: 'Godkänn',
+    addFriend: 'Lägg till vän',
+    friends: 'Vänner',
+    pending: 'Väntar på svar',
+
+  // loop
+    loopTitle: 'Skapa en Loop',
+
+
 };

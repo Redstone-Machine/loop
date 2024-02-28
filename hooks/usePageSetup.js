@@ -8,12 +8,6 @@ import { LanguageContext } from '../contexts/LanguageContext';
 import { ThemeContext } from '../contexts/ThemeContext';
 import { getUserIdFromSession } from '../utils/utils';
 
-import useSWR from 'swr';
-
-async function fetcher(url) {
-    const res = await fetch(url)
-    return res.json()
-  }
 
 export const usePageSetup = () => {
   const router = useRouter();
@@ -30,7 +24,6 @@ export const usePageSetup = () => {
 
   const [userName, setUsername] = useState(null);
   
-  const { data: users, error } = useSWR('/api/getUsers', fetcher)
 
   useEffect(() => {
     if (userId) {
@@ -114,5 +107,5 @@ export const usePageSetup = () => {
     }
   }, [status, session])
 
-  return { userId, userName, session, status, userLanguage, userTheme, theme, users, error, router };
+  return { userId, userName, session, status, userLanguage, userTheme, theme, router };
 };

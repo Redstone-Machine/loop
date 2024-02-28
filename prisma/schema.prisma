@@ -47,6 +47,49 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// model Loop {
+//   id        String   @id @default(cuid())
+//   name      String
+//   color     String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   users     UserLoop[]
+// }
+model Loop {
+  id        String   @id @default(cuid())
+  name      String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ownerId   String
+
+  owner     User     @relation("OwnedLoops", fields: [ownerId], references: [id])
+  users     UserLoop[]
+}
+
+model UserLoop {
+  userId    String
+  loopId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  loop      Loop     @relation(fields: [loopId], references: [id])
+
+  @@id([userId, loopId])
+}
+
+// model UserLoop {
+//   userId    String
+//   loopId    String
+//   createdAt DateTime @default(now())
+
+//   user      User     @relation(fields: [userId], references: [id])
+//   loop      Loop     @relation(fields: [loopId], references: [id])
+
+//   @@id([userId, loopId])
+// }
+
 model User {
   id            String   @id @default(cuid())
   userName      String   @unique
@@ -54,12 +97,37 @@ model User {
   surName       String
   email         String   @unique
   password      String
-  language          String   @default("Automatic")
-  theme             String   @default("Automatic")
+  language      String   @default("Automatic")
+  theme         String   @default("Automatic")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  profilePicture String? // new field for profile picture
+
   accounts      Account[]
   sessions      Session[]
+  ownedLoops    Loop[]   @relation("OwnedLoops")
+
+  loops     UserLoop[]
+  
   sentMessages    Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+
+  sentFriendRequests   Friend[] @relation("FriendRequests")
+  receivedFriendRequests Friend[] @relation("FriendRequestsReceived")
+}
+
+model Friend {
+  id           String   @id @default(cuid())
+  status       String   // you can use this field to represent the status of the friendship (e.g., 'pending', 'accepted', 'declined', 'blocked')
+  requesterId  String
+  addresseeId  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  requester    User     @relation("FriendRequests", fields: [requesterId], references: [id])
+  addressee    User     @relation("FriendRequestsReceived", fields: [addresseeId], references: [id])
+
+  @@unique([requesterId, addresseeId])
 }
 
 model Message {

@@ -16,194 +16,48 @@ import { signOut } from 'next-auth/react';
 // import useSWR from 'swr'
 import Link from 'next/link'
 
-// async function fetcher(url) {
-//   const res = await fetch(url)
-//   return res.json()
-// }
+import useSWR from 'swr';
 
-// export async function getServerSideProps({ req, res }) {
-//     return {
-//       props: {
-//         session: await getServerSession(req, res, authOptions)
-//       }
-//     }
-//   }
+async function fetcher(url) {
+  const res = await fetch(url)
+  return res.json()
+}
+
 
 const MainPage = () => {
 
-  const { userId, userName, session, status, userLanguage, userTheme, theme, users, error, router } = usePageSetup();
-  // const { setLanguage } = useContext(LanguageContext);
-
-  //   const [userLanguage, setUserLanguage] = useState(null);
-
-  //   const [userTheme, setUserTheme] = useState(null);
-  //   const [theme, setTheme] = useState(null);
-
-
-
-
-  //   const { data: session, status } = useSession();
-
-  //   const userId = getUserIdFromSession(session, status);
-
-  //   console.log('userId:', userId);
-
-
-
-  //   const { data: users, error } = useSWR('/api/getUsers', fetcher)
-
-  //   console.log('all users:', users);
-
-  //   const router = useRouter();
-
-  //   useEffect(() => {
-  //     if (userId) {
-  //       fetch(`/api/getUserLanguageById?id=${userId}`)
-  //       .then(response => response.json())
-  //       .then(data => {
-  //         setUserLanguage(data);
-  //       })
-  //       .catch(error => {
-  //         console.error('Error:', error);
-  //       });
-  //     }
-  //   }, [userId]);
-
-
-  //   useEffect(() => {
-
-  //     if (userLanguage && userLanguage !== 'automatic') {
-  //       if (userLanguage == 'swedish') {
-  //       setLanguage('swedish');
-  //       console.log('pushade swedish!');
-  //       }
-  //       else if (userLanguage == 'english') {
-  //         setLanguage('english');
-  //         console.log('pushade english!');
-  //       }
-  //       // setLocale(language === 'swedish' ? 'sv' : 'en');
-
-  //     }
-  //   }, [userLanguage]);
-
-
-
-
-
-
-
-  //   useEffect(() => {
-  //     // Kontrollera webbläsarens preferens
-  //     const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  //     // Sätt temat till mörkt om webbläsaren föredrar det, annars ljust
-  //     setTheme(prefersDarkMode ? 'dark' : 'light');
-  //   }, []);
-
-  //   useEffect(() => {
-  //     if (userId) {
-  //       fetch(`/api/getUserThemeById?id=${userId}`)
-  //       .then(response => response.json())
-  //       .then(data => {
-  //         setUserTheme(data);
-  //       })
-  //       .catch(error => {
-  //         console.error('Error:', error);
-  //       });
-  //     }
-  //   }, [userId]);
-
-  //   useEffect(() => {
-  //     // console.log('userTheme rn:', userTheme);
-  //     if (userTheme && userTheme !== 'automatic') {
-  //       setTheme(userTheme);
-  //     }
-  //   }, [userTheme]);
-
-  // console.log('userTheme:', userTheme);
-  // console.log('theme:', theme);
-
-  //   const [userName, setUserName] = useState(null);
-  //   useEffect(() => {
-  //     if (userId) {
-  //         fetch(`/api/getUserById?id=${userId}`)
-  //             .then(response => response.json())
-  //             .then(user => setUserName(user.userName));
-  //     }
-  // }, [userId]);
-
-
-
-
-  // useEffect(() => {
-  //   // if (!loading) { // Only check if the user is logged in when loading is false
-  //     if (session) {
-  //       console.log('User is logged in:', session)
-  //     } else {
-  //       console.log('User is not logged in')
-  //       router.push('/login');
-  //     }
-  //   // }
-  // }, [session, loading]) // Add loading to the dependency array
-
-  // if (error) return <div>Failed to load users</div>
-  // if (users === undefined) return <div>Loading...</div>
-  // if (users === null) return <div>No users found</div>
-
-
-
-
-  // useEffect(() => {
-  //   if (status === 'unauthenticated') {
-  //     console.log('User is not logged in')
-  //     router.push('/login');
-  //   } else if (status === 'authenticated') {
-  //     console.log('User is logged in:', session)
-  //   }
-  // }, [status, session])
-
-
-
+  const { userId, userName, session, status, userLanguage, userTheme, theme, router } = usePageSetup();
+  const { data: users, error } = useSWR('/api/getUsers', fetcher)  
+  const { data: Friends, error: FriendError } = useSWR(`/api/getFriendsById?userId=${userId}`, fetcher)
+  const { data: recivedFriendRequests, error: recivedFriendRequestsError } = useSWR(`/api/getRecivedFriendRequestById?userId=${userId}`, fetcher)
+  const { data: loops, error: loopsError } = useSWR(`/api/getAllLoopsById?userId=${userId}`, fetcher)
 
   const handleSignOut = () => {
-    signOut();
+    signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login` });
   }
 
-  // useEffect(() => {
-  //   if (session) {
-  //     console.log('User is logged in:', session)
-  //   } else {
-  //     console.log('User is not logged in')
-  //     router.push('/login');
-  //   }
-  // }, [session])
+  async function handleAcceptFriendRequest(addresseeId) {
+    const response = await fetch('/api/acceptFriendRequest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        requesterId: addresseeId,
+        addresseeId: userId,
+      }),
+    })
 
+    const data = await response.json()
 
-  // if (error) return <div>Failed to load users</div>
-  // if (!users) return <div>Loading...</div>
-
-  // const switchToEnglish = () => {
-  //   setLanguage2('english');
-  //   router.push(router.pathname, router.asPath, { locale: 'en' });
-  // };
-
-  // const switchToSwedish = () => {
-  //   setLanguage2('swedish');
-  //   router.push(router.pathname, router.asPath, { locale: 'sv' });
-  // };
+    // Reload the page
+    router.reload()
+  }
 
   return (
     <>
       {userTheme && (
         <>
-          {/* <Head>
-            <style>{`
-          body {
-            background-color: ${theme === 'light' ? 'white' : 'black'};
-            color: ${theme === 'light' ? 'black' : 'white'};
-          }
-        `}</style>
-          </Head> */}
 
           <div>
 
@@ -228,10 +82,55 @@ const MainPage = () => {
               <FormattedMessage id="addFriends" />
             </Link>
             <br />
-            <br />
-            {/* <button onClick={switchToEnglish}>Switch to English</button>
-            <button onClick={switchToSwedish}>Byt till Svenska</button> */}
+            
+            <h2> <FormattedMessage id="loop" /> </h2>
 
+            {loops && userId
+              ? loops
+                .map(loop => (
+                  <div key={loop.id}>
+                    <Link style={{ color: loop?.color, backgroundColor: '#ededed' }} href={`/loop/${loop.id}`}>
+                      {loop.name}
+                    </Link>
+                  </div>
+                ))
+              : <div>Loading... loops</div>
+            }
+            
+            <br />
+
+            <button onClick={() => router.push('/create-loop')}> <FormattedMessage id="createLoop" /> </button>
+
+            <h2> <FormattedMessage id="friendsTitle" /> </h2>
+
+            {Friends && users && userId
+              ? users
+                .filter(user => Friends.includes(user.id) && user.id !== userId)
+                .map(user => (
+                  <div key={user.id}>
+                    <Link href={`/chat/${user.id}`}>
+                      {user.userName}
+                    </Link>
+                  </div>
+                ))
+              : <div>Loading... friends</div>
+            }
+
+            <h2> <FormattedMessage id="friendRequestsTitle" /> </h2>
+
+            {recivedFriendRequests && users && userId
+              ? users
+                .filter(user => recivedFriendRequests.includes(user.id) && user.id !== userId)
+                .map(user => (
+                  <div key={user.id} style={{ display: 'flex', alignItems: 'center' }}>
+                    <p>{user.userName}</p>
+                    <button onClick={() => handleAcceptFriendRequest(user.id)}><FormattedMessage id="acceptFriendRequest" /></button>
+                  </div>
+                ))
+              : <div>Loading... requests</div>
+            }
+
+            <h2> <FormattedMessage id="allUsersTitle" /> </h2>
 
             {users && userId
               ? users
