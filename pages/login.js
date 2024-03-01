@@ -1,4 +1,5 @@
 import { FormattedMessage } from 'react-intl';
+import Head from 'next/head';
 
 // import Link from 'next/link';
 import { useState } from 'react';
@@ -100,6 +101,11 @@ const Login = () => {
 
   return (
     <div>
+
+      {/* <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+      </Head> */}
+
       <h1><FormattedMessage id="logInTitle" /></h1>
       <button><FormattedMessage id="logInApple" /></button>
       <button onClick={signInGoogle}><FormattedMessage id="logInGoogle" /></button>

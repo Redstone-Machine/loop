@@ -61,6 +61,7 @@ const MainPage = () => {
 
           <div>
 
+
             {/* <h1>Welcome to Loop</h1> */}
             <h1>
               <FormattedMessage id="welcomeTitle" />
