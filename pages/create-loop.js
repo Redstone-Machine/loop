@@ -17,7 +17,7 @@ const { userId, userName, session, status, userLanguage, userTheme, theme, route
 const { data: users, error } = useSWR('/api/getUsers', fetcher)
 
 const [name, setName] = useState('');
-const [color, setColor] = useState('#000000');
+const [color, setColor] = useState('#ff0000');
 const [selectedFriends, setSelectedFriends] = useState([]);
 
 const { data: Friends, error: FriendError } = useSWR(`/api/getFriendsById?userId=${userId}`, fetcher)
@@ -58,17 +58,21 @@ const handleSubmit = async (event) => {
 
 return (
     <>
-    <h1>Create a Loop</h1>
+    <h1><FormattedMessage id="loopTitle" /></h1>
     <form onSubmit={handleSubmit}>
         <label>
         <FormattedMessage id="name" />:
 
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
         </label>
+        <br />
+        <br />
         <label>
         <FormattedMessage id="color" />:
         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} required />
         </label>
+        <br />
+        <br />
         {Friends && users && userId
         
             ? users
@@ -77,10 +81,13 @@ return (
             <label key={user.id}>
                 <input type="checkbox" value={user.id} onChange={handleFriendChange} />
                 {user.userName}
+                <br />
+
             </label>
             ))
             : <div>Loading... friends</div>
         }
+        <br />
         <button type="submit"><FormattedMessage id="createLoop" /></button>
     </form>
     </>

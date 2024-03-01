@@ -14,9 +14,10 @@ import { signOut } from 'next-auth/react';
 // import { authOptions } from './api/auth/[...nextauth]'
 
 // import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import Link from 'next/link'
 
-import useSWR from 'swr';
+// import useSWR from 'swr';
 
 async function fetcher(url) {
   const res = await fetch(url)
@@ -33,7 +34,9 @@ const MainPage = () => {
   const { data: loops, error: loopsError } = useSWR(`/api/getAllLoopsById?userId=${userId}`, fetcher)
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login` });
+    // signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login` });
+    // signOut({ callbackUrl: `http://192.168.0.12:3000/login` });
+    signOut();
   }
 
   async function handleAcceptFriendRequest(addresseeId) {
@@ -50,8 +53,17 @@ const MainPage = () => {
 
     const data = await response.json()
 
-    // Reload the page
-    router.reload()
+    // // Reload the page
+    // router.reload()
+
+      // Update local data
+    mutate(`/api/getRecivedFriendRequestById?userId=${userId}`, (data) => {
+      return data.filter(id => id !== addresseeId)
+    }, false)
+
+    mutate(`/api/getFriendsById?userId=${userId}`, (data) => {
+      return [...data, addresseeId]
+    }, false)
   }
 
   return (

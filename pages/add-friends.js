@@ -6,8 +6,13 @@ import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
-import useSWR from 'swr'
+// import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
+
 import Link from 'next/link'
+
+
+
 
 async function fetcher(url) {
     const res = await fetch(url)
@@ -46,8 +51,15 @@ const AddFriends = () => {
       const data = await response.json()
 
 
-      // Reload the page
-      router.reload()
+      // // Reload the page
+      // router.reload()
+        // Update local data
+        mutate(`/api/getSentFriendRequestById?userId=${userId}`, (data) => {
+          return [...data, addresseeId]
+        }, false)
+       
+      
+
     }
 
     async function handleAcceptFriendRequest(addresseeId) {
@@ -64,8 +76,16 @@ const AddFriends = () => {
   
       const data = await response.json()
 
-      // Reload the page
-      router.reload()
+      // // Reload the page
+      // router.reload()
+        // Update local data
+      mutate(`/api/getRecivedFriendRequestById?userId=${userId}`, (data) => {
+        return data.filter(id => id !== addresseeId)
+      }, false)
+
+      mutate(`/api/getFriendsById?userId=${userId}`, (data) => {
+        return [...data, addresseeId]
+      }, false)
     }
 
 
@@ -94,9 +114,12 @@ const AddFriends = () => {
           ? users
             .filter(user => user.id !== userId)
             .map(user => {
-              const isPending = pendingFriends && pendingFriends.includes(user.id);
-              const isReceived = recivedFriendRequests && recivedFriendRequests.includes(user.id);
-              const isFriends = Friends && Friends.includes(user.id);
+              // const isPending = pendingFriends && pendingFriends.includes(user.id);
+              // const isReceived = recivedFriendRequests && recivedFriendRequests.includes(user.id);
+              // const isFriends = Friends && Friends.includes(user.id);
+              const isPending = Array.isArray(pendingFriends) && pendingFriends.includes(user.id);
+              const isReceived = Array.isArray(recivedFriendRequests) && recivedFriendRequests.includes(user.id);
+              const isFriends = Array.isArray(Friends) && Friends.includes(user.id);
               let button;
 
               if (isPending) {
