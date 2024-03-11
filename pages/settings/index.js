@@ -28,7 +28,7 @@ const SettingsPage = () => {
 
 
                     <div>
-                        <h1>Settings</h1>
+                        <h1><FormattedMessage id="settingsTitle" /></h1>
 
                         <button onClick={() => router.push('/settings/profile-picture')}> <FormattedMessage id="profilePicture" /> </button>
                     </div>
