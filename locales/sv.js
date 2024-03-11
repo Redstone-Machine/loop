@@ -46,9 +46,14 @@ export default {
 
   // settings
     settingsTitle: 'Inställningar',
+    uppload: 'Ladda upp',
     changeUsername: 'Ändra användarnamn',
     changePassword: 'Ändra lösenord',
     deleteAccount: 'Ta bort konto',
+    profilePicture: 'Profilbild',
+    upploadProfilePicture:  'Ladda upp profilbild',
+    currentProfilePicture: 'Nuvarande profilbild',
+    infoAboutProfilePicture: 'Profilbilden ska vara en jpg-fil och får maximalt vara 10 MB. Bilden kommer att beskäras till en kvadrat.',
 
   // add-friends
     addFriendsTitle: 'Lägg till vänner',

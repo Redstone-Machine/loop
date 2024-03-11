@@ -72,7 +72,7 @@ return (
         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} required />
         </label>
         <br />
-        <br />
+        <p><FormattedMessage id="friends" />:</p>
         {Friends && users && userId
         
             ? users

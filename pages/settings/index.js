@@ -1,4 +1,5 @@
 import { usePageSetup } from '../../hooks/usePageSetup';
+import { FormattedMessage } from 'react-intl';
 import Head from 'next/head';
 
 import { useState } from 'react';
@@ -28,6 +29,8 @@ const SettingsPage = () => {
 
                     <div>
                         <h1>Settings</h1>
+
+                        <button onClick={() => router.push('/settings/profile-picture')}> <FormattedMessage id="profilePicture" /> </button>
                     </div>
                 </>
             )}

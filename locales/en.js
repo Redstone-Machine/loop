@@ -47,9 +47,16 @@ export default {
 
   // settings:
     settingsTitle: 'Settings',
+    uppload: 'Upload',
     changeUsername: 'Change Username',
     changePassword: 'Change Password',
     deleteAccount: 'Delete Account',
+    profilePicture: 'Profile Picture',
+    upploadProfilePicture: 'Upload Profile Picture',
+    currentProfilePicture: 'Current Profile Picture',
+    infoAboutProfilePicture: 'The profile picture should be a jpg file and have a maximum size of 10 MB. The picture will be cropped to a square.',
+
+    
   
   // add-friends:
     addFriendsTitle: 'Add Friends',
@@ -60,6 +67,8 @@ export default {
 
   // loop
     loopTitle: 'Create a Loop',
+
+
 
 
 
