@@ -54,7 +54,7 @@ export default {
     profilePicture: 'Profile Picture',
     upploadProfilePicture: 'Upload Profile Picture',
     currentProfilePicture: 'Current Profile Picture',
-    infoAboutProfilePicture: 'The profile picture should be a jpg file and have a maximum size of 10 MB. The picture will be cropped to a square.',
+    infoAboutProfilePicture: 'The profile picture should be a jpg or a png file and have a maximum size of 10 MB. The picture will be cropped to a square.',
 
     
   

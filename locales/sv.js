@@ -53,7 +53,7 @@ export default {
     profilePicture: 'Profilbild',
     upploadProfilePicture:  'Ladda upp profilbild',
     currentProfilePicture: 'Nuvarande profilbild',
-    infoAboutProfilePicture: 'Profilbilden ska vara en jpg-fil och får maximalt vara 10 MB. Bilden kommer att beskäras till en kvadrat.',
+    infoAboutProfilePicture: 'Profilbilden ska vara en jpg- eller png-fil och får maximalt vara 10 MB. Bilden kommer att beskäras till en kvadrat.',
 
   // add-friends
     addFriendsTitle: 'Lägg till vänner',

@@ -83,12 +83,13 @@ export default async function handler(req, res) {
 
 function saveFile(file, publicFolder) {
   const fileExt = path.extname(file[0].originalFilename || "").toLowerCase();
-  const filename = Date.now() + fileExt;
+  // const filename = Date.now() + fileExt;
+  const filename = Date.now() + '.jpg';
   const maxSize = 10 * 1024 * 1024; // 10MB
 
-  // Check if file is a .jpg
-  if (fileExt !== '.jpg') {
-    throw new Error('Only .jpg files are allowed');
+  // Check if file is a .jpg or .png
+  if (fileExt !== '.jpg' && fileExt !== '.png') {
+    throw new Error('Only .jpg and .png files are allowed');
   }
 
   // Check if file size is less than 10MB
@@ -103,11 +104,12 @@ function saveFile(file, publicFolder) {
   // Create a temporary file path for the output
   const tempFilePath = path.join(publicFolder, '..', '..', '..', 'loop_data', 'profile_pictures', `temp_${filename}`);
 
-  // Crop the image to a square
+  // Crop the image to a square and convert to jpg
   sharp(newFilePath)
     .resize(1000, 1000, {
       fit: 'cover',
     })
+    .jpeg() // Add this to convert to jpg
     .toFile(tempFilePath, (err) => {
       if (err) {
         throw err;
