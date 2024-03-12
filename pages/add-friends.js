@@ -133,7 +133,10 @@ const AddFriends = () => {
               }
               return (
                 <div key={user.id}>
-                  {user.userName}
+                  <Link href={`/profile/${user.id}`}>
+                    {user.userName}
+                  </Link>
+                  &nbsp;&nbsp;&nbsp;
                   {button}
                 </div>
               );

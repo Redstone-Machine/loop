@@ -16,11 +16,10 @@ const SettingsProfilePicture = () => {
     const { userId, userName, session, status, userLanguage, userTheme, theme, router } = usePageSetup();
     const [file, setFile] = useState(null);
     const [profilePictureUrl, setProfilePictureUrl] = useState(null);
-    const [uploadError, setUploadError] = useState(null);
 
     useEffect(() => {
       const fetchProfilePicture = async () => {
-        const response = await fetch(`/api/getCurrentProfilePictureById?id=${userId}`);
+        const response = await fetch(`/api/getProfilePictureById?id=${userId}`);
         if (response.ok) {
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);

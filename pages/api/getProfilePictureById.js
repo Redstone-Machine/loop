@@ -1,4 +1,4 @@
-// pages/api/getCurrentProfilePictureById.js
+// pages/api/getProfilePictureById.js
 
 import { PrismaClient } from '@prisma/client';
 import path from 'path';
@@ -23,7 +23,17 @@ export default async function handle(req, res) {
     return;
   }
 
-  const filePath = path.resolve("../loop_data/profile_pictures", user.profilePicture);
+  // const filePath = path.resolve("../loop_data/profile_pictures", user.profilePicture);
+  // const file = await readFile(filePath);
+  // res.setHeader('Content-Type', 'image/jpeg'); // Set the correct content type
+  // res.send(file);
+  let filePath;
+  if (user.profilePicture) {
+    filePath = path.resolve("../loop_data/profile_pictures", user.profilePicture);
+  } else {
+    filePath = path.resolve("public/standard_profile_picture.jpg");
+  }
+
   const file = await readFile(filePath);
   res.setHeader('Content-Type', 'image/jpeg'); // Set the correct content type
   res.send(file);
