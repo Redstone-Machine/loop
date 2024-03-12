@@ -32,7 +32,7 @@ export default {
   // main:
     welcomeTitle: 'Välkommen till Loop',
     friendsTitle: 'Vänner',
-    friendRequestsTitle: 'Vännförfrågningar',
+    friendRequestsTitle: 'Vänförfrågningar',
     allUsersTitle: 'Alla användare',
 
   // chat:
