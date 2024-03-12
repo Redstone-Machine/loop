@@ -87,9 +87,9 @@ function saveFile(file, publicFolder) {
   const filename = Date.now() + '.jpg';
   const maxSize = 10 * 1024 * 1024; // 10MB
 
-  // Check if file is a .jpg or .png
-  if (fileExt !== '.jpg' && fileExt !== '.png') {
-    throw new Error('Only .jpg and .png files are allowed');
+  // Check if file is a .jpg, .jpeg, .png or .heic
+  if (fileExt !== '.jpg' && fileExt !== '.jpeg' && fileExt !== '.png' && fileExt !== '.heic') {
+    throw new Error('Only .jpg, .jpeg, .png and .heic files are allowed');
   }
 
   // Check if file size is less than 10MB
