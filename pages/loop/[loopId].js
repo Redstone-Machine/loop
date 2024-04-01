@@ -1,7 +1,7 @@
 import { usePageSetup } from '../../hooks/usePageSetup';
 import { FormattedMessage } from 'react-intl';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 // import { useState, useEffect } from 'react'
 // import { useSession } from 'next-auth/react'
 // import { useRouter } from 'next/router'
@@ -26,7 +26,7 @@ async function fetcher(url) {
 
 const MainPage = () => {
 
-  const { userId, userName, session, status, userLanguage, userTheme, theme, router } = usePageSetup();
+  const { userId, userName, session, status, userLanguage, userTheme, theme, router, changeColor, themeColor, setThemeColor } = usePageSetup();
 
   const { loopId } = router.query;
 
@@ -37,8 +37,11 @@ const MainPage = () => {
   const { data: recivedFriendRequests, error: recivedFriendRequestsError } = useSWR(`/api/getRecivedFriendRequestById?userId=${userId}`, fetcher)
   const { data: loopUsers, error: loopUsersError } = useSWR(`/api/getUsersFromLoopByLoopId?loopId=${loopId}`, fetcher)
   const { data: loop, error: loopError } = useSWR(`/api/getLoopInfoByLoopId?loopId=${loopId}`, fetcher)
-console.log('loopUsers:', loopUsers);
+  console.log('loopUsers:', loopUsers);
 
+  useEffect(() => {
+    setThemeColor(loop?.color);
+  }, [loop?.color]);
 
   return (
     <>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { LanguageContext } from '../contexts/LanguageContext';
 import { ThemeContext } from '../contexts/ThemeContext';
+import { ThemeColorContext } from '../contexts/ThemeColorContext';
 import { getUserIdFromSession } from '../utils/utils';
 
 
@@ -21,6 +22,8 @@ export const usePageSetup = () => {
   const { setThemeMode } = useContext(ThemeContext);
   const [userTheme, setUserTheme] = useState(null);
   const [theme, setTheme] = useState(null);
+
+  const { themeColor, setThemeColor } = useContext(ThemeColorContext);
 
   const [userName, setUsername] = useState(null);
   
@@ -107,5 +110,9 @@ export const usePageSetup = () => {
     }
   }, [status, session])
 
-  return { userId, userName, session, status, userLanguage, userTheme, theme, router };
+  const changeColor = (color) => {
+    setThemeColor(color);
+  }
+
+  return { userId, userName, session, status, userLanguage, userTheme, theme, router, changeColor, themeColor, setThemeColor };
 };

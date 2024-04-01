@@ -4,8 +4,11 @@ import Head from 'next/head';
 // import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
+import { useEffect } from 'react';
+
+import { getUserIdFromSession } from '../utils/utils';
 
 
 const Login = () => {
@@ -14,6 +17,9 @@ const Login = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const { data: session, status } = useSession();
+  const userId = getUserIdFromSession(session, status);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -98,6 +104,15 @@ const Login = () => {
   //     alert('Failed to log in. Please check your username and password.');
   //   }
   // };
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      console.log('User is not logged in')
+    } else if (status === 'authenticated') {
+      console.log('User is logged in:', session)
+      router.push('/main-page');
+    }
+  }, [status, session])
 
   return (
     <div>

@@ -30,7 +30,13 @@ const SettingsPage = () => {
                     <div>
                         <h1><FormattedMessage id="settingsTitle" /></h1>
 
-                        <button onClick={() => router.push('/settings/profile-picture')}> <FormattedMessage id="profilePicture" /> </button>
+                        <button onClick={async () => {
+                            await router.prefetch('/settings/profile-picture');
+                                router.push('/settings/profile-picture');
+                            }}>
+                            <FormattedMessage id="profilePicture" />
+                        </button>
+                        
                     </div>
                 </>
             )}

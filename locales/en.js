@@ -20,6 +20,14 @@ export default {
     color: 'Color',
     name: 'Name',
 
+  // navbar:
+
+    english: 'English',
+    swedish: 'Swedish',
+    myProfile: 'My Profile',
+    settings: 'Settings',
+    darkMode: 'Dark Mode',
+    lightMode: 'Light Mode',
 
   // login:
     logInTitle: 'Log in to Loop',

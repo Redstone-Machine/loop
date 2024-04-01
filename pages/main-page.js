@@ -17,6 +17,9 @@ import { signOut } from 'next-auth/react';
 import useSWR, { mutate } from 'swr'
 import Link from 'next/link'
 
+import { useEffect, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
+
 // import useSWR from 'swr';
 
 async function fetcher(url) {
@@ -27,8 +30,8 @@ async function fetcher(url) {
 
 const MainPage = () => {
 
-  const { userId, userName, session, status, userLanguage, userTheme, theme, router } = usePageSetup();
-  const { data: users, error } = useSWR('/api/getUsers', fetcher)  
+  const { userId, userName, session, status, userLanguage, userTheme, theme, router, setThemeColor } = usePageSetup();
+  const { data: users, userError } = useSWR('/api/getUsers', fetcher)  
   const { data: Friends, error: FriendError } = useSWR(`/api/getFriendsById?userId=${userId}`, fetcher)
   const { data: recivedFriendRequests, error: recivedFriendRequestsError } = useSWR(`/api/getRecivedFriendRequestById?userId=${userId}`, fetcher)
   const { data: loops, error: loopsError } = useSWR(`/api/getAllLoopsById?userId=${userId}`, fetcher)
@@ -66,8 +69,23 @@ const MainPage = () => {
     }, false)
   }
 
+
+
+  // const usersIsLoading = !userError && !users;
+  // const FriendsIsLoading = !FriendError && !Friends;
+  // const recivedFriendRequestsIsLoading = !recivedFriendRequestsError && !recivedFriendRequests;
+  // const loopsIsLoading = !loopsError && !loops;
+
+  // const isLoaded = !(usersIsLoading || FriendsIsLoading || recivedFriendRequestsIsLoading || loopsIsLoading);
+  
+  useEffect(() => {
+    setThemeColor('none');
+  }, []);
+  
   return (
+    // <CSSTransition in={isLoaded} timeout={500} classNames="page-transition">
     <>
+    
       {userTheme && (
         <>
 
@@ -113,8 +131,14 @@ const MainPage = () => {
             
             <br />
 
-            <button onClick={() => router.push('/create-loop')}> <FormattedMessage id="createLoop" /> </button>
-
+            {/* <button onClick={() => router.push('/create-loop')}> <FormattedMessage id="createLoop" /> </button> */}
+            <button onClick={async () => {
+              await router.prefetch('/create-loop');
+              router.push('/create-loop');
+            }}>
+              <FormattedMessage id="createLoop" />
+            </button>
+            
             <h2> <FormattedMessage id="friendsTitle" /> </h2>
 
             {Friends && users && userId
@@ -165,6 +189,7 @@ const MainPage = () => {
         </>
       )}
     </>
+    // </CSSTransition>
   );
 
 

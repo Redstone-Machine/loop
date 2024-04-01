@@ -33,13 +33,16 @@ const router = useRouter();
     setLocale(newLocale);
   };
 
-  const goHome = () => {
-    router.push('/main-page');
-  }
+  // const goHome = async () => {
+  //   console.log('main-page load');
+  //   await router.prefetch('/main-page');
+  //   console.log('main-page loaded');
+  //   router.push('/main-page');
+  // }
   
 
   return (
-    <LanguageContext.Provider value={{ locale, switchToEnglish, switchToSwedish, setLanguage, goHome }}>
+    <LanguageContext.Provider value={{ locale, switchToEnglish, switchToSwedish, setLanguage }}>
       {children}
     </LanguageContext.Provider>
   );

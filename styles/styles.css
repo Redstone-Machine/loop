@@ -1,0 +1,132 @@
+.page-transition-enter {
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  
+  .page-transition-enter-active {
+    opacity: 1;
+  }
+
+
+  @keyframes slideIn {
+    0% {
+      transform: translateY(-7px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes slideOut {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-7px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes animateInChatProfile {
+    0% {
+      transform: translate(-50%, calc(-50% - 120px));
+      /* transform: translate(-50%, -50%); */
+      opacity: 0;
+    }
+    100% {
+      /* transform: translate(-50%, -50%); */
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+  }
+  @keyframes animateOutChatProfile {
+    0% {
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, calc(-50% - 120px));
+      opacity: 0;
+    }
+  }
+
+  /* .chatProfileStyle {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    gap: 1rem;
+    transform: translate(-50%, -50%);
+
+    animation: animateInChatProfile 1s;
+  }
+
+  .navStyle {
+    display: flex;
+
+
+    border-bottom: 1px solid grey; 
+    width: 100%;
+    height: calc(0.5rem + 80px);
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: 'light';
+    z-index: 1000;
+  } */
+
+
+  .popup-menu-button:hover {
+    color: grey;
+  }
+
+  @media (max-width: 600px) {
+    .hide-on-small-screen {
+      display: none;
+    }
+  }
+
+  .loop-logo {
+    mask-image: url(../public/loop_logo_white.png);
+    -webkit-mask-image: url(../public/loop_logo_white.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 125px;
+    aspect-ratio: 472 / 396;
+    background-color: var(--themeColor);
+  }
+
+  .check_mark {
+    mask-image: url(../public/png_icons/check_white.png);
+    -webkit-mask-image: url(../public/png_icons/check_white.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 40px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+  }
+
+  @font-face {
+    font-family: 'SF Pro';
+    src: url('/fonts/SF-Pro.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  .dummy-checkmark {
+    visibility: hidden;
+  }
+
+  /* .flags_icon {
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+  } */
+
+
+

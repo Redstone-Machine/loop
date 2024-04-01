@@ -2,7 +2,7 @@ import { usePageSetup } from '../../hooks/usePageSetup';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import io from 'socket.io-client';
@@ -22,6 +22,9 @@ const ChatPage = () => {
     const router = useRouter();
 
     const { reciverUserId } = router.query;
+
+
+    const messagesEndRef = useRef(null);
 
     console.log('reciverUserId:', reciverUserId);
     
@@ -51,6 +54,11 @@ const ChatPage = () => {
     //     newSocket.close();
     //   };
     // }, []);
+
+    useEffect(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+  
     
     useEffect(() => {
       console.log('process.env.SERVER_URL', process.env.NEXT_PUBLIC_EXTRA_URL);
@@ -285,6 +293,7 @@ const ChatPage = () => {
     <p key={index} className={messageClass}>{message.content}</p>
   );
 })}
+<div ref={messagesEndRef} />
       <style jsx>{`
         .sent {
           text-align: right;
@@ -355,6 +364,7 @@ const ChatPage = () => {
       }
     `}</style> */}
         </div>
+      
   );
 };
 

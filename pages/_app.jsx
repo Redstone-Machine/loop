@@ -5,10 +5,17 @@ import messages_en from '../locales/en';
 import messages_sv from '../locales/sv';
 import App from 'next/app';
 import { getSession } from 'next-auth/react';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { LanguageProvider, LanguageContext } from '../contexts/LanguageContext';
 import { ThemeProvider, ThemeContext } from '../contexts/ThemeContext';
+import { ThemeColorProvider, ThemeColorContext } from '../contexts/ThemeColorContext';
 import Head from 'next/head';
+
+import { useRouter } from 'next/router';
+
+
+import Navbar from '../app/components/navbar';
+import '../styles/styles.css';
 
 const messages = {
   'en': messages_en,
@@ -16,6 +23,18 @@ const messages = {
 };
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  }, []);
+
   return (
     // <LanguageProvider>
     //   <SessionProvider session={session}>
@@ -25,7 +44,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <SessionProvider session={session}>
       <LanguageProvider>
         <ThemeProvider>
-           <MyComponent Component={Component} pageProps={pageProps} />
+          <ThemeColorProvider>
+            <MyComponent Component={Component} pageProps={pageProps} />
+          </ThemeColorProvider>
         </ThemeProvider>
       </LanguageProvider>
     </SessionProvider>
@@ -33,30 +54,51 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 }
 
 function MyComponent({ Component, pageProps }) {
-  const { locale, switchToEnglish, switchToSwedish, goHome } = useContext(LanguageContext);
+  const { locale, switchToEnglish, switchToSwedish } = useContext(LanguageContext);
   const { theme, switchToLightMode, switchToDarkMode } = useContext(ThemeContext);
+  const { themeColor, setThemeColor } = useContext(ThemeColorContext);
+
+  const router = useRouter();
+  const activePage = router.pathname.split('/')[1]; // Get the active page
+  const activeInsidePage = router.pathname.split('/')[2];
+
+  const goHome = async () => {
+    console.log('main-page load');
+    await router.prefetch('/main-page');
+    console.log('main-page loaded');
+    router.push('/main-page');
+  }
+
+  // const mainContentStyle = { 
+  //   marginTop: 'calc(0.5rem + 80px)' // Adjust this value to match the height of your navbar
+  // };
+
+
   return (
     <IntlProvider locale={locale} messages={messages[locale]}>
+      <Navbar activePage={activePage} activeInsidePage={activeInsidePage} theme={theme} themeColor={themeColor} language={locale} />
       <Component {...pageProps} />
       <Head>
-            <style>{`
+        <style>{`
           body {
             background-color: ${theme === 'light' ? 'white' : 'black'};
             color: ${theme === 'light' ? 'black' : 'white'};
           }
         `}</style>
 
-            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
-          </Head>
-          <br />
-          <br />    
+      </Head>
+
+      <br />
+      <br />
       <button onClick={switchToEnglish}>Switch to English</button>
       <button onClick={switchToSwedish}>Byt till Svenska</button>
       <button onClick={switchToLightMode}>Switch to Light Mode</button>
       <button onClick={switchToDarkMode}>Switch to Dark Mode</button>
       <br />
       <button onClick={goHome}>Gå hem</button>
+
     </IntlProvider>
   );
 }

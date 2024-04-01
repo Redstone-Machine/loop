@@ -20,6 +20,14 @@ export default {
     color: 'Färg',
     name: 'Namn',
 
+    // navbar:
+    english: 'Engelska',
+    swedish: 'Svenska',
+    myProfile: 'Min profil',
+    settings: 'Inställningar',
+    darkMode: 'Mörkt läge',
+    lightMode: 'Ljust läge',
+
   // login:
     logInTitle: 'Logga in på Loop',
     logInGoogle: 'Logga in med Google',

@@ -29,10 +29,10 @@ const SettingsPage = () => {
         }
       };
       
-      if (userId) {
+      if (profileUserId) {
         fetchProfilePicture();
       }
-    }, [userId]);
+    }, [profileUserId]);
     
     useEffect(() => {
         if (profileUserId) {
@@ -62,6 +62,16 @@ const SettingsPage = () => {
                         <p>Mail: {profileEmail}</p>
 
                         {profilePictureUrl && <img src={profilePictureUrl} alt="Profilbild" style={{ width: '200px', height: '200px' }} />}
+                        
+                        <br />
+                        <br />
+                        
+                        <button onClick={async () => {
+                            await router.prefetch(`/chat/${profileUserId}`);
+                                router.push(`/chat/${profileUserId}`);
+                            }}>
+                            Chatta med {profileUserName}
+                        </button>
 
                     </div>
                 </>
