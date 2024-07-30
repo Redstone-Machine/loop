@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { delay, throttle } from 'lodash';
+import { delay, throttle, transform } from 'lodash';
 import { Head } from 'next/head';
 
 import { signOut } from 'next-auth/react';
@@ -23,6 +23,8 @@ import ProfileIcon from '../../public/svg_icons/navbar_icons/profile_icon';
 import SettingsIcon from '../../public/svg_icons/navbar_icons/settings_icon';
 import LogoutIcon from '../../public/svg_icons/navbar_icons/logout_icon';
 
+import LowerMenubarBackground from '../../public/navbar_background/svg/lower_navbar_background_smal.jsx';
+
 
 import LoopLogo from '../../public/svg_icons/loop_logo';
 
@@ -35,6 +37,7 @@ import useSWR, { mutate } from 'swr';
 
 
 import { FormattedMessage } from 'react-intl';
+import { margin } from '@mui/system';
 
 const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) => {
 
@@ -396,20 +399,195 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
     return null;
   }
 
+const menuStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+
+};
+
+
+  // const menuStyle = { 
+  //   display: 'flex', 
+  //   display: 'inline-flex',
+  //   alignItems: 'center',
+  //   padding: '0.5rem',
+
+  //   boxSizing: 'border-box',
+  //   position: 'fixed',
+  //   bottom: '1rem',
+
+  //   left: '50%',
+  //   transform: 'translateX(-50%)',
+    
+
+
+
+
+    // display: 'grid', 
+    // gridTemplateColumns: 'auto auto auto', // three columns
+    // alignItems: 'start',
+    // justifyContent: 'center',
+    // gap: '0.5rem', 
+
+
+
+    // width: '100%',
+    // height: 'calc(0.5rem + 80px)',
+
+    // backgroundColor: 'black',
+
+    // border: '1px solid grey', 
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+    // borderRadius: '20px',
+    // zIndex: 1000,
+
+
+
+    // left: '20px',
+    // right: '20px',
+
+  // };
+
+  const lowerMenubar = {
+
+    // transform: 'translateX(-2.1px)',
+    // width: '400px',
+    // height: 'auto',
+    position: 'fixed',
+    zIndex: 1000,
+    left: '50%',
+    bottom: '2rem', // Justera detta värde för att placera det längre ner eller upp
+    transform: 'translateX(-50%)',
+    userSelect: 'none',
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+
+  }
+
+
+
+
+
+
+  const menubarIcons = {
+    border: '1px solid #D7D7D7', 
+    backgroundColor: theme === 'light' ? 'white' : 'black',
+    borderRadius: '20px',
+  
+  }
+
+  const standardMenubarIcons = {
+    ...menubarIcons,
+    width: '80px',
+    height: '80px',
+    // alignSelf: 'center',
+    // padding: '0.5rem',
+    zIndex: 1000,
+    // position: 'absolute',
+  }
+
+  const standardMenubarMainStyle = {
+    border: '1px solid grey', 
+    backgroundColor: theme === 'light' ? 'white' : 'black',
+    borderRadius: '20px',
+  
+  }
+
+  const standardMenubarAround = {
+    backgroundColor: theme === 'light' ? 'white' : 'black',
+    zIndex: 1000,
+    height: '100%',
+
+    height: '80px',
+    width: '80px',
+
+    // transform: 'translateY(20px)',
+    // height: '100%',
+
+    // height: '60px',
+    alignSelf: 'center',
+    // padding: '0.5rem',
+    margin: '0.5rem',
+    
+
+  }
+
+
+
+
+
+  const standardMenubarLeftAround = {
+  ...standardMenubarAround,
+  transform: 'translateX(3px)',
+  marginRight: '0',
+
+
+  }
+
+  const standardMenubarRightAround = {
+  ...standardMenubarAround,
+  transform: 'translateX(-3px)',
+  marginLeft: '0',
+
+  }
+
+  const standardMenubarLeftIcons = {
+  ...standardMenubarIcons,
+  // paddingLeft: '0.5rem',
+  // borderRadiusLeft: '20px',
+  borderTopRightRadius: '0px',
+  borderBottomRightRadius: '0px',
+  borderRight: '0px',
+  transform: 'translateX(-2.1px)',
+  
+  }
+
+  const standardMenubarRightIcons = {
+  ...standardMenubarIcons,
+  // borderRadiusRight: '20px',
+  borderTopLeftRadius: '0px',
+  borderBottomLeftRadius: '0px',
+  borderLeft: '0px',
+  transform: 'translateX(2.1px)',
+  paddingRight: '0.5rem',
+  // paddingTop: '0.5rem',
+  // paddingBottom: '0.5rem',
+
+
+  // transform: 'translate(-1.2px)',
+  
+  }
+
+  const mainMenubarIcons = {
+    ...menubarIcons,
+    width: '100px',
+    height: '100px',
+    alignSelf: 'stretch',
+    paddingLeft: '0.5rem',
+    paddingRight: '0.5rem',
+    marginTop: '0.5rem',
+    marginBottom: '0.5rem',
+    paddingTop: '0.5rem',
+    paddingBottom: '0.5rem',
+
+    borderRadius: '13px',
+    zIndex: 999,
+  }
+
   const navStyle = { 
     display: 'flex', 
     // justifyContent: 'space-between', 
 
-    borderBottom: '1px solid grey', 
+    borderBottom: '1px solid #AAAAAA', 
     width: '100%',
     height: 'calc(0.5rem + 80px)',
     boxSizing: 'border-box',
     position: 'fixed',
     top: 0,
     left: 0,
-    // backgroundColor: 'black',
     backgroundColor: theme === 'light' ? 'white' : 'black',
-    zIndex: 1000
+
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+    // zIndex: 1000
   };
 
   const linkStyle = { cursor: 'pointer' };
@@ -663,6 +841,40 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
       )}
 
     </nav>
+
+
+
+  <nav style={menuStyle}>
+
+    {/* <div>
+      <img src="/navbar_background/lower_navbar_background_smal.svg" alt="Bakgrund" style={{ width: '100px', height: '50px' }} > </img>
+      <img src="/menubar_icons/menubar_settings_icon.png" alt="Bakgrund" style={{ width: '100px', height: '50px' }} > </img>
+    </div> */}
+
+    <div style={lowerMenubar}>
+      <LowerMenubarBackground background_color={theme === 'light' ? 'white' : 'black'} stroke_color="#AAAAAA" draggable="false" width="360px" height="auto" />
+      {/* <img src="/navbar_background/lower_navbar_background_smal.svg" alt="Bakgrund" style={lowerMenubar} draggable="false" /> */}
+    </div>
+
+
+
+    {/* <div style={standardMenubarLeftAround}>
+      <img src="/menubar_icons/menubar_settings_icon.png" alt="Profile" style={standardMenubarLeftIcons}/>
+    </div>
+    
+    <div>
+      <img src="/menubar_icons/menubar_loop_icon.png" alt="Profile" style={mainMenubarIcons}/>
+    </div>
+
+    <div style={standardMenubarRightAround}>
+      <img src="/menubar_icons/menubar_book_icon.png" alt="Profile" style={standardMenubarRightIcons}/>
+    </div> */}
+    
+  </nav>
+
+
+
+
 
     {!removeProfilePopUpMenu && (
       <div className="profilePopUpMenu" style={profilePopUpMenu}>
