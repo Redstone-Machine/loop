@@ -6,6 +6,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import io from 'socket.io-client';
+import { borderRadius, height, margin, padding, positions, width } from '@mui/system';
+import { backdropClasses } from '@mui/material';
 
 require('dotenv').config();
 
@@ -34,6 +36,9 @@ const ChatPage = () => {
     const [sentMessages, setSentMessages] = useState([]);
     const [receivedMessages, setReceivedMessages] = useState([]);
 
+    const [phoneLayout, setPhoneLayout] = useState(false);
+
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
     const [socket, setSocket] = useState(null);
 
@@ -54,6 +59,48 @@ const ChatPage = () => {
     //     newSocket.close();
     //   };
     // }, []);
+
+
+    useEffect(() => {
+      // Kontrollera skärmdimensionerna vid första renderingen
+      checkScreenDimensions();
+  
+      // Lägg till en resize-händelselyssnare
+      window.addEventListener('resize', checkScreenDimensions);
+  
+      // Rensa händelselyssnaren när komponenten avmonteras
+      return () => {
+        window.removeEventListener('resize', checkScreenDimensions);
+      };
+    }, []);
+  
+    useEffect(() => {
+      const handleFocus = () => setIsKeyboardVisible(true);
+      const handleBlur = () => setIsKeyboardVisible(false);
+    
+      window.addEventListener('focusin', handleFocus);
+      window.addEventListener('focusout', handleBlur);
+    
+      return () => {
+        window.removeEventListener('focusin', handleFocus);
+        window.removeEventListener('focusout', handleBlur);
+      };
+    }, []);
+
+
+    
+  
+    const checkScreenDimensions = () => {
+    //   isMobile = window.innerWidth <= 600;
+      if (window.innerWidth <= 700) {
+        setPhoneLayout(true);
+      } else {
+        setPhoneLayout(false);
+      }
+    };
+
+
+
 
     useEffect(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -189,6 +236,66 @@ const ChatPage = () => {
 
     // if (loading || !session || !userName) return <div>Loading...</div>;
 
+    const inputMessage = {
+        border: '2px solid #AAAAAA', 
+        width: '65%',
+        height: '3rem',
+        borderRadius: '17px',
+
+        fontSize: '16px',
+        fontFamily: "'SF Pro', sans-serif",
+
+        paddingTop: '5px',
+        paddingBottom: '5px',
+        paddingLeft: '15px',
+        paddingRight: '15px',
+        marginLeft: '4px',
+    }
+
+    const inputMessageButton = {
+      height: 'calc(3rem + 13px)',
+      // height: '100%',
+      width: '8rem',
+      backgroundColor: '#595ff2',
+
+      borderRadius: '17px',
+      border: '2px solid #AAAAAA', 
+
+      color: theme === 'light' ? 'black' : 'white',
+
+      fontSize: '18px',
+      fontFamily: "'SF Pro', sans-serif",
+      marginTop: '0px',
+      marginBottom: '0px',
+      marginLeft: '4px',
+      marginRight: '4px',
+        
+    }
+
+    console.log ('themeaggjag:', theme)
+
+    const inputMessageForm = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        gap: '10px',
+        position: 'fixed',
+        // bottom: '0',
+        bottom: isKeyboardVisible ? '0' : (phoneLayout ? 'calc(0.5rem + 125px)' : '0'),
+        paddingBottom: '35px',
+        paddingTop: '10px',
+        // backgroundColor: 'rgba(255, 255, 255, 0.8)', // Lägg till en semi-transparent bakgrundsfärg
+        // color: theme === 'light' ? 'black' : 'white',
+        backgroundColor: theme === 'light' ?  'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(10px)', // Lägg till blur-effekten
+        WebkitBackdropFilter: 'blur(10px)',
+        zIndex: 999,
+        left: '0px',
+
+
+        // position: 'fixed',
+    }
 
 
 
@@ -337,14 +444,14 @@ const ChatPage = () => {
 
 
          
-          <form onSubmit={handleSubmit}>
-            <input
+          <form onSubmit={handleSubmit} style={inputMessageForm}>
+            <input style={inputMessage}
               type="text"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
-              placeholder={intl.formatMessage({ id: 'writeMessage' })}
+              // placeholder={intl.formatMessage({ id: 'writeMessage' })}
             />
-            <button type="submit"><FormattedMessage id="send" /></button>
+            <button type="submit" style={inputMessageButton}><FormattedMessage id="send" /></button>
           </form>
       {/* <style jsx>{`
       .sent {

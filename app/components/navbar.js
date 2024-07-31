@@ -96,6 +96,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
   
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   useEffect(() => {
     // Kontrollera skärmdimensionerna vid första renderingen
@@ -123,6 +124,19 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
       setPhoneLayout(false);
     }
   };
+
+  useEffect(() => {
+    const handleFocus = () => setIsKeyboardVisible(true);
+    const handleBlur = () => setIsKeyboardVisible(false);
+  
+    window.addEventListener('focusin', handleFocus);
+    window.addEventListener('focusout', handleBlur);
+  
+    return () => {
+      window.removeEventListener('focusin', handleFocus);
+      window.removeEventListener('focusout', handleBlur);
+    };
+  }, []);
 
 
   useEffect(() => {
@@ -598,7 +612,7 @@ const menuStyle = {
       
   
       // backgroundColor: theme === 'light' ? 'white' : 'black',
-      // zIndex: 1000
+      zIndex: 1000
   }
   
   const mobileLowerMenuIcons = {
@@ -606,7 +620,7 @@ const menuStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '11px',
-    zIndex: '2',
+    zIndex: '1001',
 
     top: 0,
     left: 0,
@@ -1093,7 +1107,7 @@ const menuStyle = {
       </div> */}
 
 
-      {phoneLayout && (
+      {phoneLayout && !isKeyboardVisible && (
         <div style={mobileLowerMenubar}>
 
           {expandMobileLowerMenubar && (
