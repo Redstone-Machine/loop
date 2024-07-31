@@ -400,7 +400,7 @@ const ChatPage = () => {
 
     return (
         <div>
-          <h1><FormattedMessage id="chatTitlePart1" /> {userName} <FormattedMessage id="chatTitlePart2" /> {reciverUserName}</h1>
+          {/* <h1><FormattedMessage id="chatTitlePart1" /> {userName} <FormattedMessage id="chatTitlePart2" /> {reciverUserName}</h1> */}
 
           {/* {messages.map((message, index) => (
             <p key={index}>{message.content}</p>
@@ -422,38 +422,79 @@ const ChatPage = () => {
   const messageClass = message.senderId === userId ? 'sent' : 'received';
 
   return (
-    <p key={index} className={messageClass}>{message.content}</p>
+    <div key={index} className="message-wrapper">
+      <p className={messageClass}>{message.content}</p>
+    </div>
   );
 })}
+
 <div ref={messagesEndRef} />
       <style jsx>{`
+        .message-wrapper {
+          display: flex;
+          // margin-bottom: 10px; // Avstånd mellan meddelanden
+        }
+
         .sent {
-          text-align: right;
-          background-color: #dcf8c6;
-          margin-left: 40%;
-          margin-right: 20%;
-          border-radius: 5px;
-          padding: 10px;
-          color: black;
+          justify-content: flex-end;
+          text-align: left;
+          // background-color: #dcf8c6;
+          // background-color: #60ed3f;
+          background-color: #3ae364;
+          display: inline-block;
+          border-radius: 15px;
+          padding: 13px;
+          color: #ffffff;
+          margin-bottom: 8px;
+          margin-top: 8px;
+          font-size: 1.3rem;
+          font-family: 'SF Pro', sans-serif;
+          align-self: flex-end; // Håller elementet till höger
+          margin-left: auto; // Flyttar elementet till höger
+          margin-right: 5px;
+          max-width: calc(100% - 20%);
+          
         }
 
         .received {
+          justify-content: flex-start;
           text-align: left;
-          background-color: #ffffff;
-          margin-right: 40%;
-          margin-left: 20%;
-          border-radius: 5px;
-          padding: 10px;
-          color: black;
+          // background-color: #e9e9e9;
+          background-color: ${theme === 'light' ? '#e9e9e9' : '#262629'};
+          display: inline-block;
+          border-radius: 15px;
+          padding: 13px;
+          // color: black;
+          color: ${theme === 'light' ? 'black' : '#ffffff'};
+          margin-bottom: 8px;
+          margin-top: 8px;
+          font-size: 1.3rem;
+          font-family: 'SF Pro', sans-serif;
+          align-self: flex-start; // Håller elementet till vänster
+          margin-right: auto; // Flyttar elementet till vänster
+          margin-left: 5px;
+          max-width: calc(100% - 20%);
+        }
+
+        @media (min-width: 1000px) {
+          .sent {
+            margin-right: 10%;
+            max-width: calc(100% - 40%);
+          }
+        
+          .received {
+            margin-left: 10%;
+            max-width: calc(100% - 40%);
+          }
         }
 
         @media (max-width: 600px) {
-          .sent {
-            margin-right: 0%;
-          }
+        .sent {
+          // margin-right: 0%;
+        }
       
           .received {
-            margin-left: 0%;
+            // margin-left: 0%;
           }
         }
       `}</style>
