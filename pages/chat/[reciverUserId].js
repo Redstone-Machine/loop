@@ -236,6 +236,30 @@ const ChatPage = () => {
 
     // if (loading || !session || !userName) return <div>Loading...</div>;
 
+    const inputRef = useRef(null);
+    let originalScrollPosition = 0;
+
+    useEffect(() => {
+        const handleFocus = () => {
+            originalScrollPosition = window.scrollY;
+        };
+
+        const handleBlur = () => {
+            window.scrollTo(0, originalScrollPosition);
+        };
+
+        const inputElement = inputRef.current;
+        inputElement.addEventListener('focus', handleFocus);
+        inputElement.addEventListener('blur', handleBlur);
+
+        return () => {
+            inputElement.removeEventListener('focus', handleFocus);
+            inputElement.removeEventListener('blur', handleBlur);
+        };
+    }, []);
+
+
+
     const inputMessage = {
         border: '2px solid #AAAAAA', 
         width: '65%',
@@ -358,6 +382,7 @@ const ChatPage = () => {
           });
       }
     }, [userId, reciverUserId, messageText]);
+    
 
 
 
@@ -445,13 +470,21 @@ const ChatPage = () => {
 
          
           <form onSubmit={handleSubmit} style={inputMessageForm}>
-            <input style={inputMessage}
+            <input
+              style={inputMessage}
+              ref={inputRef}
               type="text"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
               // placeholder={intl.formatMessage({ id: 'writeMessage' })}
             />
-            <button type="submit" style={inputMessageButton}><FormattedMessage id="send" /></button>
+            <button
+              type="submit"
+              style={inputMessageButton}
+              onClick={handleSubmit}
+            >
+              <FormattedMessage id="send" />
+            </button>
           </form>
       {/* <style jsx>{`
       .sent {

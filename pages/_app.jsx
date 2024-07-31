@@ -11,6 +11,8 @@ import { ThemeProvider, ThemeContext } from '../contexts/ThemeContext';
 import { ThemeColorProvider, ThemeColorContext } from '../contexts/ThemeColorContext';
 import Head from 'next/head';
 
+import React, { useState } from 'react';
+
 import { useRouter } from 'next/router';
 
 
@@ -35,6 +37,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     }
   }, []);
 
+
+
+
+
   return (
     // <LanguageProvider>
     //   <SessionProvider session={session}>
@@ -58,6 +64,46 @@ function MyComponent({ Component, pageProps }) {
   const { theme, switchToLightMode, switchToDarkMode } = useContext(ThemeContext);
   const { themeColor, setThemeColor } = useContext(ThemeColorContext);
 
+  const [phoneLayout, setPhoneLayout] = useState(false);
+
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const handleFocus = () => setIsKeyboardVisible(true);
+    const handleBlur = () => setIsKeyboardVisible(false);
+  
+    window.addEventListener('focusin', handleFocus);
+    window.addEventListener('focusout', handleBlur);
+  
+    return () => {
+      window.removeEventListener('focusin', handleFocus);
+      window.removeEventListener('focusout', handleBlur);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Kontrollera skärmdimensionerna vid första renderingen
+    checkScreenDimensions();
+
+    // Lägg till en resize-händelselyssnare
+    window.addEventListener('resize', checkScreenDimensions);
+
+    // Rensa händelselyssnaren när komponenten avmonteras
+    return () => {
+      window.removeEventListener('resize', checkScreenDimensions);
+    };
+  }, []);
+
+
+  const checkScreenDimensions = () => {
+  //   isMobile = window.innerWidth <= 600;
+    if (window.innerWidth <= 700) {
+      setPhoneLayout(true);
+    } else {
+      setPhoneLayout(false);
+    }
+  };
+
   const router = useRouter();
   const activePage = router.pathname.split('/')[1]; // Get the active page
   const activeInsidePage = router.pathname.split('/')[2];
@@ -68,6 +114,14 @@ function MyComponent({ Component, pageProps }) {
     console.log('main-page loaded');
     router.push('/main-page');
   }
+
+  const chatDistance = {
+    height: 'calc(3rem + 13px)',
+  };
+
+  const mobileMenubarDistance = {
+    height: 'calc(0.5rem + 125px)' // Adjust this value to match the height of your navbar
+  };
 
   // const mainContentStyle = { 
   //   marginTop: 'calc(0.5rem + 80px)' // Adjust this value to match the height of your navbar
@@ -92,12 +146,22 @@ function MyComponent({ Component, pageProps }) {
 
       <br />
       <br />
-      <button onClick={switchToEnglish}>Switch to English</button>
+
+
+      {phoneLayout && !isKeyboardVisible &&
+        <div style={mobileMenubarDistance}></div>
+      }
+
+      {activePage === 'chat' && activeInsidePage &&
+        <div style={chatDistance}></div> 
+      }
+
+      {/* <button onClick={switchToEnglish}>Switch to English</button>
       <button onClick={switchToSwedish}>Byt till Svenska</button>
       <button onClick={switchToLightMode}>Switch to Light Mode</button>
       <button onClick={switchToDarkMode}>Switch to Dark Mode</button>
       <br />
-      <button onClick={goHome}>Gå hem</button>
+      <button onClick={goHome}>Gå hem</button> */}
 
     </IntlProvider>
   );

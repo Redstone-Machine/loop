@@ -693,103 +693,103 @@ const menuStyle = {
   
   }
 
-  const standardMenubarIcons = {
-    ...menubarIcons,
-    width: '80px',
-    height: '80px',
-    // alignSelf: 'center',
-    // padding: '0.5rem',
-    zIndex: 1000,
-    // position: 'absolute',
-  }
+  // const standardMenubarIcons = {
+  //   ...menubarIcons,
+  //   width: '80px',
+  //   height: '80px',
+  //   // alignSelf: 'center',
+  //   // padding: '0.5rem',
+  //   zIndex: 1000,
+  //   // position: 'absolute',
+  // }
 
-  const standardMenubarMainStyle = {
-    border: '1px solid grey', 
-    backgroundColor: theme === 'light' ? 'white' : 'black',
-    borderRadius: '20px',
+  // const standardMenubarMainStyle = {
+  //   border: '1px solid grey', 
+  //   backgroundColor: theme === 'light' ? 'white' : 'black',
+  //   borderRadius: '20px',
   
-  }
+  // }
 
-  const standardMenubarAround = {
-    backgroundColor: theme === 'light' ? 'white' : 'black',
-    zIndex: 1000,
-    height: '100%',
+  // const standardMenubarAround = {
+  //   backgroundColor: theme === 'light' ? 'white' : 'black',
+  //   zIndex: 1000,
+  //   height: '100%',
 
-    height: '80px',
-    width: '80px',
+  //   height: '80px',
+  //   width: '80px',
 
-    // transform: 'translateY(20px)',
-    // height: '100%',
+  //   // transform: 'translateY(20px)',
+  //   // height: '100%',
 
-    // height: '60px',
-    alignSelf: 'center',
-    // padding: '0.5rem',
-    margin: '0.5rem',
+  //   // height: '60px',
+  //   alignSelf: 'center',
+  //   // padding: '0.5rem',
+  //   margin: '0.5rem',
     
 
-  }
+  // }
 
 
 
 
 
-  const standardMenubarLeftAround = {
-  ...standardMenubarAround,
-  transform: 'translateX(3px)',
-  marginRight: '0',
+  // const standardMenubarLeftAround = {
+  // ...standardMenubarAround,
+  // transform: 'translateX(3px)',
+  // marginRight: '0',
 
 
-  }
+  // }
 
-  const standardMenubarRightAround = {
-  ...standardMenubarAround,
-  transform: 'translateX(-3px)',
-  marginLeft: '0',
+  // const standardMenubarRightAround = {
+  // ...standardMenubarAround,
+  // transform: 'translateX(-3px)',
+  // marginLeft: '0',
 
-  }
+  // }
 
-  const standardMenubarLeftIcons = {
-  ...standardMenubarIcons,
-  // paddingLeft: '0.5rem',
-  // borderRadiusLeft: '20px',
-  borderTopRightRadius: '0px',
-  borderBottomRightRadius: '0px',
-  borderRight: '0px',
-  transform: 'translateX(-2.1px)',
+  // const standardMenubarLeftIcons = {
+  // ...standardMenubarIcons,
+  // // paddingLeft: '0.5rem',
+  // // borderRadiusLeft: '20px',
+  // borderTopRightRadius: '0px',
+  // borderBottomRightRadius: '0px',
+  // borderRight: '0px',
+  // transform: 'translateX(-2.1px)',
   
-  }
+  // }
 
-  const standardMenubarRightIcons = {
-  ...standardMenubarIcons,
-  // borderRadiusRight: '20px',
-  borderTopLeftRadius: '0px',
-  borderBottomLeftRadius: '0px',
-  borderLeft: '0px',
-  transform: 'translateX(2.1px)',
-  paddingRight: '0.5rem',
-  // paddingTop: '0.5rem',
-  // paddingBottom: '0.5rem',
+  // const standardMenubarRightIcons = {
+  // ...standardMenubarIcons,
+  // // borderRadiusRight: '20px',
+  // borderTopLeftRadius: '0px',
+  // borderBottomLeftRadius: '0px',
+  // borderLeft: '0px',
+  // transform: 'translateX(2.1px)',
+  // paddingRight: '0.5rem',
+  // // paddingTop: '0.5rem',
+  // // paddingBottom: '0.5rem',
 
 
-  // transform: 'translate(-1.2px)',
+  // // transform: 'translate(-1.2px)',
   
-  }
+  // }
 
-  const mainMenubarIcons = {
-    ...menubarIcons,
-    width: '100px',
-    height: '100px',
-    alignSelf: 'stretch',
-    paddingLeft: '0.5rem',
-    paddingRight: '0.5rem',
-    marginTop: '0.5rem',
-    marginBottom: '0.5rem',
-    paddingTop: '0.5rem',
-    paddingBottom: '0.5rem',
+  // const mainMenubarIcons = {
+  //   ...menubarIcons,
+  //   width: '100px',
+  //   height: '100px',
+  //   alignSelf: 'stretch',
+  //   paddingLeft: '0.5rem',
+  //   paddingRight: '0.5rem',
+  //   marginTop: '0.5rem',
+  //   marginBottom: '0.5rem',
+  //   paddingTop: '0.5rem',
+  //   paddingBottom: '0.5rem',
 
-    borderRadius: '13px',
-    zIndex: 999,
-  }
+  //   borderRadius: '13px',
+  //   zIndex: 999,
+  // }
 
   const navStyle = { 
     display: 'flex', 
