@@ -52,6 +52,29 @@
     }
   }
 
+
+
+
+
+@keyframes animateInLowerMenubar {
+  0% {
+    transform: translate(-50%, 200px);  
+  }
+  100% {
+    transform: translate(-50%, 0px); 
+  }
+}
+
+@keyframes animateOutLowerMenubar {
+  0% {
+    transform: translate(-50%, 0px);  
+  }
+  100% {
+    transform: translate(-50%, 200px); 
+  }
+}
+
+
   /* .chatProfileStyle {
     display: flex;
     align-items: center;

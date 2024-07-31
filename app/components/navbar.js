@@ -23,7 +23,7 @@ import ProfileIcon from '../../public/svg_icons/navbar_icons/profile_icon';
 import SettingsIcon from '../../public/svg_icons/navbar_icons/settings_icon';
 import LogoutIcon from '../../public/svg_icons/navbar_icons/logout_icon';
 
-import LowerMenubarBackground from '../../public/navbar_background/svg/lower_navbar_background_smal.jsx';
+import LowerMenubarBackground from '../../public/navbar_background/svg/lower_navbar_background_smal';
 
 
 import LoopLogo from '../../public/svg_icons/loop_logo';
@@ -57,8 +57,9 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
 
   const { reciverUserId } = router.query;
 
-
   const [browserLanguage, setBrowserLanguage] = useState('en');
+
+  const [phoneLayout, setPhoneLayout] = useState(false);
 
   const [userTheme, setUserTheme] = useState(null);
   const [theTheme, setTheTheme] = useState(null);
@@ -69,6 +70,11 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
   const [chatProfileUserName, setChatProfileUserName] = useState(null);
   const [chatProfileBool, setChatProfileBool] = useState(false);
   const [userLanguage, setUserLanguage] = useState(null);
+
+  const [showLowerMenubar, setShowLowerMenubar] = useState(true);
+  const [showLowerMenubarAnimation, setShowLowerMenubarAnimation] = useState(true);
+
+  const [expandMobileLowerMenubar, setExpandMobileLowerMenubar] = useState(false);
   
   const [hoverLanguage, setHoverLanguage] = useState(false);
   const [hoverTheme, setHoverTheme] = useState(false);
@@ -87,6 +93,48 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
   const [skipRemoveThemePopUpMenu, setSkipRemoveThemePopUpMenu] = useState(false);
 
   const [chatProfileImageLoaded, setChatProfileImageLoaded] = useState(false);
+  
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
+
+  useEffect(() => {
+    // Kontrollera skärmdimensionerna vid första renderingen
+    checkScreenDimensions();
+
+    // Lägg till en resize-händelselyssnare
+    window.addEventListener('resize', checkScreenDimensions);
+
+    // Rensa händelselyssnaren när komponenten avmonteras
+    return () => {
+      window.removeEventListener('resize', checkScreenDimensions);
+    };
+  }, []);
+
+  
+
+  const checkScreenDimensions = () => {
+  //   isMobile = window.innerWidth <= 600;
+    if (window.innerWidth <= 700) {
+      setPhoneLayout(true);
+      setShowProfilePopUpMenu(false);
+      setShowLanguagePopUpMenu(false);
+      setShowThemePopUpMenu(false);
+    } else {
+      setPhoneLayout(false);
+    }
+  };
+
+
+  useEffect(() => {
+    
+    setShowLowerMenubarAnimation(false);
+    setShowLowerMenubar(true);
+    const timer = setTimeout(() => {
+      setIsPageLoaded(true);
+    }, 1000); // 2000 millisekunder = 2 sekunder
+
+    return () => clearTimeout(timer); // Rensa timeout om komponenten avmonteras
+  }, []);
 
   useEffect(() => {
     if (userId) {
@@ -259,15 +307,18 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
       if (chatProfileId) {
         fetchChatProfilePicture();
         fetchChatProfileName();
+        setShowLowerMenubarAnimation(false);
         setTimeout(() => {
           setChatProfileBool(true);
+          setShowLowerMenubar(true);
         }, 200);
       }
       else {
-
+        setShowLowerMenubarAnimation(true);
         setTimeout(() => setChatProfileBool(false), 500);
         setTimeout(() => setChatProfilePictureUrl(null), 500);
         setTimeout(() => setChatProfileUserName(null), 500);
+        setTimeout(() => setShowLowerMenubar(false), 500);
 
       }
       
@@ -453,17 +504,170 @@ const menuStyle = {
     // transform: 'translateX(-2.1px)',
     // width: '400px',
     // height: 'auto',
+    display: 'flex',
     position: 'fixed',
     zIndex: 1000,
     left: '50%',
-    bottom: '2rem', // Justera detta värde för att placera det längre ner eller upp
+    bottom: '20px', // Justera detta värde för att placera det längre ner eller upp
     transform: 'translateX(-50%)',
     userSelect: 'none',
     // backgroundColor: theme === 'light' ? 'white' : 'black',
+    animation: !isPageLoaded
+    ? 'animateInLowerMenubar 0s'
+    : showLowerMenubarAnimation
+    ? 'animateInLowerMenubar 0.5s'
+    : 'animateOutLowerMenubar 0.5s forwards',
+    width: '370px',
+    height: '150px',
+    //animation: chatProfileId ? 'animateInLowerMenubar 0.5s' : 'animateOutLowerMenubar 0.5s forwards',
 
   }
 
+  const lowerMenubarBackground = {
+    // width: '100%',
+    // height: '100%',
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    zIndex: '1',
+  }
 
+  const lowerMenuIcons = {
+    position: 'absolute',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '11px',
+    zIndex: '2',
+
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    alignContent: 'center',
+    justifyContent: 'center',
+  }
+
+  const theLowerMenuIcons = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
+  }
+
+  const theLowerMenuIconsMain = {
+    ...theLowerMenuIcons,
+    // marginLeft: '0px',
+    // marginRight: '0px',
+  }
+
+  const theLowerMenuIconsLeft = {
+    ...theLowerMenuIcons,
+    marginRight: '0px',
+  }
+
+    const theLowerMenuIconsRight = {
+    ...theLowerMenuIcons,
+    marginLeft: '0px',
+  }
+
+
+  const mobileLowerMenubar = {
+
+      display: 'flex', 
+      flexDirection: 'column',
+  
+      borderTop: '1px solid #AAAAAA', 
+      width: '100%',
+      height: expandMobileLowerMenubar ? '80%' : 'calc(0.5rem + 125px)',
+
+
+      boxSizing: 'border-box',
+      position: 'fixed',
+      bottom: '0',
+
+      left: 0,
+      backgroundColor: theme === 'light' ? 'white' : 'black',
+      // backgroundColor: 'red',
+
+      transition: 'all 0.3s ease-in-out',
+
+      paddingBottom: '18px',
+      
+  
+      // backgroundColor: theme === 'light' ? 'white' : 'black',
+      // zIndex: 1000
+  }
+  
+  const mobileLowerMenuIcons = {
+    position: 'absolute',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '11px',
+    zIndex: '2',
+
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    // alignContent: 'center',
+    justifyContent: 'center',
+
+
+    alignContent: 'end',
+
+
+    margin: 'auto',
+
+
+    // marginBottom: '0px',
+    // bottom: '0px',
+  }
+
+
+  const theMobileLowerMenuIcons = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
+    // paddingBottom: '20px',
+  }
+
+  const theMobileLowerMenuIconsMain = {
+    ...theMobileLowerMenuIcons,
+    // marginLeft: '0px',
+    // marginRight: '0px',
+  }
+
+  const theMobileLowerMenuIconsLeft = {
+    ...theMobileLowerMenuIcons,
+    // marginRight: '0px',
+  }
+
+    const theMobileLowerMenuIconsRight = {
+    ...theMobileLowerMenuIcons,
+    // marginLeft: '0px',
+  }
+
+  const mobileLowerExpandedMenubar = {
+    justifyContent: 'center',
+    width: '100%',
+    alignContent: 'start',
+  }
+
+  const mobileLowerExpandedMenubarText = {
+    display: 'flex',
+    justifyContent: 'center',
+    fontSize: '2.1rem',
+    userSelect: 'none',
+    // gap: '1rem',
+    padding: '0.2rem',
+
+    fontFamily: "'SF Pro', sans-serif",
+  }
 
 
 
@@ -592,7 +796,9 @@ const menuStyle = {
 
   const linkStyle = { cursor: 'pointer' };
 
-  const isMobile = window.innerWidth <= 600;
+
+  
+
 
   const logoStyle = {
     position: 'absolute',
@@ -603,7 +809,7 @@ const menuStyle = {
   };
   
   const homeButtonStyle = activePage === 'chat' 
-    ? { ...logoStyle, left: isMobile ? '-100%' : 'calc(4% + 45px + 1.5rem)', transform: 'translateX(0)' } 
+    ? { ...logoStyle, left: phoneLayout ? '-100%' : 'calc(4% + 45px + 1.5rem)', transform: 'translateX(0)' } 
     : logoStyle;
 
   const navbarButtonStyle = {
@@ -779,205 +985,253 @@ const menuStyle = {
     justifyContent: 'center',
   };
 
+  const toggleExpandMobileLowerMenubar = () => {
+    setExpandMobileLowerMenubar(prevState => !prevState);
+  };
 
   return (
     <>
+    {/* <div style={{ paddingBottom: 'calc(0.5rem + 120px)' }}> */}
 
-    <div style={{ height: 'calc(0.5rem + 80px)' }} /> {/* This div acts as a margin */}
+      <div style={{ height: 'calc(0.5rem + 80px)' }} /> {/* This div acts as a margin */}
+      {/* <div style={{ height: 'calc(0.5rem + 80px)', position: 'fixed', bottom: 0, width: '100%', backgroundColor: 'transparent' }} /> */}
 
-    <nav style={navStyle} className="navStyle">
-      <div style={homeButtonStyle} onClick={() => navigate('/main-page')}>
-        <div className="loop-logo" style={{'--themeColor': themeColor }}> </div>
-      </div>
-
-      {/* <div style={linkStyle} onClick={() => navigate('/chat')}>Chat</div> */}
-
-      <div style={leftSideStyle}>
-        <div className="hide-on-small-screen" style={navbarButtonStyleBackButton} onMouseEnter={() => setHoverGoBack(true)} onMouseLeave={() => setHoverGoBack(false)} onClick={goBack}>
-          <GoBackButton color={themeColor} width="45px" height="45px" theme={theme} />
+      <nav style={navStyle} className="navStyle">
+        <div style={homeButtonStyle} onClick={() => navigate('/main-page')}>
+          <div className="loop-logo" style={{'--themeColor': themeColor }}> </div>
         </div>
+
+        {/* <div style={linkStyle} onClick={() => navigate('/chat')}>Chat</div> */}
+
+        <div style={leftSideStyle}>
+          <div className="hide-on-small-screen" style={navbarButtonStyleBackButton} onMouseEnter={() => setHoverGoBack(true)} onMouseLeave={() => setHoverGoBack(false)} onClick={goBack}>
+            <GoBackButton color={themeColor} width="45px" height="45px" theme={theme} />
+          </div>
+        </div>
+
+        <div style={rightSideStyle}> {/* Add this div */}
+
+        {/* <div style={navbarButtonStyle} onClick={() => navigate('/')}>
+          <Image 
+            // src={language === 'english' ? "/english_button.svg" : "/other_language_button.svg"} 
+            src="/moon_button.svg"
+            alt="Theme button" 
+            width={45} 
+            height={45} 
+          />
+        </div> */}
+
+        <div className="hide-on-small-screen" style={navbarButtonStyleTheme} onMouseEnter={() => setHoverTheme(true)} onMouseLeave={() => setHoverTheme(false)} onClick={toggleThemePopUpMenu}>
+          <ThemeButton color={themeColor} width="45px" height="45px" theme={theme} />
+        </div>
+
+        <div className="hide-on-small-screen" style={navbarButtonStyleLanguage} onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)} onClick={toggleLanguagePopUpMenu}>
+          <LanguageButton color={themeColor} width="45px" height="45px" />
+        </div>
+
+
+        {/* <div style={navbarButtonStyle} onClick={() => navigate('/')}>
+          <Image
+            src="/language_button.svg"
+            alt="Language button"
+            width={45}
+            height={45}
+          />
+        </div> */}
+
+        {profilePictureUrl && <img src={profilePictureUrl} alt="Profile" className="hide-on-small-screen" style={profilePictureStyle} onClick={toggleProfilePopUpMenu} />}
+
+        {/* Add your symbols here */}
+        </div>
+
+        {chatProfileBool && chatProfileImageLoaded && (
+          <div style={chatProfileStyle} className="chatProfileStyle" onClick={() => navigate(`/profile/${chatProfileId}`)}>
+            <img src={chatProfilePictureUrl} alt="Profile" style={chatProfileIconStyle}/>
+            <p style={chatProfileTextStyle}>{chatProfileUserName}</p>
+          </div>
+        )}
+
+      </nav>
+
+
+
+    <nav style={menuStyle}>
+
+      {/* <div>
+        <img src="/navbar_background/lower_navbar_background_smal.svg" alt="Bakgrund" style={{ width: '100px', height: '50px' }} > </img>
+        <img src="/menubar_icons/menubar_settings_icon.png" alt="Bakgrund" style={{ width: '100px', height: '50px' }} > </img>
+      </div> */}
+      {!showLowerMenubar && !phoneLayout && (
+        <div style={lowerMenubar}>
+          <div style={lowerMenubarBackground}>
+            <LowerMenubarBackground background_color={theme === 'light' ? 'white' : 'black'} stroke_color="#AAAAAA" draggable="false" width="auto" height="auto" />
+          {/* <img src="/navbar_background/lower_navbar_background_smal.svg" alt="Bakgrund" style={lowerMenubar} draggable="false" /> */}
+          </div>
+
+          <div style={lowerMenuIcons}>
+            <img src="/menubar_icons/menubar_book_icon.png" width="82px" height='82px' alt="Profile" style={theLowerMenuIconsLeft}/>
+            <img src="/menubar_icons/menubar_loop_icon.png" width="110px" height='110px' alt="Profile" style={theLowerMenuIconsMain}/>
+            <img src="/menubar_icons/menubar_settings_icon.png" width="82px" height='82px' alt="Profile" style={theLowerMenuIconsRight}/>
+
+          </div>
+
+        </div>
+
+      )}
+
+
+      {/* <div style={standardMenubarLeftAround}>
+        <img src="/menubar_icons/menubar_settings_icon.png" alt="Profile" style={standardMenubarLeftIcons}/>
+      </div>
+      
+      <div>
+        <img src="/menubar_icons/menubar_loop_icon.png" alt="Profile" style={mainMenubarIcons}/>
       </div>
 
-      <div style={rightSideStyle}> {/* Add this div */}
-
-      {/* <div style={navbarButtonStyle} onClick={() => navigate('/')}>
-        <Image 
-          // src={language === 'english' ? "/english_button.svg" : "/other_language_button.svg"} 
-          src="/moon_button.svg"
-          alt="Theme button" 
-          width={45} 
-          height={45} 
-        />
+      <div style={standardMenubarRightAround}>
+        <img src="/menubar_icons/menubar_book_icon.png" alt="Profile" style={standardMenubarRightIcons}/>
       </div> */}
 
-      <div className="hide-on-small-screen" style={navbarButtonStyleTheme} onMouseEnter={() => setHoverTheme(true)} onMouseLeave={() => setHoverTheme(false)} onClick={toggleThemePopUpMenu}>
-        <ThemeButton color={themeColor} width="45px" height="45px" theme={theme} />
-      </div>
 
-      <div className="hide-on-small-screen" style={navbarButtonStyleLanguage} onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)} onClick={toggleLanguagePopUpMenu}>
-        <LanguageButton color={themeColor} width="45px" height="45px" />
-      </div>
+      {phoneLayout && (
+        <div style={mobileLowerMenubar}>
+
+          {expandMobileLowerMenubar && (
+            <div style={mobileLowerExpandedMenubar}>
+              <p  onClick={() => { handleSignOut(); closeProfilePopUpMenu(); }} style={mobileLowerExpandedMenubarText}>Logga ut</p>
+              <p onClick={() => navigate(`/profile/${userId}`, setExpandMobileLowerMenubar(false))}style={mobileLowerExpandedMenubarText}>Min profil</p>
+              <p onClick={() => navigate(`/settings`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Inställningar</p>
+              <p onClick={() => navigate(`/add-friends`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Lägg till vänner</p> 
+              <p onClick={() => navigate(`/main-page`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Vänner</p> 
+            </div>
+          )}
+
+          <div style={mobileLowerMenuIcons}>
+            <img onClick={goBack} src="/menubar_icons/menubar_back_button.png" width="85px" height='85px' alt="Profile" style={theMobileLowerMenuIconsLeft}/>
+            <img onClick={() => navigate('/main-page')} src="/menubar_icons/menubar_loop_icon.png" width="100px" height='100px' alt="Profile" style={theMobileLowerMenuIconsMain}/>
+            <img onClick={toggleExpandMobileLowerMenubar} src="/menubar_icons/menubar_hamburger_menu.png" width="85px" height='85px' alt="Profile" style={theMobileLowerMenuIconsLeft}/>
+
+          </div>
+
+          {/* Lägg till en fixerad footer */}
 
 
-      {/* <div style={navbarButtonStyle} onClick={() => navigate('/')}>
-        <Image
-          src="/language_button.svg"
-          alt="Language button"
-          width={45}
-          height={45}
-        />
-      </div> */}
+          {/* <div className="loop-logo" style={{'--themeColor': themeColor }}> </div>
+          <button onClick={toggleExpandMobileLowerMenubar}>
+            {expandMobileLowerMenubar ? 'Collapse Menu' : 'Expand Menu'}
+          </button> */}
+        </div>
+      )}
+      
+    </nav>
 
-      {profilePictureUrl && <img src={profilePictureUrl} alt="Profile" className="hide-on-small-screen" style={profilePictureStyle} onClick={toggleProfilePopUpMenu} />}
+    
 
-      {/* Add your symbols here */}
-      </div>
 
-      {chatProfileBool && chatProfileImageLoaded && (
-        <div style={chatProfileStyle} className="chatProfileStyle" onClick={() => navigate(`/profile/${chatProfileId}`)}>
-          <img src={chatProfilePictureUrl} alt="Profile" style={chatProfileIconStyle}/>
-          <p style={chatProfileTextStyle}>{chatProfileUserName}</p>
+
+      {!removeProfilePopUpMenu && !phoneLayout && (
+        <div className="profilePopUpMenu" style={profilePopUpMenu}>
+            <div className="popup-menu-button" style={inPopUpMenu} onClick={() => navigate(`/profile/${userId}`, closeProfilePopUpMenu())}>
+              <ProfileIcon color={themeColor} width="30px" height="30px" />
+              <p style={inPopUpMenuText}><FormattedMessage id="myProfile" /></p>
+            </div>
+            <div className="popup-menu-button" style={inPopUpMenu} onClick={() => navigate(`/settings`, closeProfilePopUpMenu())}>
+              <SettingsIcon color={themeColor} width="30px" height="30px" />
+              <p style={inPopUpMenuText}><FormattedMessage id="settings" /></p>
+            </div>
+            <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleSignOut(); closeProfilePopUpMenu(); }}>
+              <LogoutIcon color={"red"} width="30px" height="30px" />
+              <p style={inPopUpMenuTextLogOut}><FormattedMessage id="signOut" /></p>
+            </div>
+          {/* Your popup menu goes here */}
+        </div>
+      )}
+      {!removeLanguagePopUpMenu && !phoneLayout && (
+        <div className="languagePopUpMenu" style={languagePopUpMenu}>
+            <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleLanguageChange('swedish');  }}>
+              <Image
+                src="/png_icons/sweden_flag.png"
+                alt="Swedish button"
+                width={60}
+                height={60}
+              />
+              {/* <ProfileIcon color={themeColor} width="30px" height="30px" /> */}
+              <p style={inPopUpMenuText}><FormattedMessage id="swedish" /></p>
+              {userLanguage == 'swedish' && (
+              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              )}
+            </div>
+            <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleLanguageChange('english'); }}>
+              <Image
+                src="/png_icons/uk_flag.png"
+                alt="Enligsh button"
+                width={60}
+                height={60}
+              />
+              <p style={inPopUpMenuText}><FormattedMessage id="english" /></p>
+              {userLanguage == 'english' && (
+              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              )}
+            </div>
+            <div className="popup-menu-button" style={inPopUpMenuAutomatic} onClick={() => { handleLanguageChange('automatic'); }}>
+              <p style={inPopUpMenuText}><FormattedMessage id="automatic" /></p>
+              {userLanguage == 'automatic' && (
+              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              )}
+            </div>
+          {/* Your popup menu goes here */}
         </div>
       )}
 
-    </nav>
+      {!removeThemePopUpMenu && !phoneLayout && (
+        <div className="themePopUpMenu" style={themePopUpMenu}>
+            <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleThemeChange('light');  }}>
+              {/* <Image
+                src="/png_icons/sweden_flag.png"
+                alt="Swedish button"
+                width={60}
+                height={60}
+              />*/}
+              <ThemeButton color={themeColor} width="45px" height="45px" theme={'light'} />
 
-
-
-  <nav style={menuStyle}>
-
-    {/* <div>
-      <img src="/navbar_background/lower_navbar_background_smal.svg" alt="Bakgrund" style={{ width: '100px', height: '50px' }} > </img>
-      <img src="/menubar_icons/menubar_settings_icon.png" alt="Bakgrund" style={{ width: '100px', height: '50px' }} > </img>
-    </div> */}
-
-    <div style={lowerMenubar}>
-      <LowerMenubarBackground background_color={theme === 'light' ? 'white' : 'black'} stroke_color="#AAAAAA" draggable="false" width="360px" height="auto" />
-      {/* <img src="/navbar_background/lower_navbar_background_smal.svg" alt="Bakgrund" style={lowerMenubar} draggable="false" /> */}
-    </div>
-
-
-
-    {/* <div style={standardMenubarLeftAround}>
-      <img src="/menubar_icons/menubar_settings_icon.png" alt="Profile" style={standardMenubarLeftIcons}/>
-    </div>
-    
-    <div>
-      <img src="/menubar_icons/menubar_loop_icon.png" alt="Profile" style={mainMenubarIcons}/>
-    </div>
-
-    <div style={standardMenubarRightAround}>
-      <img src="/menubar_icons/menubar_book_icon.png" alt="Profile" style={standardMenubarRightIcons}/>
-    </div> */}
-    
-  </nav>
-
-
-
-
-
-    {!removeProfilePopUpMenu && (
-      <div className="profilePopUpMenu" style={profilePopUpMenu}>
-          <div className="popup-menu-button" style={inPopUpMenu} onClick={() => navigate(`/profile/${userId}`, closeProfilePopUpMenu())}>
-            <ProfileIcon color={themeColor} width="30px" height="30px" />
-            <p style={inPopUpMenuText}><FormattedMessage id="myProfile" /></p>
-          </div>
-          <div className="popup-menu-button" style={inPopUpMenu} onClick={() => navigate(`/settings`, closeProfilePopUpMenu())}>
-            <SettingsIcon color={themeColor} width="30px" height="30px" />
-            <p style={inPopUpMenuText}><FormattedMessage id="settings" /></p>
-          </div>
-          <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleSignOut(); closeProfilePopUpMenu(); }}>
-            <LogoutIcon color={"red"} width="30px" height="30px" />
-            <p style={inPopUpMenuTextLogOut}><FormattedMessage id="signOut" /></p>
-          </div>
-        {/* Your popup menu goes here */}
-      </div>
-    )}
-    {!removeLanguagePopUpMenu && (
-      <div className="languagePopUpMenu" style={languagePopUpMenu}>
-          <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleLanguageChange('swedish');  }}>
-            <Image
-              src="/png_icons/sweden_flag.png"
-              alt="Swedish button"
-              width={60}
-              height={60}
-            />
-            {/* <ProfileIcon color={themeColor} width="30px" height="30px" /> */}
-            <p style={inPopUpMenuText}><FormattedMessage id="swedish" /></p>
-            {userLanguage == 'swedish' && (
-            <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
-            )}
-          </div>
-          <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleLanguageChange('english'); }}>
-            <Image
-              src="/png_icons/uk_flag.png"
-              alt="Enligsh button"
-              width={60}
-              height={60}
-            />
-            <p style={inPopUpMenuText}><FormattedMessage id="english" /></p>
-            {userLanguage == 'english' && (
-            <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
-            )}
-          </div>
-          <div className="popup-menu-button" style={inPopUpMenuAutomatic} onClick={() => { handleLanguageChange('automatic'); }}>
-            <p style={inPopUpMenuText}><FormattedMessage id="automatic" /></p>
-            {userLanguage == 'automatic' && (
-            <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
-            )}
-          </div>
-        {/* Your popup menu goes here */}
-      </div>
-    )}
-
-    {!removeThemePopUpMenu && (
-      <div className="themePopUpMenu" style={themePopUpMenu}>
-          <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleThemeChange('light');  }}>
-            {/* <Image
-              src="/png_icons/sweden_flag.png"
-              alt="Swedish button"
-              width={60}
-              height={60}
-            />*/}
-            <ThemeButton color={themeColor} width="45px" height="45px" theme={'light'} />
-
-            {/* <ProfileIcon color={themeColor} width="30px" height="30px" /> */}
-            <p style={inPopUpMenuText}><FormattedMessage id="lightMode" /></p>
-            {userTheme == 'light' && (
-            <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
-            )}
-          </div>
-          <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleThemeChange('dark'); }}>
-            {/* <Image
-              src="/png_icons/uk_flag.png"
-              alt="Enligsh button"
-              width={60}
-              height={60}
-            /> */}
-            
-            <ThemeButton color={themeColor} width="45px" height="45px" theme={'dark'} />
-        
-            <p style={inPopUpMenuText}><FormattedMessage id="darkMode" /></p>
-            {userTheme == 'dark' && (
-            <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
-            )}
-          </div>
-          <div className="popup-menu-button" style={inPopUpMenuAutomatic} onClick={() => { handleThemeChange('automatic'); }}>
-            <p style={inPopUpMenuText}><FormattedMessage id="automatic" /></p>
-            {userTheme == 'automatic' && (
-            <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
-            )}
-          </div>
-        {/* Your popup menu goes here */}
-      </div>
-    )}
+              {/* <ProfileIcon color={themeColor} width="30px" height="30px" /> */}
+              <p style={inPopUpMenuText}><FormattedMessage id="lightMode" /></p>
+              {userTheme == 'light' && (
+              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              )}
+            </div>
+            <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleThemeChange('dark'); }}>
+              {/* <Image
+                src="/png_icons/uk_flag.png"
+                alt="Enligsh button"
+                width={60}
+                height={60}
+              /> */}
+              
+              <ThemeButton color={themeColor} width="45px" height="45px" theme={'dark'} />
+          
+              <p style={inPopUpMenuText}><FormattedMessage id="darkMode" /></p>
+              {userTheme == 'dark' && (
+              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              )}
+            </div>
+            <div className="popup-menu-button" style={inPopUpMenuAutomatic} onClick={() => { handleThemeChange('automatic'); }}>
+              <p style={inPopUpMenuText}><FormattedMessage id="automatic" /></p>
+              {userTheme == 'automatic' && (
+              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              )}
+            </div>
+          {/* Your popup menu goes here */}
+        </div>
+      )}
 
 
 
 
-    </>
-    
-  );
+      </>
+      
+    );
+
 };
 
 
