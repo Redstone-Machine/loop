@@ -9,6 +9,10 @@ import io from 'socket.io-client';
 import { borderRadius, height, margin, padding, positions, width } from '@mui/system';
 import { backdropClasses } from '@mui/material';
 
+
+import { format, isThisWeek, isToday, isYesterday, subDays } from 'date-fns';
+import { sv } from 'date-fns/locale';
+
 require('dotenv').config();
 
 const ChatPage = () => {
@@ -42,23 +46,8 @@ const ChatPage = () => {
 
     const [socket, setSocket] = useState(null);
 
-    // useEffect(() => {
-    //   const newSocket = io('http://localhost:3001'); // Replace with your server URL
-    //   setSocket(newSocket);
+    const [messageInput, setMessageInput] = useState(''); // Omdöpt från inputMessage
 
-    //   newSocket.on('connect', () => {
-    //     console.log('Connected to the server');
-    //   });
-
-    //   // Listen for incoming messages
-    //   newSocket.on('chat message', (message) => {
-    //     setMessages((prevMessages) => [...prevMessages, message]);
-    //   });
-  
-    //   return () => {
-    //     newSocket.close();
-    //   };
-    // }, []);
 
 
     useEffect(() => {
@@ -73,6 +62,15 @@ const ChatPage = () => {
         window.removeEventListener('resize', checkScreenDimensions);
       };
     }, []);
+
+    const checkScreenDimensions = () => {
+      //   isMobile = window.innerWidth <= 600;
+        if (window.innerWidth <= 700) {
+          setPhoneLayout(true);
+        } else {
+          setPhoneLayout(false);
+        }
+      };
   
     useEffect(() => {
       const handleFocus = () => setIsKeyboardVisible(true);
@@ -87,84 +85,174 @@ const ChatPage = () => {
       };
     }, []);
 
-
-    
-  
-    const checkScreenDimensions = () => {
-    //   isMobile = window.innerWidth <= 600;
-      if (window.innerWidth <= 700) {
-        setPhoneLayout(true);
-      } else {
-        setPhoneLayout(false);
-      }
-    };
-
-
-
-
     useEffect(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+
+
+
+    
+
+    
   
     
+    // useEffect(() => {
+    //   console.log('process.env.SERVER_URL', process.env.NEXT_PUBLIC_EXTRA_URL);
+    //   const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Replace with your server URL
+    //   setSocket(newSocket);
+    
+    //   newSocket.on('connect', () => {
+    //     console.log('Connected to the server');
+    //   });
+    
+    //   // Define the message handler
+    //   const messageHandler = (message) => {
+    //     setMessages((prevMessages) => [...prevMessages, message]);
+    
+    //     // Show a notification if the user has granted permission
+    //     if (Notification.permission === 'granted') {
+    //       new Notification('New message', { body: message.content });
+    //     }
+    //   };
+    
+    //   // // Add the message handler
+    //   // newSocket.on('chat message', messageHandler);
+    //   newSocket.on('chat message', message => {
+    //     console.log('Received message:', message);
+    //     if (message.userId === reciverUserId) {
+    //       setReceivedMessages(prevMessages => [...prevMessages, message]);
+    //       setMessages(prevMessages => [...prevMessages, message]); // Add this line
+    //     }
+    //   });
+    
+    //   return () => {
+    //     // Remove the message handler when the component unmounts
+    //     newSocket.off('chat message', messageHandler);
+    //     newSocket.close();
+    //   };
+    // }, []);
+
+
+
+
+    // useEffect(() => {
+    //   console.log('process.env.SERVER_URL', process.env.NEXT_PUBLIC_EXTRA_URL);
+    //   const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Replace with your server URL
+    //   setSocket(newSocket);
+  
+    //   newSocket.on('connect', () => {
+    //     console.log('Connected to the server');
+    //   });
+  
+    //   // Define the message handler
+    //   const messageHandler = (message) => {
+    //     console.log('Received message:', message);
+    //     if (message.userId === reciverUserId) {
+    //       setMessages((prevMessages) => [...prevMessages, message]);
+    //     }
+  
+    //     // Show a notification if the user has granted permission
+    //     if (Notification.permission === 'granted') {
+    //       new Notification('New message', { body: message.content });
+    //     }
+    //   };
+  
+    //   // Add the message handler
+    //   newSocket.on('chat message', messageHandler);
+  
+    //   return () => {
+    //     // Remove the message handler when the component unmounts
+    //     newSocket.off('chat message', messageHandler);
+    //     newSocket.close();
+    //   };
+    // }, [reciverUserId]);
+
     useEffect(() => {
-      console.log('process.env.SERVER_URL', process.env.NEXT_PUBLIC_EXTRA_URL);
-      const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Replace with your server URL
+      if (!userId) return;
+
+      // Anslut till WebSocket-servern
+      const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Ersätt med din server-URL
       setSocket(newSocket);
-    
+
+      // När anslutningen är etablerad, skicka register-händelsen med userId
       newSocket.on('connect', () => {
-        console.log('Connected to the server');
+        console.log(`Connected with socket id: ${newSocket.id}`);
+        
+        // Skicka register-händelsen med userId
+        newSocket.emit('register', userId);
       });
-    
-      // Define the message handler
-      const messageHandler = (message) => {
-        setMessages((prevMessages) => [...prevMessages, message]);
-    
-        // Show a notification if the user has granted permission
+  
+      // Hantera inkommande meddelanden
+      newSocket.on('chat message', (message) => {
+        console.log('Received message:', message);
+
+
+        if (message.userId === reciverUserId) {
+          setMessages((prevMessages) => [...prevMessages, message]);
+        }
+  
+        // Visa en notifikation om användaren har gett tillstånd
         if (Notification.permission === 'granted') {
           new Notification('New message', { body: message.content });
         }
-      };
-    
-      // // Add the message handler
-      // newSocket.on('chat message', messageHandler);
-      newSocket.on('chat message', message => {
-        console.log('Received message:', message);
-        if (message.userId === reciverUserId) {
-          setReceivedMessages(prevMessages => [...prevMessages, message]);
-          setMessages(prevMessages => [...prevMessages, message]); // Add this line
-        }
       });
-    
+  
+      // Stäng anslutningen när komponenten avmonteras
       return () => {
-        // Remove the message handler when the component unmounts
-        newSocket.off('chat message', messageHandler);
         newSocket.close();
       };
-    }, []);
-
-    // useEffect(() => {
-    //     if (session) {
-    //       console.log('User is logged in:', session)
-    //     } else {
-    //       console.log('User is not logged in')
-    //       router.push('/login');
-    //     }
-    //   }, [session])
+    }, [userId, reciverUserId]);
+  
 
 
-
+    
     useEffect(() => {
-        if (reciverUserId) {
-            fetch(`/api/getUserById?id=${reciverUserId}`)
-                .then(response => response.json())
-                .then(user => setReciverUserName(user.userName));
-        }
+      if (reciverUserId) {
+        fetch(`/api/getUserById?id=${reciverUserId}`)
+          .then(response => response.json())
+          .then(user => setReciverUserName(user.userName));
+      }
     }, [reciverUserId]);
 
 
 
 
+
+    // const handleSubmit = async (event) => {
+    //   event.preventDefault();
+    
+    //   console.log('Submitting message:', messageText);
+    //   console.log('Sender UserID:', userId);
+    //   console.log('Reciver UserID:', reciverUserId);
+    
+    //   const message = {
+    //     content: messageText,
+    //     userId: userId,
+    //     recipientId: reciverUserId,
+    //   };
+    
+    //   // // Send the message in real-time
+    //   // socket.emit('chat message', message);
+    //   socket.emit('chat message', message);
+    //   setSentMessages(prevMessages => [...prevMessages, message]);
+    
+    //   const response = await fetch('/api/createMessage', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(message),
+    //   });
+    
+    //   const data = await response.json();
+    
+    //   if (!response.ok) {
+    //     // handle error
+    //   } else {
+    //     // clear the message input
+    //     setMessageText('');
+    //   }
+    // };
 
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -177,28 +265,40 @@ const ChatPage = () => {
         content: messageText,
         userId: userId,
         recipientId: reciverUserId,
+        createdAt: new Date().toISOString(), // Lägg till tidsstämpel
       };
     
-      // // Send the message in real-time
-      // socket.emit('chat message', message);
-      socket.emit('chat message', message);
-      setSentMessages(prevMessages => [...prevMessages, message]);
-    
-      const response = await fetch('/api/createMessage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(message),
-      });
-    
-      const data = await response.json();
-    
-      if (!response.ok) {
-        // handle error
+      // Kontrollera om socket är ansluten
+      if (socket && socket.connected) {
+        console.log('Socket is connected, emitting message');
+        // Skicka meddelandet i realtid via WebSocket
+        socket.emit('chat message', message);
+        setSentMessages(prevMessages => [...prevMessages, message]);
       } else {
-        // clear the message input
-        setMessageText('');
+        console.error('Socket is not connected');
+      }
+    
+      try {
+        const response = await fetch('/api/createMessage', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(message),
+        });
+    
+        const data = await response.json();
+    
+        if (!response.ok) {
+          console.error('Failed to send message:', data);
+          // Hantera fel
+        } else {
+          // Rensa meddelandeinputen
+          setMessageText('');
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+        // Hantera fel
       }
     };
 
@@ -239,24 +339,7 @@ const ChatPage = () => {
     const inputRef = useRef(null);
     let originalScrollPosition = 0;
 
-    useEffect(() => {
-        const handleFocus = () => {
-            originalScrollPosition = window.scrollY;
-        };
 
-        const handleBlur = () => {
-            window.scrollTo(0, originalScrollPosition);
-        };
-
-        const inputElement = inputRef.current;
-        inputElement.addEventListener('focus', handleFocus);
-        inputElement.addEventListener('blur', handleBlur);
-
-        return () => {
-            inputElement.removeEventListener('focus', handleFocus);
-            inputElement.removeEventListener('blur', handleBlur);
-        };
-    }, []);
 
 
 
@@ -322,6 +405,15 @@ const ChatPage = () => {
     }
 
 
+    const isDayBeforeYesterday = (date) => {
+      const dayBeforeYesterday = subDays(new Date(), 2);
+      return date.getFullYear() === dayBeforeYesterday.getFullYear() &&
+            date.getMonth() === dayBeforeYesterday.getMonth() &&
+            date.getDate() === dayBeforeYesterday.getDate();
+    };
+
+
+
 
 
     useEffect(() => {
@@ -382,6 +474,11 @@ const ChatPage = () => {
           });
       }
     }, [userId, reciverUserId, messageText]);
+
+    console.log('messages:', messages);
+
+
+    
     
 
 
@@ -393,46 +490,78 @@ const ChatPage = () => {
       //   });
       // }, []);
     
+      
 
 
 
 
 
     return (
-        <div>
-          {/* <h1><FormattedMessage id="chatTitlePart1" /> {userName} <FormattedMessage id="chatTitlePart2" /> {reciverUserName}</h1> */}
 
-          {/* {messages.map((message, index) => (
-            <p key={index}>{message.content}</p>
-        ))} */}
+          // <div>
+          //   {messages.map((message, index) => {
+          //     const messageClass = message.senderId === userId ? 'sent' : 'received';
 
-{/* {sentMessages.map((message, index) => (
-  <p key={index} style={{textAlign: 'right'}}>
-    {message.content}
-  </p>
-))}
+          //     return (
+          //       <div key={index} className="message-wrapper">
+          //         <p className={messageClass}>{message.content}</p>
+          //       </div>
+          //     );
+          //   })}
+          // <div ref={messagesEndRef} />
 
-{receivedMessages.map((message, index) => (
-  <p key={index} style={{textAlign: 'left'}}>
-    {message.content}
-  </p>
-))} */}
+          <div>
+          {messages.map((message, index) => {
+            const messageClass = message.senderId === userId ? 'sent' : 'received';
+            const currentTimestamp = new Date(message.createdAt);
+            const previousMessage = index > 0 ? messages[index - 1] : null;
+            const previousTimestamp = previousMessage ? new Date(previousMessage.createdAt) : null;
+            const showTimestamp = index === 0 || !previousMessage || (currentTimestamp - previousTimestamp > 3600000) || (previousMessage.senderId !== message.senderId && (currentTimestamp - previousTimestamp > 3600000));
+            const sameSenderWithinHour = previousMessage && previousMessage.senderId === message.senderId && (currentTimestamp - previousTimestamp <= 3600000);
+            
+            let formattedTimestamp;
+            if (isToday(currentTimestamp)) {
+              formattedTimestamp = `idag ${format(currentTimestamp, 'HH:mm', { locale: sv })}`;
+            } else if (isYesterday(currentTimestamp)) {
+              formattedTimestamp = `igår ${format(currentTimestamp, 'HH:mm', { locale: sv })}`;
+            } else if (isDayBeforeYesterday(currentTimestamp)) {
+              formattedTimestamp = `iförrgår ${format(currentTimestamp, 'HH:mm', { locale: sv })}`;
+            } else if (isThisWeek(currentTimestamp, { locale: sv })) {
+              formattedTimestamp = format(currentTimestamp, 'EEEE HH:mm', { locale: sv }); // Ex: "Måndag 16:00"
+            } else {
+              formattedTimestamp = format(currentTimestamp, 'EEE d MMM HH:mm', { locale: sv }); // Ex: "mån 10 juli 16:30"
+            }
+            
+            return (
+              <React.Fragment key={index}>
+                {showTimestamp && (
+                  <div className="timestamp-wrapper">
+                    <div className="timestamp">
+                      {formattedTimestamp}
+                    </div>
+                  </div>
+                )}
+                <div className={`message-wrapper ${sameSenderWithinHour ? 'same-sender' : ''}`}>
+                  <p className={messageClass}>{message.content}</p>
+                </div>
+              </React.Fragment>
+            );
+          })}
 
-{messages.map((message, index) => {
-  const messageClass = message.senderId === userId ? 'sent' : 'received';
+          <div ref={messagesEndRef} />
 
-  return (
-    <div key={index} className="message-wrapper">
-      <p className={messageClass}>{message.content}</p>
-    </div>
-  );
-})}
 
-<div ref={messagesEndRef} />
+
       <style jsx>{`
         .message-wrapper {
           display: flex;
           // margin-bottom: 10px; // Avstånd mellan meddelanden
+        }
+
+        .message-wrapper.same-sender .sent,
+        .message-wrapper.same-sender .received {
+          margin-top: 2px;
+          // margin-bottom: 2px;
         }
 
         .sent {
@@ -443,10 +572,10 @@ const ChatPage = () => {
           background-color: #3ae364;
           display: inline-block;
           border-radius: 15px;
-          padding: 13px;
+          padding: 0.8rem;
           color: #ffffff;
-          margin-bottom: 8px;
-          margin-top: 8px;
+          margin-bottom: 2px;
+          margin-top: 16px;
           font-size: 1.3rem;
           font-family: 'SF Pro', sans-serif;
           align-self: flex-end; // Håller elementet till höger
@@ -463,17 +592,30 @@ const ChatPage = () => {
           background-color: ${theme === 'light' ? '#e9e9e9' : '#262629'};
           display: inline-block;
           border-radius: 15px;
-          padding: 13px;
+          padding: 0.8rem;
           // color: black;
           color: ${theme === 'light' ? 'black' : '#ffffff'};
-          margin-bottom: 8px;
-          margin-top: 8px;
+          margin-bottom: 2px;
+          margin-top: 16px;
           font-size: 1.3rem;
           font-family: 'SF Pro', sans-serif;
           align-self: flex-start; // Håller elementet till vänster
           margin-right: auto; // Flyttar elementet till vänster
           margin-left: 5px;
           max-width: calc(100% - 20%);
+        }
+
+        .timestamp {
+          font-size: 0.7rem;
+          color: gray;
+          text-align: center;
+          margin-bottom: 5px;
+          margin-top: 5px;
+          // margin-left: auto;
+          // margin-right: auto;
+          font-family: 'SF Pro', sans-serif;
+          width: 100%; /* Gör att timestampen tar upp hela bredden */
+          display: block; /* Säkerställer att timestampen visas på en egen rad */
         }
 
         @media (min-width: 1000px) {
@@ -497,6 +639,7 @@ const ChatPage = () => {
             // margin-left: 0%;
           }
         }
+
       `}</style>
 
 

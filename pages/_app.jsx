@@ -116,7 +116,7 @@ function MyComponent({ Component, pageProps }) {
   }
 
   const chatDistance = {
-    height: 'calc(3rem + 13px)',
+    height: 'calc(3rem + 16px)',
   };
 
   const mobileMenubarDistance = {
