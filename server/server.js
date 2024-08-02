@@ -161,7 +161,7 @@ io.on('connection', (socket) => {
 });
 
 // Starta servern på en annan port
-const PORT = 444; // Ny port
+const PORT = 4500; // Ny port
 server.listen(PORT, () => {
   console.log(`WebSocket server listening on port ${PORT}`);
 });
