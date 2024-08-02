@@ -170,21 +170,21 @@ const ChatPage = () => {
     useEffect(() => {
       if (!userId) return;
 
-      // Be om tillstånd för notifikationer om det inte redan har beviljats
-      if (Notification.permission !== 'granted') {
-        console.log('Requesting notification permission...');
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            console.log('Notification permission granted.');
-          } else {
-            console.log('Notification permission denied.');
-          }
-        }).catch(error => {
-          console.error('Error requesting notification permission:', error);
-        });
-      } else {
-        console.log('Notification permission already granted.');
-      }
+      // // Be om tillstånd för notifikationer om det inte redan har beviljats
+      // if (Notification.permission !== 'granted') {
+      //   console.log('Requesting notification permission...');
+      //   Notification.requestPermission().then(permission => {
+      //     if (permission === 'granted') {
+      //       console.log('Notification permission granted.');
+      //     } else {
+      //       console.log('Notification permission denied.');
+      //     }
+      //   }).catch(error => {
+      //     console.error('Error requesting notification permission:', error);
+      //   });
+      // } else {
+      //   console.log('Notification permission already granted.');
+      // }
 
       // Anslut till WebSocket-servern
       const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Ersätt med din server-URL
@@ -309,9 +309,39 @@ const ChatPage = () => {
           console.error('Failed to send message:', data);
           // Hantera fel
         } else {
+
+        // Skicka push-notis till mottagaren
+        try {
+          const notificationResponse = await fetch('/api/send-message-notification', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: reciverUserId,  // Mottagarens userId
+              message: messageText,   // Meddelandets innehåll
+              title: 'New Message'    // Titeln på notisen
+            }),
+          });
+  
+          const notificationData = await notificationResponse.json();
+  
+          if (!notificationResponse.ok) {
+            console.error('Failed to send notification:', notificationData);
+            // Hantera fel
+          } else {
+            console.log('Notification sent successfully.');
+          }
+        } catch (notificationError) {
+          console.error('Error sending notification:', notificationError);
+          // Hantera fel
+
+        }
+
           // Rensa meddelandeinputen
           setMessageText('');
-        }
+      }
+
       } catch (error) {
         console.error('Error sending message:', error);
         // Hantera fel

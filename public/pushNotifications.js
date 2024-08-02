@@ -5,7 +5,7 @@ export async function subscribeUserToPush(userId) {
       const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
       const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
-      console.log('VAPID Public Key:', process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY);
+      //console.log('VAPID Public Key:', process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY);
 
   
       return registration.pushManager.subscribe({
@@ -18,7 +18,7 @@ export async function subscribeUserToPush(userId) {
         userId, // Include the userId
       };
   
-      return fetch('/api/save-subscription', {
+      return fetch('/api/saveSubscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

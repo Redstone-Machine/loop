@@ -30,7 +30,7 @@ const SettingsPage = () => {
     };
 
     const sendTestNotification = () => {
-        fetch('/api/send-test-notification', {
+        fetch('/api/sendTestNotification', {
         method: 'POST',
         })
         .then(response => {
@@ -81,25 +81,31 @@ const SettingsPage = () => {
                             }}>
                             <FormattedMessage id="profilePicture" />
                         </button>
+                    </div>
 
-                        <h1>Välkommen till min PWA!</h1>
+                    <div>
+                        <h1>Notishantering</h1>
+                        {/* <br /> */}
                         
                         <button onClick={askPermission}>
                             Ge tillstånd för notiser
                         </button>
-                        <div>
+                        <br />
+                        <br />
+
 
                         {/* <NotificationButton /> */}
 
                         <button onClick={handleSubscription}>
-                        Prenumerera på notiser
+                        Aktivera notiser på den här enheten
                         </button>
-
+                        <br />
+                        <br />
+                        <br />
+                        <br />
                         <button onClick={sendTestNotification}>
                         Skicka testnotis
                         </button>
-                        </div>
-                        
                         
                     </div>
                 </>
