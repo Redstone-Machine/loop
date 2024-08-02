@@ -40,7 +40,9 @@
     "socket.io-client": "^4.7.5",
     "sqlite": "^5.0.1",
     "sqlite3": "^5.1.6",
-    "swr": "^2.2.4"
+    "swr": "^2.2.4",
+    "web-push": "^3.6.7",
+    "workbox-webpack-plugin": "^7.1.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

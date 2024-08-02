@@ -170,6 +170,22 @@ const ChatPage = () => {
     useEffect(() => {
       if (!userId) return;
 
+      // Be om tillstånd för notifikationer om det inte redan har beviljats
+      if (Notification.permission !== 'granted') {
+        console.log('Requesting notification permission...');
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            console.log('Notification permission granted.');
+          } else {
+            console.log('Notification permission denied.');
+          }
+        }).catch(error => {
+          console.error('Error requesting notification permission:', error);
+        });
+      } else {
+        console.log('Notification permission already granted.');
+      }
+
       // Anslut till WebSocket-servern
       const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Ersätt med din server-URL
       setSocket(newSocket);
