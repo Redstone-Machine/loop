@@ -17,20 +17,25 @@ self.addEventListener('fetch', event => {
   );
 });
 
+
 // Ny logik för att hantera push-notifikationer
 self.addEventListener('push', event => {
   const data = event.data ? event.data.json() : {};
+  
+  // Förbereda notifikationsalternativ
   const options = {
     body: data.body || 'Du har ett nytt meddelande!',
     icon: data.icon || '/default-icon.png',
     badge: data.badge || '/default-badge.png',
-    data: data.url || '/'
+    data: data.data || {}, // Se till att du använder ett objekt för data
   };
 
+  // Visa notifikationen
   event.waitUntil(
-    self.registration.showNotification(data.title || 'Nytt meddelande', options)
+    self.registration.showNotification(data.title || 'Ny Notifikation', options)
   );
 });
+
 
 // Hantera klick på notifikationen
 self.addEventListener('notificationclick', event => {
