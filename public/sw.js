@@ -50,6 +50,8 @@ self.addEventListener('notificationclick', function(event) {
 
   console.log('chatId inside notification:', chatId);
 
+  console.log('Notification click received. Notification:', event.notification);
+
   // Close the notification
   event.notification.close();
 

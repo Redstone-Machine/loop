@@ -25,7 +25,9 @@ export default async (req, res) => {
       console.log('Den här titeln kommer visas på notisen:', title);
 
       console.log('chatId:', chatId);
+
       
+
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
@@ -33,6 +35,9 @@ export default async (req, res) => {
           chatId: chatId
         }
       });
+
+      console.log('Notification Payload:', notificationPayload);
+
 
       await Promise.all(subscriptions.map(async (subscription) => {
         const { endpoint, auth, p256dh } = subscription;
