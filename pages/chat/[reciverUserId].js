@@ -320,7 +320,7 @@ const ChatPage = () => {
             body: JSON.stringify({
               userId: reciverUserId,  // Mottagarens userId
               message: messageText,   // Meddelandets innehåll
-              title: 'New Message'    // Titeln på notisen
+              title: userName    // Titeln på notisen
             }),
           });
   
@@ -462,19 +462,19 @@ const ChatPage = () => {
 
 
 
-    useEffect(() => {
-      if (typeof Notification !== 'undefined') {
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            console.log('Notification permission granted.');
-          } else {
-            console.log('Unable to get permission to notify.');
-          }
-        });
-      } else {
-        console.log('Web Notifications not available');
-      }
-    }, []);
+    // useEffect(() => {
+    //   if (typeof Notification !== 'undefined') {
+    //     Notification.requestPermission().then((permission) => {
+    //       if (permission === 'granted') {
+    //         console.log('Notification permission granted.');
+    //       } else {
+    //         console.log('Unable to get permission to notify.');
+    //       }
+    //     });
+    //   } else {
+    //     console.log('Web Notifications not available');
+    //   }
+    // }, []);
 
 
     // useEffect(() => {
