@@ -48,6 +48,8 @@ self.addEventListener('notificationclick', function(event) {
   // Extract the chatId from the notification data
   const chatId = event.notification.data.chatId;
 
+  console.log('chatId inside notification:', chatId);
+
   // Close the notification
   event.notification.close();
 
