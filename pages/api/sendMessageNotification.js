@@ -22,6 +22,8 @@ export default async (req, res) => {
         where: { userId },
       });
 
+      console.log('Den här titeln kommer visas på notisen:', title);
+      
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,

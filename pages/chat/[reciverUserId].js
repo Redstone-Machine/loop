@@ -312,6 +312,7 @@ const ChatPage = () => {
 
         // Skicka push-notis till mottagaren
         try {
+          console.log('Sending notification from:', userName);
           const notificationResponse = await fetch('/api/sendMessageNotification', {
             method: 'POST',
             headers: {
@@ -320,7 +321,11 @@ const ChatPage = () => {
             body: JSON.stringify({
               userId: reciverUserId,  // Mottagarens userId
               message: messageText,   // Meddelandets innehåll
-              title: userName    // Titeln på notisen
+              title: userName,    // Titeln på notisen
+              "data": {
+                "chatId": userId
+              }
+
             }),
           });
   
