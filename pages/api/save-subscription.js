@@ -8,15 +8,29 @@ export default async (req, res) => {
     const { endpoint, keys: { auth, p256dh }, userId } = req.body;
 
     try {
-      // Spara prenumerationen i databasen med userId
-      await prisma.pushSubscription.create({
-        data: {
-          endpoint,
-          auth,
-          p256dh,
-          userId,
-        },
+      // Kontrollera om prenumerationen redan finns
+      let subscription = await prisma.pushSubscription.findUnique({
+        where: { endpoint },
       });
+
+      if (subscription) {
+        // Om prenumerationen redan finns, uppdatera den
+        subscription = await prisma.pushSubscription.update({
+          where: { endpoint },
+          data: { auth, p256dh, userId },
+        });
+      } else {
+        // Om prenumerationen inte finns, skapa en ny
+        subscription = await prisma.pushSubscription.create({
+          data: {
+            endpoint,
+            auth,
+            p256dh,
+            userId,
+          },
+        });
+      }
+
       res.status(201).json({ message: 'Prenumeration mottagen och sparad i databasen.' });
     } catch (error) {
       console.error('Error saving subscription:', error);
