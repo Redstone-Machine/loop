@@ -27,8 +27,8 @@ export default async (req, res) => {
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
-        "data": {
-            "chatId": chatId
+        data: {
+          chatId: chatId
         }
       });
 
