@@ -312,7 +312,7 @@ const ChatPage = () => {
 
         // Skicka push-notis till mottagaren
         try {
-          const notificationResponse = await fetch('/api/send-message-notification', {
+          const notificationResponse = await fetch('/api/sendMessageNotification', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
