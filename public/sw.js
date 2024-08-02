@@ -53,27 +53,39 @@ self.addEventListener('notificationclick', function(event) {
   // Extract the chatId from the notification data
   const chatId = event.notification.data.chatId;
 
-  console.log('chatId inside notification:', chatId);
+  // console.log('chatId inside notification:', chatId);
 
-  console.log('Notification click received. Notification:', event.notification);
+  // console.log('Notification click received. Notification:', event.notification);
 
   // Close the notification
   event.notification.close();
 
-  // Focus or open the PWA and navigate to the correct chat
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-      // Check if there is already a window/tab open with the PWA
-      for (let client of windowClients) {
-        if (client.url.includes(`/chat/${chatId}`) && 'focus' in client) {
-          return client.focus();
-        }
-      }
 
-      // If not, open a new window/tab
-      if (clients.openWindow) {
-        return clients.openWindow(`/chat/${chatId}`);
-      }
+  // Focus or open the PWA and navigate to the correct chat
+
+
+  // event.waitUntil(
+  //   clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+  //     // Check if there is already a window/tab open with the PWA
+  //     for (let client of windowClients) {
+  //       if (client.url.includes(`/chat/${chatId}`) && 'focus' in client) {
+  //         return client.focus();
+  //       }
+  //     }
+
+  //     // If not, open a new window/tab
+  //     if (clients.openWindow) {
+  //       return clients.openWindow(`/chat/${chatId}`);
+  //     }
+  //   })
+  // );
+
+
+  // Öppna en ny flik/fönster och navigera till den angivna chatten
+  event.waitUntil(
+    clients.openWindow(`/chat/${chatId}`).catch(error => {
+      console.error('Error opening new window:', error);
     })
   );
+
 });
