@@ -3,15 +3,11 @@
     "name": "Loop Application",
     "icons": [
       {
-        "src": "/next.svg",
-        "sizes": "192x192",
-        "type": "image/svg+xml"
-      },
-      {
-        "src": "/next.svg",
+        "src": "/Icon_512.png",
         "sizes": "512x512",
-        "type": "image/svg+xml"
+        "type": "image/png"
       }
+
     ],
     "start_url": "/",
     "display": "standalone",
