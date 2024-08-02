@@ -322,10 +322,7 @@ const ChatPage = () => {
               userId: reciverUserId,  // Mottagarens userId
               message: messageText,   // Meddelandets innehåll
               title: userName,    // Titeln på notisen
-              "data": {
-                "chatId": userId
-              }
-
+              chatId: userId
             }),
           });
   

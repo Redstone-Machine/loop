@@ -14,7 +14,7 @@ webPush.setVapidDetails(
 
 export default async (req, res) => {
   if (req.method === 'POST') {
-    const { userId, message, title } = req.body;
+    const { userId, message, title, chatId } = req.body;
 
     try {
       // Hämta prenumerationer för den angivna användaren
@@ -23,10 +23,13 @@ export default async (req, res) => {
       });
 
       console.log('Den här titeln kommer visas på notisen:', title);
-      
+
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
+        "data": {
+            "chatId": chatId
+        }
       });
 
       await Promise.all(subscriptions.map(async (subscription) => {
