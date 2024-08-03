@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 
 import React, { useState, useEffect, useRef } from 'react';
+import DOMPurify from 'dompurify';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import io from 'socket.io-client';
@@ -270,6 +271,8 @@ const ChatPage = () => {
     //   }
     // };
 
+
+
     const handleSubmit = async (event) => {
       event.preventDefault();
     
@@ -427,7 +430,7 @@ const ChatPage = () => {
         
     }
 
-    console.log ('themeaggjag:', theme)
+    // console.log ('themeaggjag:', theme)
 
     const inputMessageForm = {
         display: 'flex',
@@ -540,6 +543,12 @@ const ChatPage = () => {
     
       
 
+      // Funktion för att konvertera text med länkar till HTML med <a>-taggar
+      function linkify(text) {
+        const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return text.replace(urlPattern, (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+      }
+
 
 
 
@@ -560,7 +569,7 @@ const ChatPage = () => {
 
           <div>
           {messages.map((message, index) => {
-            const messageClass = message.senderId === userId ? 'sent' : 'received';
+            // const messageClass = message.senderId === userId ? 'sent' : 'received';
             const currentTimestamp = new Date(message.createdAt);
             const previousMessage = index > 0 ? messages[index - 1] : null;
             const previousTimestamp = previousMessage ? new Date(previousMessage.createdAt) : null;
@@ -579,7 +588,40 @@ const ChatPage = () => {
             } else {
               formattedTimestamp = format(currentTimestamp, 'EEE d MMM HH:mm', { locale: sv }); // Ex: "mån 10 juli 16:30"
             }
-            
+
+
+            // Sanera innehållet innan det sätts in i DOM
+            const linkifiedContent = linkify(message.content);
+            // console.log(linkifiedContent); // Logga resultatet av linkify
+            // Konfigurera DOMPurify att tillåta target och rel attributen
+            const purifyConfig = {
+              ADD_ATTR: ['target', 'rel']
+            };
+            const sanitizedContent = DOMPurify.sanitize(linkifiedContent, purifyConfig);
+            // console.log(sanitizedContent); // Logga resultatet efter sanering
+
+            // Funktion för att kontrollera om en sträng endast innehåller emojis
+            const isOnlyEmojis = (str) => {
+              const emojiRegex = /^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)+$/gu;
+              return emojiRegex.test(str);
+            };
+
+            // Funktion för att räkna antalet emojis i en sträng
+            const countEmojis = (str) => {
+              const emojiRegex = /(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu;
+              const emojis = str.match(emojiRegex);
+              return emojis ? emojis.length : 0;
+            };
+
+            // Kontrollera om meddelandet endast innehåller emojis och om antalet emojis är högst 3
+            const isOnlyEmojisAndMaxThree = (str) => {
+              return isOnlyEmojis(str) && countEmojis(str) <= 3;
+            };
+
+            // Kontrollera om meddelandet endast innehåller emojis och om antalet emojis är högst 3
+            const messageClass = `${message.senderId === userId ? 'sent' : 'received'} ${isOnlyEmojisAndMaxThree(message.content) ? 'only-emoji' : ''}`;
+
+
             return (
               <React.Fragment key={index}>
                 {showTimestamp && (
@@ -590,7 +632,8 @@ const ChatPage = () => {
                   </div>
                 )}
                 <div className={`message-wrapper ${sameSenderWithinHour ? 'same-sender' : ''}`}>
-                  <p className={messageClass}>{message.content}</p>
+                  {/* <p className={messageClass}>{message.content}</p> */}
+                  <p className={messageClass} dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
                 </div>
               </React.Fragment>
             );
@@ -612,6 +655,7 @@ const ChatPage = () => {
           // margin-bottom: 2px;
         }
 
+
         .sent {
           justify-content: flex-end;
           text-align: left;
@@ -624,12 +668,13 @@ const ChatPage = () => {
           color: #ffffff;
           margin-bottom: 2px;
           margin-top: 16px;
-          font-size: 1.3rem;
+          font-size: 1.2rem;
           font-family: 'SF Pro', sans-serif;
           align-self: flex-end; // Håller elementet till höger
           margin-left: auto; // Flyttar elementet till höger
           margin-right: 5px;
           max-width: calc(100% - 20%);
+          word-break: break-word;
           
         }
 
@@ -645,20 +690,21 @@ const ChatPage = () => {
           color: ${theme === 'light' ? 'black' : '#ffffff'};
           margin-bottom: 2px;
           margin-top: 16px;
-          font-size: 1.3rem;
+          font-size: 1.2rem;
           font-family: 'SF Pro', sans-serif;
           align-self: flex-start; // Håller elementet till vänster
           margin-right: auto; // Flyttar elementet till vänster
           margin-left: 5px;
           max-width: calc(100% - 20%);
+          word-break: break-word;
         }
 
         .timestamp {
           font-size: 0.7rem;
           color: gray;
           text-align: center;
-          margin-bottom: 5px;
-          margin-top: 5px;
+          margin-bottom: 0px;
+          margin-top: 16px;
           // margin-left: auto;
           // margin-right: auto;
           font-family: 'SF Pro', sans-serif;
@@ -686,6 +732,15 @@ const ChatPage = () => {
           .received {
             // margin-left: 0%;
           }
+        }
+        a {
+          color: inherit;
+          text-decoration: underline;
+        }
+
+        .only-emoji {
+          background: none;
+          font-size: 3rem;
         }
 
       `}</style>
