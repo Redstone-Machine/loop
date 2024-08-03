@@ -13,6 +13,7 @@ import { backdropClasses } from '@mui/material';
 
 import { format, isThisWeek, isToday, isYesterday, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
+import { set } from 'lodash';
 
 require('dotenv').config();
 
@@ -49,6 +50,7 @@ const ChatPage = () => {
 
     const [messageInput, setMessageInput] = useState(''); // Omdöpt från inputMessage
 
+    const [updatingFromBackground, setUpdatingFromBackground] = useState(false);
 
 
     useEffect(() => {
@@ -78,15 +80,20 @@ const ChatPage = () => {
       const handleFocus = () => {
         setIsKeyboardVisible(true);
         let otherNewOriginalScrollPosition = window.scrollY; // Spara den ursprungliga scrollpositionen
-        let scrollOffset = 0.5 * parseFloat(getComputedStyle(document.documentElement).fontSize) + 125; // Beräkna offset i pixlar
-        window.scrollTo(0, otherNewOriginalScrollPosition + scrollOffset); // Scrolla ner med beräknad offset
+        let scrollOffset = 0.5 * parseFloat(getComputedStyle(document.documentElement).fontSize) + 175; // Beräkna offset i pixlar
+        if (phoneLayout) {
+          window.scrollTo(0, otherNewOriginalScrollPosition + scrollOffset); // Scrolla ner med beräknad offset
+        }
+
 
       };
       const handleBlur = () => {
         setIsKeyboardVisible(false);
         let newOriginalScrollPosition = window.scrollY; // Spara den ursprungliga scrollpositionen
         let scrollOffset = -0.5 * parseFloat(getComputedStyle(document.documentElement).fontSize) - 125; // Beräkna offset i pixlar
-        window.scrollTo(0, newOriginalScrollPosition + scrollOffset); // Scrolla ner med beräknad offset
+        if (phoneLayout) {
+          window.scrollTo(0, newOriginalScrollPosition + scrollOffset); // Scrolla ner med beräknad offset
+        }
       };
     
       window.addEventListener('focusin', handleFocus);
@@ -98,8 +105,12 @@ const ChatPage = () => {
       };
     }, []);
 
+
+
     useEffect(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      if (!updatingFromBackground) {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
     }, [messages]);
 
 
@@ -385,9 +396,9 @@ const ChatPage = () => {
     
         if (document.visibilityState === 'visible') {
           console.log('Page is visible. Checking WebSocket connection and fetching messages.');
-    
+          setUpdatingFromBackground(true);
           fetchMessages();
-          
+
           // Kontrollera om socket är definierad och ansluten
           if (socket && !socket.connected) {
             console.log('Reconnecting WebSocket...');
@@ -397,7 +408,7 @@ const ChatPage = () => {
     
           // Uppdatera meddelandena
           // console.log('Fetching messages...');
-
+          setUpdatingFromBackground(false);
         }
       };
     
