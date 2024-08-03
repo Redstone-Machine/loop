@@ -77,6 +77,10 @@ const Login = () => {
     router.push('/register')
   }
 
+  const handleForceGoToMain = () => {
+    router.push('/main-page')
+  }
+
   // const handleSubmit = async (event) => {
   //   console.log('Handling submit...');
   //   console.log(username, password); // Log the username and password
@@ -138,6 +142,14 @@ const Login = () => {
 
       <button onClick={handleRegister}>
       <FormattedMessage id="register" />
+      </button>
+
+      <br />
+      <br />
+      <br />
+      
+      <button onClick={handleForceGoToMain}>
+       Försök gå till startsidan
       </button>
 
       {/* <Link href="/create-account">
