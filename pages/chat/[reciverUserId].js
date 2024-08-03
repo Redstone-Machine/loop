@@ -386,6 +386,8 @@ const ChatPage = () => {
         if (document.visibilityState === 'visible') {
           console.log('Page is visible. Checking WebSocket connection and fetching messages.');
     
+          fetchMessages();
+          
           // Kontrollera om socket är definierad och ansluten
           if (socket && !socket.connected) {
             console.log('Reconnecting WebSocket...');
@@ -394,8 +396,8 @@ const ChatPage = () => {
           }
     
           // Uppdatera meddelandena
-          console.log('Fetching messages...');
-          fetchMessages();
+          // console.log('Fetching messages...');
+
         }
       };
     
