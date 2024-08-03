@@ -43,7 +43,7 @@ const ChatPage = () => {
 
     const [phoneLayout, setPhoneLayout] = useState(false);
 
-    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(true);
 
     const [socket, setSocket] = useState(null);
 
@@ -55,6 +55,7 @@ const ChatPage = () => {
       // Kontrollera skärmdimensionerna vid första renderingen
       checkScreenDimensions();
   
+      setIsKeyboardVisible(false); 
       // Lägg till en resize-händelselyssnare
       window.addEventListener('resize', checkScreenDimensions);
   
@@ -74,8 +75,19 @@ const ChatPage = () => {
       };
   
     useEffect(() => {
-      const handleFocus = () => setIsKeyboardVisible(true);
-      const handleBlur = () => setIsKeyboardVisible(false);
+      const handleFocus = () => {
+        setIsKeyboardVisible(true);
+        let otherNewOriginalScrollPosition = window.scrollY; // Spara den ursprungliga scrollpositionen
+        let scrollOffset = 0.5 * parseFloat(getComputedStyle(document.documentElement).fontSize) + 125; // Beräkna offset i pixlar
+        window.scrollTo(0, otherNewOriginalScrollPosition + scrollOffset); // Scrolla ner med beräknad offset
+
+      };
+      const handleBlur = () => {
+        setIsKeyboardVisible(false);
+        let newOriginalScrollPosition = window.scrollY; // Spara den ursprungliga scrollpositionen
+        let scrollOffset = -0.5 * parseFloat(getComputedStyle(document.documentElement).fontSize) - 125; // Beräkna offset i pixlar
+        window.scrollTo(0, newOriginalScrollPosition + scrollOffset); // Scrolla ner med beräknad offset
+      };
     
       window.addEventListener('focusin', handleFocus);
       window.addEventListener('focusout', handleBlur);
@@ -208,10 +220,10 @@ const ChatPage = () => {
           setMessages((prevMessages) => [...prevMessages, message]);
         }
   
-        // Visa en notifikation om användaren har gett tillstånd
-        if (Notification.permission === 'granted') {
-          new Notification('New message', { body: message.content });
-        }
+        // // Visa en notifikation om användaren har gett tillstånd
+        // if (Notification.permission === 'granted') {
+        //   new Notification('New message', { body: message.content });
+        // }
       });
   
       // Stäng anslutningen när komponenten avmonteras
@@ -271,14 +283,17 @@ const ChatPage = () => {
     //   }
     // };
 
-
+    const [isSending, setIsSending] = useState(false);
 
     const handleSubmit = async (event) => {
       event.preventDefault();
+
+      if (isSending) return;
+      setIsSending(true); // Inaktivera skicka-knappen
     
-      console.log('Submitting message:', messageText);
-      console.log('Sender UserID:', userId);
-      console.log('Reciver UserID:', reciverUserId);
+      // console.log('Submitting message:', messageText);
+      // console.log('Sender UserID:', userId);
+      // console.log('Reciver UserID:', reciverUserId);
     
       const message = {
         content: messageText,
@@ -286,13 +301,16 @@ const ChatPage = () => {
         recipientId: reciverUserId,
         createdAt: new Date().toISOString(), // Lägg till tidsstämpel
       };
+
+      // Rensa meddelandeinputen direkt
+      setMessageText('');
+      setSentMessages(prevMessages => [...prevMessages, message]);
     
       // Kontrollera om socket är ansluten
       if (socket && socket.connected) {
         console.log('Socket is connected, emitting message');
         // Skicka meddelandet i realtid via WebSocket
         socket.emit('chat message', message);
-        setSentMessages(prevMessages => [...prevMessages, message]);
       } else {
         console.error('Socket is not connected');
       }
@@ -344,14 +362,48 @@ const ChatPage = () => {
         }
 
           // Rensa meddelandeinputen
-          setMessageText('');
+          // setMessageText('');
+          
       }
 
       } catch (error) {
         console.error('Error sending message:', error);
         // Hantera fel
+      } finally {
+        setIsSending(false); // Återställ skicka-knappen
+        fetchMessages();
       }
     };
+
+
+    
+    useEffect(() => {
+      console.log('useEffect hook is running');
+    
+      const handleVisibilityChange = () => {
+        console.log('Visibility change detected:', document.visibilityState);
+    
+        if (document.visibilityState === 'visible') {
+          console.log('Page is visible. Checking WebSocket connection and fetching messages.');
+    
+          // Kontrollera om socket är definierad och ansluten
+          if (socket && !socket.connected) {
+            console.log('Reconnecting WebSocket...');
+            // Återupprätta WebSocket-anslutningen
+            socket.connect();
+          }
+    
+          // Uppdatera meddelandena
+          console.log('Fetching messages...');
+          fetchMessages();
+        }
+      };
+    
+      // Lägg till event listener för visibility change
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+      // Ingen cleanup-funktion returneras
+    }, []);
 
 
 
@@ -386,6 +438,9 @@ const ChatPage = () => {
     // };
 
     // if (loading || !session || !userName) return <div>Loading...</div>;
+
+
+
 
     const inputRef = useRef(null);
     let originalScrollPosition = 0;
@@ -510,7 +565,27 @@ const ChatPage = () => {
     //         .then(setMessages);
     //     }
     //   }, [messageText]);
-    useEffect(() => {
+
+
+    // useEffect(() => {
+    //   if (userId && reciverUserId) {
+    //     fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
+    //       .then(response => response.json())
+    //       .then(messages => {
+    //         const sent = messages.filter(message => message.senderId === userId);
+    //         const received = messages.filter(message => message.recipientId === userId);
+    //         const combined = [...sent, ...received];
+    //         combined.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    //         setSentMessages(sent);
+    //         setReceivedMessages(received);
+    //         setMessages(combined);
+    //       });
+    //   }
+    // }, [userId, reciverUserId]);
+
+    // console.log('messages:', messages);
+
+    const fetchMessages = () => {
       if (userId && reciverUserId) {
         fetch(`/api/getMessages?senderId=${userId}&recipientId=${reciverUserId}`)
           .then(response => response.json())
@@ -524,9 +599,13 @@ const ChatPage = () => {
             setMessages(combined);
           });
       }
+    };
+  
+    useEffect(() => {
+      fetchMessages();
     }, [userId, reciverUserId, messageText]);
 
-    console.log('messages:', messages);
+    //ta bort messageText om den inte ska uppdatera varje gång man skriver
 
 
     
@@ -764,11 +843,13 @@ const ChatPage = () => {
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
               // placeholder={intl.formatMessage({ id: 'writeMessage' })}
+              // disabled={isSending}
             />
             <button
               type="submit"
               style={inputMessageButton}
               onClick={handleSubmit}
+              // disabled={isSending}
             >
               <FormattedMessage id="send" />
             </button>
