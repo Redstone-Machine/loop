@@ -1,4 +1,4 @@
-// pages/api/sendMessageNotification.js
+// pages/api/sendTestNotification.js
 import webPush from 'web-push';
 import { PrismaClient } from '@prisma/client';
 
@@ -6,39 +6,34 @@ const prisma = new PrismaClient();
 const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
 
+// Sätt VAPID-detalerna
 webPush.setVapidDetails(
-  'mailto:minepost@outlook.com',
+  'mailto:minepost@outlook.com', // Ersätt med din e-postadress
   vapidPublicKey,
   vapidPrivateKey
 );
 
 export default async (req, res) => {
   if (req.method === 'POST') {
-    const { userId, message, title, chatId } = req.body;
+    const { userId, message } = req.body;
 
     try {
-      // Hämta prenumerationer för den angivna användaren
+      // Hämta alla prenumerationer för den angivna användaren
       const subscriptions = await prisma.pushSubscription.findMany({
         where: { userId },
       });
 
-      // console.log('Den här titeln kommer visas på notisen:', title);
+      if (subscriptions.length === 0) {
+        return res.status(404).json({ message: 'Ingen prenumeration hittades för användaren.' });
+      }
 
-      // console.log('chatId:', chatId);
-
-      
-
+      // Skapa payload för notisen
       const notificationPayload = JSON.stringify({
-        title: title || 'Meddelande',
+        title: 'Notis',
         body: message,
-        data: {
-          chatId: chatId
-        }
       });
 
-      console.log('Notification Payload:', notificationPayload);
-
-
+      // Skicka notiser till alla prenumerationer
       await Promise.all(subscriptions.map(async (subscription) => {
         const { endpoint, auth, p256dh } = subscription;
         const pushSubscription = {
@@ -66,7 +61,7 @@ export default async (req, res) => {
       res.status(200).json({ message: 'Notis skickad.' });
     } catch (error) {
       console.error('Error sending notification:', error);
-      res.status(500).json({ message: 'Misslyckades att skicka notis.' });
+      res.status(500).json({ message: 'Misslyckades att skicka notis.', error });
     }
   } else {
     res.setHeader('Allow', ['POST']);

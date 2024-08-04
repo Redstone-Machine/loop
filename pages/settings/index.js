@@ -30,6 +30,27 @@ const SettingsPage = () => {
     };
 
     const sendTestNotification = () => {
+        fetch('/api/sendTestNotificationToUser', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId })
+        
+        })
+        .then(response => {
+        if (response.ok) {
+            console.log('Testnotis skickad.');
+        } else {
+            console.error('Misslyckades att skicka testnotis.');
+        }
+        })
+        .catch(error => {
+        console.error('Ett fel inträffade:', error);
+        });
+    };
+
+    const sendTestNotificationToAll = () => {
         fetch('/api/sendTestNotification', {
         method: 'POST',
         })
@@ -104,8 +125,11 @@ const SettingsPage = () => {
                         <br />
                         <br />
                         <button onClick={sendTestNotification}>
-                        Skicka testnotis
+                        Skicka testnotis till dig
                         </button>
+                        {/* <button onClick={sendTestNotificationToAll}>
+                        Skicka testnotis till alla användare
+                        </button> */}
                         
                     </div>
                 </>
