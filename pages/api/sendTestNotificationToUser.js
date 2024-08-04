@@ -15,7 +15,7 @@ webPush.setVapidDetails(
 
 export default async (req, res) => {
   if (req.method === 'POST') {
-    const { userId, message } = req.body;
+    const { userId } = req.body;
 
     try {
       // Hämta alla prenumerationer för den angivna användaren
@@ -23,14 +23,16 @@ export default async (req, res) => {
         where: { userId },
       });
 
+      console.log('subscriptions:', subscriptions);
+
       if (subscriptions.length === 0) {
         return res.status(404).json({ message: 'Ingen prenumeration hittades för användaren.' });
       }
 
       // Skapa payload för notisen
       const notificationPayload = JSON.stringify({
-        title: 'Notis',
-        body: message,
+        title: 'Det här är en test notis.',
+        body: 'Det här ett testmeddelande.',
       });
 
       // Skicka notiser till alla prenumerationer
