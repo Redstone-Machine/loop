@@ -47,13 +47,22 @@ export default async (req, res) => {
           }
         })
         .catch(error => console.error('Error fetching Icon_512.png:', error));
+
+      // Hämta profilbilden för användaren
+      const profilePictureResponse = await fetch(`${baseUrl}/api/getProfilePictureById?id=${userId}`);
+      let profilePictureUrl = `${baseUrl}/public/standard_profile_picture.jpg`; // Standardbild om profilbilden inte hittas
+
+      if (profilePictureResponse.ok) {
+        profilePictureUrl = `${baseUrl}/api/getProfilePictureById?id=${userId}`;
+      }
       
 
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
         badge: `${baseUrl}/icon_72.png`,
-        icon: `${baseUrl}/Icon_512.png`,
+        icon: profilePictureUrl,
+        // icon: `${baseUrl}/Icon_512.png`,
         data: {
           chatId: chatId
         }
