@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
 
+const baseUrl = 'http://localhost:3000';
+
 webPush.setVapidDetails(
   'mailto:minepost@outlook.com',
   vapidPublicKey,
@@ -26,7 +28,7 @@ export default async (req, res) => {
 
       // console.log('chatId:', chatId);
 
-      fetch('./public/icon_72.png')
+      fetch('${baseUrl}/icon_72.png')
         .then(response => {
           if (response.ok) {
             console.log('icon_72.png is accessible');
@@ -36,7 +38,7 @@ export default async (req, res) => {
         })
         .catch(error => console.error('Error fetching icon_72.png:', error));
 
-      fetch('./public/Icon_512.png')
+      fetch('${baseUrl}/Icon_512.png')
         .then(response => {
           if (response.ok) {
             console.log('Icon_512.png is accessible');
@@ -50,8 +52,8 @@ export default async (req, res) => {
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
-        badge: './public/icon_72.png',
-        icon: './public/Icon_512.png',
+        badge: '${baseUrl}/icon_72.png',
+        icon: '${baseUrl}/Icon_512.png',
         data: {
           chatId: chatId
         }
