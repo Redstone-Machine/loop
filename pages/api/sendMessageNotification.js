@@ -32,6 +32,7 @@ export default async (req, res) => {
         title: title || 'Meddelande',
         body: message,
         badge: '../../public/icon_72.png',
+        icon: '../../public/Icon_512.png',
         data: {
           chatId: chatId
         }
