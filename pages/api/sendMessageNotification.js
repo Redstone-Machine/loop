@@ -53,8 +53,8 @@ export default async (req, res) => {
       let profilePictureUrl = `${baseUrl}/public/standard_profile_picture.jpg`; // Standardbild om profilbilden inte hittas
 
       if (profilePictureResponse.ok) {
-        const blob = await profilePictureResponse.blob();
-        profilePictureUrl = URL.createObjectURL(blob);
+        const profilePictureData = await profilePictureResponse.json();
+        profilePictureUrl = profilePictureData.url;
       }
       
       
