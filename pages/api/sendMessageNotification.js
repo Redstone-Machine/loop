@@ -26,13 +26,32 @@ export default async (req, res) => {
 
       // console.log('chatId:', chatId);
 
+      fetch('/icon_72.png')
+        .then(response => {
+          if (response.ok) {
+            console.log('icon_72.png is accessible');
+          } else {
+            console.error('icon_72.png is not accessible');
+          }
+        })
+        .catch(error => console.error('Error fetching icon_72.png:', error));
+
+      fetch('/Icon_512.png')
+        .then(response => {
+          if (response.ok) {
+            console.log('Icon_512.png is accessible');
+          } else {
+            console.error('Icon_512.png is not accessible');
+          }
+        })
+        .catch(error => console.error('Error fetching Icon_512.png:', error));
       
 
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
-        badge: '../../public/icon_72.png',
-        icon: '../../public/Icon_512.png',
+        badge: '/icon_72.png',
+        icon: '/public/Icon_512.png',
         data: {
           chatId: chatId
         }
