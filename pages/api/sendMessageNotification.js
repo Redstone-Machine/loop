@@ -48,22 +48,22 @@ export default async (req, res) => {
         })
         .catch(error => console.error('Error fetching Icon_512.png:', error));
 
-      // Hämta profilbilden för användaren
-      const profilePictureResponse = await fetch(`${baseUrl}/api/getProfilePictureById?id=${userId}`);
-      let profilePictureUrl = `${baseUrl}/public/standard_profile_picture.jpg`; // Standardbild om profilbilden inte hittas
+      // // Hämta profilbilden för användaren
+      // const profilePictureResponse = await fetch(`${baseUrl}/api/getProfilePictureById?id=${userId}`);
+      // let profilePictureUrl = `${baseUrl}/public/standard_profile_picture.jpg`; // Standardbild om profilbilden inte hittas
 
-      if (profilePictureResponse.ok) {
-        const profilePictureData = await profilePictureResponse.json();
-        profilePictureUrl = profilePictureData.url;
-      }
+      // if (profilePictureResponse.ok) {
+      //   const profilePictureData = await profilePictureResponse.json();
+      //   profilePictureUrl = profilePictureData.url;
+      // }
       
       
 
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
-        icon: profilePictureUrl,
-        badge: `${baseUrl}/icon_72.png`,
+        // icon: profilePictureUrl,
+        // badge: `${baseUrl}/icon_72.png`,
 
         // icon: `${baseUrl}/Icon_512.png`,
         data: {
