@@ -25,8 +25,10 @@ self.addEventListener('push', event => {
   // Förbereda notifikationsalternativ
   const options = {
     body: data.body || 'Du har ett nytt meddelande!',
-    icon: data.icon || '/default-icon.png',
-    badge: data.badge || '/default-badge.png',
+    // icon: data.icon || '/default-icon.png',
+    // badge: data.badge || '/default-badge.png',
+    icon: data.icon || './Icon_512.png',
+    badge: data.badge || './icon_72.png',
     data: data.data || {}, // Se till att du använder ett objekt för data
   };
 
