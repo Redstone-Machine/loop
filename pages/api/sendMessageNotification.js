@@ -28,7 +28,7 @@ export default async (req, res) => {
 
       // console.log('chatId:', chatId);
 
-      fetch('${baseUrl}/icon_72.png')
+      fetch(`${baseUrl}/icon_72.png`)
         .then(response => {
           if (response.ok) {
             console.log('icon_72.png is accessible');
@@ -38,7 +38,7 @@ export default async (req, res) => {
         })
         .catch(error => console.error('Error fetching icon_72.png:', error));
 
-      fetch('${baseUrl}/Icon_512.png')
+      fetch(`${baseUrl}/Icon_512.png`)
         .then(response => {
           if (response.ok) {
             console.log('Icon_512.png is accessible');
@@ -52,8 +52,8 @@ export default async (req, res) => {
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
-        badge: '${baseUrl}/icon_72.png',
-        icon: '${baseUrl}/Icon_512.png',
+        badge: `${baseUrl}/icon_72.png`,
+        icon: `${baseUrl}/Icon_512.png`,
         data: {
           chatId: chatId
         }
