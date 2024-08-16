@@ -31,6 +31,7 @@ export default async (req, res) => {
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
+        badge: '../../public/icon_72.png',
         data: {
           chatId: chatId
         }
