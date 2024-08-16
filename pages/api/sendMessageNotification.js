@@ -53,15 +53,18 @@ export default async (req, res) => {
       let profilePictureUrl = `${baseUrl}/public/standard_profile_picture.jpg`; // Standardbild om profilbilden inte hittas
 
       if (profilePictureResponse.ok) {
-        profilePictureUrl = `${baseUrl}/api/getProfilePictureById?id=${userId}`;
+        const blob = await profilePictureResponse.blob();
+        profilePictureUrl = URL.createObjectURL(blob);
       }
+      
       
 
       const notificationPayload = JSON.stringify({
         title: title || 'Meddelande',
         body: message,
-        badge: `${baseUrl}/icon_72.png`,
         icon: profilePictureUrl,
+        badge: `${baseUrl}/icon_72.png`,
+
         // icon: `${baseUrl}/Icon_512.png`,
         data: {
           chatId: chatId
