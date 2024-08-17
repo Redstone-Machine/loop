@@ -113,6 +113,20 @@
     }
   }
 
+  .loop-logo-button {
+    mask-image: url(../public/loop_logo_white.png);
+    -webkit-mask-image: url(../public/loop_logo_white.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 125px;
+    aspect-ratio: 472 / 396;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+  .loop-logo-button:hover {
+    background-color: grey;
+  }
+
   .loop-logo {
     mask-image: url(../public/loop_logo_white.png);
     -webkit-mask-image: url(../public/loop_logo_white.png);
@@ -121,9 +135,10 @@
     width: 125px;
     aspect-ratio: 472 / 396;
     background-color: var(--themeColor);
+
   }
 
-  .check_mark {
+  .check-mark {
     mask-image: url(../public/png_icons/check_white.png);
     -webkit-mask-image: url(../public/png_icons/check_white.png);
     mask-size: contain;
@@ -131,6 +146,137 @@
     width: 40px;
     aspect-ratio: 1000 / 1000;
     background-color: var(--themeColor);
+  }
+
+
+  .back-icon {
+    mask-image: url(../public/navbar_icons/go_back_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/go_back_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 48px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+
+  .notification-icon {
+    mask-image: url(../public/navbar_icons/notification_bell_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/notification_bell_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 48px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+
+  .language-icon {
+    mask-image: url(../public/navbar_icons/language_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/language_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 48px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+
+  .moon-icon {
+    mask-image: url(../public/navbar_icons/moon_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/moon_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 48px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+  .sun-icon {
+    mask-image: url(../public/navbar_icons/sun_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/sun_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 48px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+  
+  .profile-picture {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .profile-picture img {
+    display: block;
+    border-radius: 50%;
+  }
+
+  .profile-picture::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  
+  .profile-picture:hover::after {
+    opacity: 1;
+  }
+
+
+
+
+
+
+
+  .main-loop-icon {
+    mask-image: url(../public/menubar_icons/menubar_loop_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_loop_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 110px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+  .main-loop-icon:hover {
+    background-color: grey;
+  }
+
+  .plus-icon {
+    mask-image: url(../public/menubar_icons/menubar_plus_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_plus_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 82px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+  .plus-icon:hover {
+    background-color: grey;
+  }
+
+  .friends-icon {
+    mask-image: url(../public/menubar_icons/menubar_friends_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_friends_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 82px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+  .friends-icon:hover {
+    background-color: grey;
   }
 
   @font-face {
@@ -143,6 +289,11 @@
 
   .dummy-checkmark {
     visibility: hidden;
+  }
+
+  .no-scroll {
+    overflow: hidden;
+    height: 100%;
   }
 
   /* .flags_icon {

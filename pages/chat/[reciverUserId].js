@@ -2,7 +2,7 @@ import { usePageSetup } from '../../hooks/usePageSetup';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import DOMPurify from 'dompurify';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -15,13 +15,17 @@ import { format, isThisWeek, isToday, isYesterday, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { set } from 'lodash';
 
+import { ThemeContext } from '../../contexts/ThemeContext';
+
 require('dotenv').config();
 
 const ChatPage = () => {
 
-    const { userId, userName, session, status, userLanguage, userTheme, theme } = usePageSetup();
+    const { userId, userName, session, status, userLanguage, userTheme, themeColor } = usePageSetup();
 
     const intl = useIntl();
+
+    const { theme } = useContext(ThemeContext);
 
     // const { data: session } = useSession()
     // const { data, status } = useSession();
@@ -482,7 +486,8 @@ const ChatPage = () => {
       height: 'calc(3rem + 13px)',
       // height: '100%',
       width: '8rem',
-      backgroundColor: '#595ff2',
+      // backgroundColor: '#595ff2',
+      backgroundColor: themeColor,
 
       borderRadius: '17px',
       border: '2px solid #AAAAAA', 
@@ -495,6 +500,7 @@ const ChatPage = () => {
       marginBottom: '0px',
       marginLeft: '4px',
       marginRight: '4px',
+      fontWeight: 'bold',
         
     }
 

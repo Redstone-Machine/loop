@@ -29,9 +29,11 @@ export default {
     lightMode: 'Ljust läge',
 
   // login:
-    logInTitle: 'Logga in på Loop',
+    logInTitle: 'Logga in på',
     logInGoogle: 'Logga in med Google',
     logInApple: 'Logga in med Apple',
+
+    loginFailed: 'Misslyckades med inloggningen. Kolla om användarnamnet och lösenordet stämmer.',
 
   // register:
     registerTitle: 'Skapa ett konto',

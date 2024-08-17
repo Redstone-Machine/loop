@@ -1,6 +1,8 @@
 // components/navbar.js
 import { LanguageContext } from '../../contexts/LanguageContext';
 import { ThemeContext } from '../../contexts/ThemeContext';
+import { ThemeColorContext } from '../../contexts/ThemeColorContext';
+
 
 
 import { useState, useEffect, useContext } from 'react';
@@ -39,7 +41,9 @@ import useSWR, { mutate } from 'swr';
 import { FormattedMessage } from 'react-intl';
 import { margin } from '@mui/system';
 
-const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) => {
+const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
+
+
 
 
 
@@ -51,6 +55,8 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
   const userId = getUserIdFromSession(session, status);
 
   const router = useRouter();
+
+  const { themeColor } = useContext(ThemeColorContext);
 
   const { switchToEnglish, switchToSwedish } = useContext(LanguageContext);
   const { switchToDarkMode, switchToLightMode } = useContext(ThemeContext);
@@ -78,6 +84,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, themeColor, language }) =
   
   const [hoverLanguage, setHoverLanguage] = useState(false);
   const [hoverTheme, setHoverTheme] = useState(false);
+  const [hoverNotification, setHoverNotification] = useState(false);
   const [hoverGoBack, setHoverGoBack] = useState(false);
 
   const [showProfilePopUpMenu, setShowProfilePopUpMenu] = useState(false);
@@ -828,12 +835,18 @@ const menuStyle = {
 
   const navbarButtonStyle = {
     // backgroundColor: theme === 'light' ? 'white' : 'black',
-    borderRadius: '15px',
-    padding: '6px',
-    border: `2px solid ${theme === 'light' ? 'black' : 'white'}`,
-    // borderRadius: '50%',
-    // padding: '9px',
-    transition: 'all 0.3s ease'
+
+    // Ändra till cirklar i menyn
+    // borderRadius: '15px',
+    // padding: '6px',
+    // border: `2px solid ${theme === 'light' ? 'black' : 'white'}`,
+    borderRadius: '50%',
+    padding: '7px',
+
+    transition: 'all 0.3s ease',
+
+    // borderTop: showProfilePopUpMenu ? '2px solid #AAAAAA' : 'none',
+
   }
 
 
@@ -880,15 +893,40 @@ const menuStyle = {
     backgroundColor: hoverGoBack ? (theme === 'light' ? 'lightgrey' : 'darkgrey') : (theme === 'light' ? 'white' : 'black'),
   }
 
+
+  const navbarButtonStyleNotification = {
+    ...navbarButtonStyle,
+
+    marginRight: '9px',
+
+    backgroundColor: hoverNotification ? (theme === 'light' ? 'lightgrey' : 'darkgrey') : (theme === 'light' ? 'white' : 'black'),
+    // boxShadow: showNotificationPopUpMenu ? 'inset 0 0 0 1px #AAAAAA' : 'none',
+  }
+
   const navbarButtonStyleLanguage = {
     ...navbarButtonStyle,
+
+    marginRight: '9px',
+
     backgroundColor: hoverLanguage ? (theme === 'light' ? 'lightgrey' : 'darkgrey') : (theme === 'light' ? 'white' : 'black'),
-    
+    boxShadow: showLanguagePopUpMenu ? 'inset 0 0 0 1px #AAAAAA' : 'none',
   }
 
   const navbarButtonStyleTheme = {
     ...navbarButtonStyle,
     backgroundColor: hoverTheme ? (theme === 'light' ? 'lightgrey' : 'darkgrey') : (theme === 'light' ? 'white' : 'black'),
+
+    // outline: showThemePopUpMenu ? '1px solid #AAAAAA' : 'none',
+    boxShadow: showThemePopUpMenu ? 'inset 0 0 0 1px #AAAAAA' : 'none',
+    // transition: 'outline 0s',
+  }
+
+  const themeButton = {
+      filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))',
+  }
+
+  const languageButton = {
+
   }
 
   const leftSideStyle = {
@@ -906,9 +944,9 @@ const menuStyle = {
     justifyContent: 'space-between',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingRight: '1.5rem',
+    paddingRight: '2.2rem',
     flex: 1, // This will make the div take up all remaining space
-    gap: '1rem',
+    // gap: '1rem',
   };
     
   const profilePictureStyle = {
@@ -917,7 +955,16 @@ const menuStyle = {
     borderRadius: '50%',
     justifyContent: 'center',
     fill: 'white',
-    border: `2px solid ${theme === 'light' ? 'black' : 'white'}`,
+
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+
+    // boxShadow: showProfilePopUpMenu ? 'inset 0 0 0 1px #AAAAAA' : 'none',
+    outline: showProfilePopUpMenu ? '1px solid #AAAAAA' : 'none',
+    // transition: 'outline 0.3s',
+    transition: 'all 0.1s ease',
+
+    // border: `2px solid ${theme === 'light' ? 'black' : 'white'}`,
+    // border:'1px solid #AAAAAA',
     // border: '2px solid grey',
     // Add more styles as needed
   };
@@ -929,13 +976,15 @@ const menuStyle = {
   };
 
 
-
-  themeColor = themeColor === 'none' ? (theme === 'light' ? 'black' : 'white') : themeColor;
+  //sätt färg
+  // themeColor = themeColor === 'none' ? (theme === 'light' ? 'black' : 'white') : themeColor;
+  // themeColor = '#3de434';
 
   const popUpMenu = {
     
     backgroundColor: theme === 'light' ? 'white' : 'black',
-    border: `2px solid ${theme === 'light' ? 'black' : 'white'}`,
+    // border: `2px solid ${theme === 'light' ? 'black' : 'white'}`,
+    border: '1px solid #AAAAAA',
     position: 'fixed',
 
     top: 'calc(0.5rem + 90px)',
@@ -1012,15 +1061,34 @@ const menuStyle = {
 
       <nav style={navStyle} className="navStyle">
         <div style={homeButtonStyle} onClick={() => navigate('/main-page')}>
-          <div className="loop-logo" style={{'--themeColor': themeColor }}> </div>
+          <div className="loop-logo-button" style={{'--themeColor': themeColor }}> </div>
         </div>
 
         {/* <div style={linkStyle} onClick={() => navigate('/chat')}>Chat</div> */}
 
         <div style={leftSideStyle}>
-          <div className="hide-on-small-screen" style={navbarButtonStyleBackButton} onMouseEnter={() => setHoverGoBack(true)} onMouseLeave={() => setHoverGoBack(false)} onClick={goBack}>
-            <GoBackButton color={themeColor} width="45px" height="45px" theme={theme} />
+
+
+          <div className="hide-on-small-screen"
+            style={navbarButtonStyleBackButton}
+            onMouseEnter={() => setHoverGoBack(true)}
+            onMouseLeave={() => setHoverGoBack(false)}
+            onClick={goBack}
+          >  
+
+            <div
+              className="back-icon"
+              style={{'--themeColor': themeColor
+              }}>
+            </div>
+
           </div>
+
+          {/* <div className="hide-on-small-screen" style={navbarButtonStyleBackButton} onMouseEnter={() => setHoverGoBack(true)} onMouseLeave={() => setHoverGoBack(false)} onClick={goBack}>
+            <GoBackButton color={themeColor} width="45px" height="45px" theme={theme} />
+          </div> */}
+
+          
         </div>
 
         <div style={rightSideStyle}> {/* Add this div */}
@@ -1035,13 +1103,68 @@ const menuStyle = {
           />
         </div> */}
 
-        <div className="hide-on-small-screen" style={navbarButtonStyleTheme} onMouseEnter={() => setHoverTheme(true)} onMouseLeave={() => setHoverTheme(false)} onClick={toggleThemePopUpMenu}>
-          <ThemeButton color={themeColor} width="45px" height="45px" theme={theme} />
+        {/* <div className="hide-on-small-screen" style={navbarButtonStyleTheme} onMouseEnter={() => setHoverTheme(true)} onMouseLeave={() => setHoverTheme(false)} onClick={toggleThemePopUpMenu}>
+          <ThemeButton style={themeButton} color={themeColor} width="45px" height="45px" theme={theme} />
+        </div> */}
+
+
+        <div className="hide-on-small-screen"
+          style={navbarButtonStyleNotification}
+          onMouseEnter={() => setHoverNotification(true)}
+          onMouseLeave={() => setHoverNotification(false)}
+          // onClick={toggleLanguagePopUpMenu}
+        >  
+
+          <div
+            className="notification-icon"
+            style={{'--themeColor': themeColor
+            }}>
+          </div>
         </div>
 
-        <div className="hide-on-small-screen" style={navbarButtonStyleLanguage} onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)} onClick={toggleLanguagePopUpMenu}>
-          <LanguageButton color={themeColor} width="45px" height="45px" />
+
+        <div className="hide-on-small-screen"
+          style={navbarButtonStyleTheme}
+          onMouseEnter={() => setHoverTheme(true)}
+          onMouseLeave={() => setHoverTheme(false)}
+          onClick={toggleThemePopUpMenu}
+        >
+          {theme == 'light' &&
+            <div
+              className="sun-icon"
+              style={{'--themeColor': themeColor
+              }}>
+            </div>
+          }
+          {theme == 'dark' &&
+            <div
+              className="moon-icon"
+              style={{'--themeColor': themeColor
+              }}>
+            </div>
+          }
+
         </div>
+
+
+        <div className="hide-on-small-screen"
+          style={navbarButtonStyleLanguage}
+          onMouseEnter={() => setHoverLanguage(true)}
+          onMouseLeave={() => setHoverLanguage(false)}
+          onClick={toggleLanguagePopUpMenu}
+        >  
+
+          <div
+            className="language-icon"
+            style={{'--themeColor': themeColor
+            }}>
+          </div>
+
+        </div>
+
+        {/* <div className="hide-on-small-screen" style={navbarButtonStyleLanguage} onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)} onClick={toggleLanguagePopUpMenu}>
+          <LanguageButton style={languageButton} color={themeColor} width="45px" height="45px" />
+        </div> */}
 
 
         {/* <div style={navbarButtonStyle} onClick={() => navigate('/')}>
@@ -1053,7 +1176,16 @@ const menuStyle = {
           />
         </div> */}
 
-        {profilePictureUrl && <img src={profilePictureUrl} alt="Profile" className="hide-on-small-screen" style={profilePictureStyle} onClick={toggleProfilePopUpMenu} />}
+        {profilePictureUrl &&
+            <div className="profile-picture" style={{ display: 'inline-block', position: 'relative'}}>
+            <img src={profilePictureUrl}
+            alt="Profile"
+            className="hide-on-small-screen"
+            style={profilePictureStyle}
+            onClick={toggleProfilePopUpMenu}
+          />
+        </div>
+        }
 
         {/* Add your symbols here */}
         </div>
@@ -1083,9 +1215,20 @@ const menuStyle = {
           </div>
 
           <div style={lowerMenuIcons}>
-            <img src="/menubar_icons/menubar_book_icon.png" width="82px" height='82px' alt="Profile" style={theLowerMenuIconsLeft}/>
-            <img src="/menubar_icons/menubar_loop_icon.png" width="110px" height='110px' alt="Profile" style={theLowerMenuIconsMain}/>
-            <img src="/menubar_icons/menubar_settings_icon.png" width="82px" height='82px' alt="Profile" style={theLowerMenuIconsRight}/>
+            {/* <img src="/menubar_icons/menubar_book_icon.png" width="82px" height='82px' alt="Profile" style={theLowerMenuIconsLeft}/> */}
+            <div style={theLowerMenuIconsLeft} onClick={() => navigate('/main-page')}>
+              <div className="friends-icon" style={{'--themeColor': themeColor }}> </div>
+            </div>
+
+            <div style={theLowerMenuIconsMain} onClick={() => navigate('/main-page')}>
+              <div className="main-loop-icon" style={{'--themeColor': themeColor }}> </div>
+            </div>
+
+            {/* <img src="/menubar_icons/menubar_loop_icon.png" width="110px" height='110px' alt="Profile" style={theLowerMenuIconsMain}/> */}
+            {/* <img src="/menubar_icons/menubar_settings_icon.png" width="82px" height='82px' alt="Profile" style={theLowerMenuIconsRight}/> */}
+            <div style={theLowerMenuIconsRight} onClick={() => navigate('/add-friends')}>
+              <div className="plus-icon" style={{'--themeColor': themeColor }}> </div>
+            </div>
 
           </div>
 
@@ -1172,7 +1315,7 @@ const menuStyle = {
               {/* <ProfileIcon color={themeColor} width="30px" height="30px" /> */}
               <p style={inPopUpMenuText}><FormattedMessage id="swedish" /></p>
               {userLanguage == 'swedish' && (
-              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              <div className="check-mark" style={{'--themeColor': themeColor }}> </div>
               )}
             </div>
             <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleLanguageChange('english'); }}>
@@ -1184,13 +1327,13 @@ const menuStyle = {
               />
               <p style={inPopUpMenuText}><FormattedMessage id="english" /></p>
               {userLanguage == 'english' && (
-              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              <div className="check-mark" style={{'--themeColor': themeColor }}> </div>
               )}
             </div>
             <div className="popup-menu-button" style={inPopUpMenuAutomatic} onClick={() => { handleLanguageChange('automatic'); }}>
               <p style={inPopUpMenuText}><FormattedMessage id="automatic" /></p>
               {userLanguage == 'automatic' && (
-              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              <div className="check-mark" style={{'--themeColor': themeColor }}> </div>
               )}
             </div>
           {/* Your popup menu goes here */}
@@ -1211,7 +1354,7 @@ const menuStyle = {
               {/* <ProfileIcon color={themeColor} width="30px" height="30px" /> */}
               <p style={inPopUpMenuText}><FormattedMessage id="lightMode" /></p>
               {userTheme == 'light' && (
-              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              <div className="check-mark" style={{'--themeColor': themeColor }}> </div>
               )}
             </div>
             <div className="popup-menu-button" style={inPopUpMenu} onClick={() => { handleThemeChange('dark'); }}>
@@ -1226,13 +1369,13 @@ const menuStyle = {
           
               <p style={inPopUpMenuText}><FormattedMessage id="darkMode" /></p>
               {userTheme == 'dark' && (
-              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              <div className="check-mark" style={{'--themeColor': themeColor }}> </div>
               )}
             </div>
             <div className="popup-menu-button" style={inPopUpMenuAutomatic} onClick={() => { handleThemeChange('automatic'); }}>
               <p style={inPopUpMenuText}><FormattedMessage id="automatic" /></p>
               {userTheme == 'automatic' && (
-              <div className="check_mark" style={{'--themeColor': themeColor }}> </div>
+              <div className="check-mark" style={{'--themeColor': themeColor }}> </div>
               )}
             </div>
           {/* Your popup menu goes here */}

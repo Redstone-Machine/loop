@@ -116,7 +116,7 @@ function MyComponent({ Component, pageProps }) {
   }
 
   const chatDistance = {
-    height: 'calc(3rem + 16px)',
+    height: 'calc(7rem + 16px)',
   };
 
   const mobileMenubarDistance = {
@@ -144,11 +144,11 @@ function MyComponent({ Component, pageProps }) {
 
       </Head>
 
-      <br />
-      <br />
+      {/* <br />
+      <br /> */}
 
 
-      {phoneLayout && !isKeyboardVisible &&
+      {phoneLayout && !isKeyboardVisible && activePage !== 'login' &&
         <div style={mobileMenubarDistance}></div>
       }
 

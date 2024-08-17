@@ -79,7 +79,10 @@ const MainPage = () => {
   // const isLoaded = !(usersIsLoading || FriendsIsLoading || recivedFriendRequestsIsLoading || loopsIsLoading);
   
   useEffect(() => {
-    setThemeColor('none');
+    // setThemeColor('none');
+    setThemeColor('#3de434');
+
+
   }, []);
   
   return (

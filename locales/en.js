@@ -30,9 +30,11 @@ export default {
     lightMode: 'Light Mode',
 
   // login:
-    logInTitle: 'Log in to Loop',
+    logInTitle: 'Log in to',
     logInGoogle: 'Log in with Google',
     logInApple: 'Log in with Apple',
+
+    loginFailed: 'Failed to log in. Please check your username and password.',
 
   // register:
     registerTitle: 'Create an account',

@@ -40,7 +40,9 @@ const MainPage = () => {
   console.log('loopUsers:', loopUsers);
 
   useEffect(() => {
+    console.log('loop color:', loop?.color);
     setThemeColor(loop?.color);
+    console.log('theme color:', themeColor);
   }, [loop?.color]);
 
   return (

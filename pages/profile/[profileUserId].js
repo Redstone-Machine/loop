@@ -59,7 +59,7 @@ const SettingsPage = () => {
                         <h1>{profileUserName}</h1>
 
                         <p>Namn: {profileFirstName} {profileSurName}</p>
-                        <p>Mail: {profileEmail}</p>
+                        {/* <p>Mail: {profileEmail}</p> */}
 
                         {profilePictureUrl && <img src={profilePictureUrl} alt="Profilbild" style={{ width: '200px', height: '200px' }} />}
                         
