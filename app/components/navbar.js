@@ -1217,7 +1217,7 @@ const menuStyle = {
 
           <div style={lowerMenuIcons}>
             {/* <img src="/menubar_icons/menubar_book_icon.png" width="82px" height='82px' alt="Profile" style={theLowerMenuIconsLeft}/> */}
-            <div style={theLowerMenuIconsLeft} onClick={() => navigate('/main-page')}>
+            <div style={theLowerMenuIconsLeft} onClick={() => navigate('/friends')}>
               <div className="friends-icon" style={{'--themeColor': themeColor }}> </div>
             </div>
 
@@ -1256,11 +1256,11 @@ const menuStyle = {
 
           {expandMobileLowerMenubar && (
             <div style={mobileLowerExpandedMenubar}>
-              <p  onClick={() => { handleSignOut(); closeProfilePopUpMenu(); }} style={mobileLowerExpandedMenubarText}>Logga ut</p>
+              <p onClick={() => { handleSignOut(); closeProfilePopUpMenu(); }} style={mobileLowerExpandedMenubarText}>Logga ut</p>
               <p onClick={() => navigate(`/profile/${userId}`, setExpandMobileLowerMenubar(false))}style={mobileLowerExpandedMenubarText}>Min profil</p>
               <p onClick={() => navigate(`/settings`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Inställningar</p>
               <p onClick={() => navigate(`/add-friends`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Lägg till vänner</p> 
-              <p onClick={() => navigate(`/main-page`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Vänner</p> 
+              <p onClick={() => navigate(`/friends`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Vänner</p> 
             </div>
           )}
 

@@ -187,6 +187,7 @@ const MainPage = () => {
             }
             <br />
             <br />
+            {/* <button onClick={() => router.push('/friends')}>Vänner tillfällig knapp</button> */}
 
           </div>
         </>
