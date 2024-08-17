@@ -33,6 +33,19 @@ export default async (req, res) => {
             createdAt: new Date(),
           },
         });
+
+        // Uppdatera lastMessageAt i Friend-modellen
+        await prisma.friend.updateMany({
+          where: {
+            OR: [
+              { requesterId: userId, addresseeId: recipientId },
+              { requesterId: recipientId, addresseeId: userId },
+            ],
+          },
+          data: {
+            lastMessageAt: new Date(),
+          },
+        });
   
         return res.status(200).json(newMessage);
       } catch (error) {

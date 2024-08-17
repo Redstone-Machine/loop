@@ -123,6 +123,7 @@ model Friend {
   addresseeId  String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  lastMessageAt DateTime @default(now())
 
   requester    User     @relation("FriendRequests", fields: [requesterId], references: [id])
   addressee    User     @relation("FriendRequestsReceived", fields: [addresseeId], references: [id])
