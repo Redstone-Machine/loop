@@ -19,6 +19,7 @@ export default {
     createLoop: 'Skapa en Loop',
     color: 'Färg',
     name: 'Namn',
+    noSupport: 'Denna funktion stöds inte ännu.',
 
     // navbar:
     english: 'Engelska',

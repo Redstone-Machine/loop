@@ -1177,13 +1177,14 @@ const menuStyle = {
         </div> */}
 
         {profilePictureUrl &&
-            <div className="profile-picture" style={{ display: 'inline-block', position: 'relative'}}>
-            <img src={profilePictureUrl}
-            alt="Profile"
-            className="hide-on-small-screen"
-            style={profilePictureStyle}
-            onClick={toggleProfilePopUpMenu}
-          />
+            <div className="hide-on-small-screen">
+              <div className="profile-picture" style={{ display: 'inline-block', position: 'relative'}}>
+              <img src={profilePictureUrl}
+              alt="Profile"
+              style={profilePictureStyle}
+              onClick={toggleProfilePopUpMenu}
+            />
+          </div>
         </div>
         }
 

@@ -19,6 +19,7 @@ export default {
     createLoop: 'Create a Loop',
     color: 'Color',
     name: 'Name',
+    noSupport: 'This feature isn\'t supported yet.',
 
   // navbar:
 

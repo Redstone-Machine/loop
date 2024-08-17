@@ -92,6 +92,10 @@ const Login = () => {
   // themeColor = themeColor === 'none' ? (theme === 'light' ? 'black' : 'white') : themeColor;
 
 
+  const handleNoSupport = () => {
+    alert(intl.formatMessage({ id: 'noSupport' }));
+  }
+  
   const signInGoogle = async (event) => {
     signIn('google', {
       // callbackUrl: window.location.href,
@@ -433,7 +437,8 @@ const Login = () => {
         <button
           style={loginWithApple}
           type="button"
-          // onClick={signInGoogle
+          // onClick={signInGoogle}
+          onClick={handleNoSupport}
           >  
           <AppleLogo style={appleLogo} height={24} width={24}/>
           <FormattedMessage id="logInApple" style={loginTextApple} />  
