@@ -538,8 +538,9 @@ const ChatPage = () => {
 
 
 
-  const handleInputChange = (e) => {
-    setMessageText(e.target.value);
+    const handleInputChange = (e) => {
+      setMessageText(e.target.value);
+      handleTyping(); // Anropa handleTyping här
   };
 
 
