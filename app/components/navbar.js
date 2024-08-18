@@ -852,7 +852,7 @@ const menuStyle = {
     backgroundColor: theme === 'light' ? 'white' : 'black',
 
     // backgroundColor: theme === 'light' ? 'white' : 'black',
-    // zIndex: 1000
+    zIndex: 998
   };
 
   const linkStyle = { cursor: 'pointer' };
@@ -1039,6 +1039,9 @@ const menuStyle = {
     borderRadius: '15px',
 
     fontSize: '1.3rem',
+
+    zIndex: 1000,
+
     // marginBlockStart: '0rem',
 
     // opacity: showProfilePopUpMenu ? 1 : 0,
