@@ -492,8 +492,10 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
 
 
   const handleSignOut = () => {
+    console.log('Starting sign out process');
     setExpandMobileLowerMenubar(false);
-    signOut().then(() => {
+  
+    signOut({ redirect: false }).then(() => {
       console.log('Sign out successful');
       // Lägg till en liten fördröjning för att säkerställa att signOut är klar
       setTimeout(() => {
