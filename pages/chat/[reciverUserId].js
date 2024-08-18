@@ -275,6 +275,12 @@ const ChatPage = () => {
       newSocket.on('chat message', (message) => {
         console.log('Received message:', message);
 
+          // Rensa typing timeout när ett meddelande tas emot
+          if (typingTimeout.current) {
+            clearTimeout(typingTimeout.current);
+            setIsTyping(false);
+          }
+
 
         if (message.userId === reciverUserId) {
           setMessages((prevMessages) => [...prevMessages, message]);
