@@ -741,7 +741,7 @@ const ChatPage = () => {
   
     useEffect(() => {
       fetchMessages();
-    }, [userId, reciverUserId, messageText]);
+    }, [userId, reciverUserId]);
 
     //ta bort messageText om den inte ska uppdatera varje gång man skriver
 
@@ -1043,7 +1043,7 @@ const ChatPage = () => {
                 </p>
               </div>
               )}
-              
+
               <div style={inputWrapper}>
             <input
               style={inputMessage}
