@@ -252,7 +252,7 @@ const ChatPage = () => {
 
     const markMessageAsRead = (messageUserId, messageRecipientId, messageContent) => {
           console.log('Marking message as read:', messageUserId, messageRecipientId, messageContent);
-          fetch(`/api/setMessageAsReadByMessageContent?id=${messageUserId, messageRecipientId, messageContent}`)
+          fetch(`/api/setMessageAsReadByContent?id=${messageUserId, messageRecipientId, messageContent}`)
             // .then(response => response.json())
     };
 
