@@ -152,6 +152,7 @@ io.on('connection', (socket) => {
 
   socket.on('typing', (reciverUserId) => {
     const receiverSocketId = users[reciverUserId];
+    console.log(`Receiver user id för typing: ${reciverUserId}`);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit('typing');
     }
