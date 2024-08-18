@@ -198,6 +198,8 @@ const ChatPage = () => {
 
     const typingTimeout = useRef(null);
 
+    const handleTypingRef = useRef(null);
+    
     useEffect(() => {
       if (!userId) return;
 
@@ -257,6 +259,8 @@ const ChatPage = () => {
           newSocket.emit('typing', reciverUserId);
         };
       
+        handleTypingRef.current = handleTyping;
+
         const inputElement = document.getElementById('messageInput');
         if (inputElement) {
           inputElement.addEventListener('input', handleTyping);
@@ -540,8 +544,10 @@ const ChatPage = () => {
 
     const handleInputChange = (e) => {
       setMessageText(e.target.value);
-      handleTyping(); // Anropa handleTyping här
-  };
+      if (handleTypingRef.current) {
+        handleTypingRef.current(); // Anropa handleTyping via ref
+      }
+    };
 
 
 
