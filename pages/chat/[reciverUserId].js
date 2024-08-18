@@ -56,6 +56,7 @@ const ChatPage = () => {
 
     const [updatingFromBackground, setUpdatingFromBackground] = useState(false);
 
+    const [isTyping, setIsTyping] = useState(false);
 
     useEffect(() => {
       // Kontrollera skärmdimensionerna vid första renderingen
@@ -195,6 +196,8 @@ const ChatPage = () => {
     //   };
     // }, [reciverUserId]);
 
+    const typingTimeout = useRef(null);
+
     useEffect(() => {
       if (!userId) return;
 
@@ -214,6 +217,8 @@ const ChatPage = () => {
       //   console.log('Notification permission already granted.');
       // }
 
+
+
       // Anslut till WebSocket-servern
       const newSocket = io(process.env.NEXT_PUBLIC_EXTRA_URL); // Ersätt med din server-URL
       setSocket(newSocket);
@@ -226,10 +231,41 @@ const ChatPage = () => {
         newSocket.emit('register', userId, reciverUserId);
       });
 
+      // newSocket.emit('typing', reciverUserId);
+
       newSocket.on('update messages', () => {
         console.log('Received update messages event');
         fetchMessages();
       });
+
+      newSocket.on('typing', () => {
+        console.log('Received typing event');
+        setIsTyping(true);
+
+        if (typingTimeout.current) {
+          clearTimeout(typingTimeout.current);
+        }
+
+        typingTimeout.current = setTimeout(() => {
+          setIsTyping(false);
+        }, 10000);
+      });
+
+
+        // Lägg till event listener för input-fältet
+        const handleTyping = () => {
+          newSocket.emit('typing', reciverUserId);
+        };
+
+        const inputElement = document.getElementById('messageInput');
+        if (inputElement) {
+          inputElement.addEventListener('input', handleTyping);
+        } else {
+          console.error('Element with id "messageInput" not found.');
+        }
+
+
+
   
       // Hantera inkommande meddelanden
       newSocket.on('chat message', (message) => {
@@ -250,8 +286,14 @@ const ChatPage = () => {
       // Stäng anslutningen när komponenten avmonteras
       return () => {
         newSocket.close();
+        if (typingTimeout.current) {
+          clearTimeout(typingTimeout.current);
+        }
+        if (inputElement) {
+          inputElement.removeEventListener('input', handleTyping);
+        }
       };
-    }, [userId, reciverUserId]);
+    }, [userId, reciverUserId, setIsTyping]);
 
       // Funktion för att markera ett meddelande som läst
 
@@ -320,7 +362,7 @@ const ChatPage = () => {
 
     const [isSending, setIsSending] = useState(false);
 
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    // const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -492,6 +534,13 @@ const ChatPage = () => {
     const inputRef = useRef(null);
     let originalScrollPosition = 0;
 
+
+
+
+
+  const handleInputChange = (e) => {
+    setMessageText(e.target.value);
+  };
 
 
 
@@ -946,6 +995,12 @@ const ChatPage = () => {
 })} */}
 
 
+        { isTyping && (
+          <div>
+            <p>SKRIVER</p>
+          </div>
+        )}
+
          
           <form onSubmit={handleSubmit} style={inputMessageForm}>
             <input
@@ -953,7 +1008,7 @@ const ChatPage = () => {
               ref={inputRef}
               type="text"
               value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
+              onChange={handleInputChange}
               // placeholder={intl.formatMessage({ id: 'writeMessage' })}
               // disabled={isSending}
             />

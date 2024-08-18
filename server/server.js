@@ -150,6 +150,13 @@ io.on('connection', (socket) => {
     
   });
 
+  socket.on('typing', (reciverUserId) => {
+    const receiverSocketId = users[reciverUserId];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('typing');
+    }
+  });
+
   // När ett meddelande skickas, skicka det till rätt mottagare
   socket.on('chat message', (message) => {
     console.log(`Message received from user ${message.userId} to user ${message.recipientId}: ${message.content}`);
