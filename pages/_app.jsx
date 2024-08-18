@@ -37,6 +37,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     }
   }, []);
 
+  
+
 
 
 
@@ -107,6 +109,22 @@ function MyComponent({ Component, pageProps }) {
   const router = useRouter();
   const activePage = router.pathname.split('/')[1]; // Get the active page
   const activeInsidePage = router.pathname.split('/')[2];
+
+
+
+  // Lista över sidor där skrollning ska vara avstängd
+  const noScrollPages = ['login'];
+
+  useEffect(() => {
+    if (noScrollPages.includes(activePage)) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }, [activePage, router.pathname]);
+
+
+
 
   const goHome = async () => {
     console.log('main-page load');

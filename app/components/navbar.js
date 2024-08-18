@@ -146,6 +146,9 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   }, []);
 
 
+
+
+
   useEffect(() => {
     
     setShowLowerMenubarAnimation(false);
@@ -156,6 +159,14 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
 
     return () => clearTimeout(timer); // Rensa timeout om komponenten avmonteras
   }, []);
+
+
+  // useEffect(() => {
+  //   // Denna effekt körs varje gång phoneLayout, isKeyboardVisible eller expandMobileLowerMenubar förändras
+  //   // Du kan lägga till logik här om du behöver utföra någon åtgärd när dessa tillstånd förändras
+  // }, [phoneLayout, isKeyboardVisible, expandMobileLowerMenubar]);
+
+
 
   useEffect(() => {
     if (userId) {
@@ -307,6 +318,23 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   if (activePage === 'chat' && activeInsidePage) {
       chatProfileId = reciverUserId;
   }
+
+  const [renderTrigger, setRenderTrigger] = useState(false);
+
+  useEffect(() => {
+    // Döljer tangentbordet när komponenten renderas
+    if (activePage === 'main-page') {
+      console.log('Hiding keyboard');
+      if (typeof document !== 'undefined' && document.activeElement) {
+        document.activeElement.blur();
+      }
+      setIsKeyboardVisible(false);
+      setRenderTrigger(prev => !prev);
+    }
+  }, [isKeyboardVisible, activePage]);
+
+
+
 
   useEffect(() => {
 
@@ -464,6 +492,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
 
 
   const handleSignOut = () => {
+    setExpandMobileLowerMenubar(false);
     signOut();
   }
 
@@ -848,6 +877,10 @@ const menuStyle = {
     // borderTop: showProfilePopUpMenu ? '2px solid #AAAAAA' : 'none',
 
   }
+
+
+
+  
 
 
 
@@ -1251,6 +1284,7 @@ const menuStyle = {
       </div> */}
 
 
+      {/* {phoneLayout && !isKeyboardVisible && ( */}
       {phoneLayout && !isKeyboardVisible && (
         <div style={mobileLowerMenubar}>
 

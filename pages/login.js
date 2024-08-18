@@ -35,35 +35,35 @@ const Login = () => {
 
 
 
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  // const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      // Kontrollera om fönstrets höjd har minskat, vilket indikerar att tangentbordet är öppet
-      if (window.innerHeight < document.documentElement.clientHeight) {
-        setIsKeyboardOpen(true);
-      } else {
-        setIsKeyboardOpen(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     // Kontrollera om fönstrets höjd har minskat, vilket indikerar att tangentbordet är öppet
+  //     if (window.innerHeight < document.documentElement.clientHeight) {
+  //       setIsKeyboardOpen(true);
+  //     } else {
+  //       setIsKeyboardOpen(false);
+  //     }
+  //   };
 
-    window.addEventListener('resize', handleResize);
+  //   window.addEventListener('resize', handleResize);
 
-    // Kör handleResize direkt för att sätta initialt värde
-    handleResize();
+  //   // Kör handleResize direkt för att sätta initialt värde
+  //   handleResize();
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    if (isKeyboardOpen) {
-      document.body.classList.add('no-scroll');
-    } else {
-      document.body.classList.add('no-scroll');
-    }
-  }, [isKeyboardOpen]);
+  // useEffect(() => {
+  //   if (isKeyboardOpen) {
+  //     document.body.classList.add('no-scroll');
+  //   } else {
+  //     document.body.classList.add('no-scroll');
+  //   }
+  // }, [isKeyboardOpen]);
 
 
 
@@ -95,7 +95,7 @@ const Login = () => {
   const handleNoSupport = () => {
     alert(intl.formatMessage({ id: 'noSupport' }));
   }
-  
+
   const signInGoogle = async (event) => {
     signIn('google', {
       // callbackUrl: window.location.href,
