@@ -4,15 +4,18 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
     const {
-        query: { messageId },
+        query: { messageUserId, messageRecipientId, messageContent },
+        
     } = req;
 
-    console.log('uppdaterar messageId till read', messageId);
+    console.log('uppdaterar messageId till read', messageContent);
 
     // Uppdatera alla meddelanden som skickats av recipientId till status 'READ'
     await prisma.message.updateMany({
         where: {
-            id: messageId,
+            senderId: messageUserId,
+            recipientId: messageRecipientId,
+            content: messageContent,
             status: 'SENT' // Om du bara vill uppdatera meddelanden som är 'SENT'
         },
         data: {
@@ -20,6 +23,6 @@ export default async function handler(req, res) {
         }
     });
 
-    console.log('uppdaterat messageId till read', messageId);
+    console.log('uppdaterat messageId till read', messageContent);
 
 }

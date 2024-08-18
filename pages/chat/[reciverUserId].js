@@ -233,7 +233,7 @@ const ChatPage = () => {
 
         if (message.userId === reciverUserId) {
           setMessages((prevMessages) => [...prevMessages, message]);
-          markMessageAsRead(message.id); // Anropa funktionen för att markera meddelandet som läst
+          markMessageAsRead(message.userId, message.recipientId, message.content ); // Anropa funktionen för att markera meddelandet som läst
         }
   
         // // Visa en notifikation om användaren har gett tillstånd
@@ -250,11 +250,17 @@ const ChatPage = () => {
 
       // Funktion för att markera ett meddelande som läst
 
-    const markMessageAsRead = (messageId) => {
-          fetch(`/api/setMessageAsReadByMessageId?id=${messageId}`)
+    const markMessageAsRead = (messageUserId, messageRecipientId, messageContent) => {
+          console.log('Marking message as read:', messageUserId, messageRecipientId, messageContent);
+          fetch(`/api/setMessageAsReadByMessageInfo?id=${messageUserId, messageRecipientId, messageContent}`)
             // .then(response => response.json())
     };
 
+    const markMessageAsReadById = (messageId) => {
+      console.log('Marking message as read:', messageId);
+      fetch(`/api/setMessageAsReadByMessageId?id=${messageId}`)
+        // .then(response => response.json())
+    };
   
 
 
