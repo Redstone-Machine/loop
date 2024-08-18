@@ -54,6 +54,7 @@ export default {
     messageSending: 'Skickar',
     messageSent: 'Levererat',
     messageRead: 'Läst',
+    writingText: ' skriver',
 
   // profile:
     profileTitle: 'Profil',

@@ -199,7 +199,7 @@ const ChatPage = () => {
     const typingTimeout = useRef(null);
 
     const handleTypingRef = useRef(null);
-    
+
     useEffect(() => {
       if (!userId) return;
 
@@ -592,28 +592,52 @@ const ChatPage = () => {
 
     // console.log ('themeaggjag:', theme)
 
-    const inputMessageForm = {
+      const inputMessageForm = {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        // gap: '10px',
+        position: 'fixed',
+        bottom: isKeyboardVisible ? '0' : (phoneLayout ? 'calc(0.5rem + 125px)' : '0'),
+        paddingBottom: '30px',
+        // paddingTop: '10px',
+        backgroundColor: theme === 'light' ?  'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        zIndex: 999,
+        left: '0px',
+    };
+    
+    const inputWrapper = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
         gap: '10px',
-        position: 'fixed',
-        // bottom: '0',
-        bottom: isKeyboardVisible ? '0' : (phoneLayout ? 'calc(0.5rem + 125px)' : '0'),
-        paddingBottom: '35px',
-        paddingTop: '10px',
-        // backgroundColor: 'rgba(255, 255, 255, 0.8)', // Lägg till en semi-transparent bakgrundsfärg
-        // color: theme === 'light' ? 'black' : 'white',
-        backgroundColor: theme === 'light' ?  'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(10px)', // Lägg till blur-effekten
-        WebkitBackdropFilter: 'blur(10px)',
-        zIndex: 999,
-        left: '0px',
+    };
 
+    const writingText = {
 
-        // position: 'fixed',
+      marginBlockStart: '0px',
+      marginBlockEnd: '0px',
+      fontFamily: "'SF Pro', sans-serif",
+      fontSize: '1rem',
+      color: 'gray',
     }
+
+    const writingTextWrapper = {
+
+      textAlign: 'left',
+      width: '100%',
+      left: 'max(calc((34% - 9.5rem)/2), 10px)',
+      position: 'relative',
+      marginTop: '4px',
+      marginBottom: '5px',
+      transition: 'all 0.2s',
+    }
+
 
 
     const isDayBeforeYesterday = (date) => {
@@ -1002,14 +1026,25 @@ const ChatPage = () => {
 })} */}
 
 
-        { isTyping && (
+        {/* { isTyping && (
           <div>
             <p>SKRIVER</p>
           </div>
-        )}
+        )} */}
 
          
           <form onSubmit={handleSubmit} style={inputMessageForm}>
+              { isTyping && (
+              <div style={writingTextWrapper}>
+                <p style={writingText}>
+                  {reciverUserName}
+                  <FormattedMessage id="writingText" />
+                  ...
+                </p>
+              </div>
+              )}
+              
+              <div style={inputWrapper}>
             <input
               style={inputMessage}
               ref={inputRef}
@@ -1027,6 +1062,7 @@ const ChatPage = () => {
             >
               <FormattedMessage id="send" />
             </button>
+          </div>
           </form>
       {/* <style jsx>{`
       .sent {

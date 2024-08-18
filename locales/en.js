@@ -22,7 +22,6 @@ export default {
     noSupport: 'This feature isn\'t supported yet.',
 
   // navbar:
-
     english: 'English',
     swedish: 'Swedish',
     myProfile: 'My Profile',
@@ -55,6 +54,7 @@ export default {
     messageSending: 'Sending',
     messageSent: 'Sent',
     messageRead: 'Read',
+    writingText: ' is writing',
 
   // profile:
     profileTitle: 'Profile',
