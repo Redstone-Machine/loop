@@ -131,12 +131,15 @@ model Friend {
   @@unique([requesterId, addresseeId])
 }
 
+
+
 model Message {
   id        String   @id @default(cuid())
   content   String
   senderId    String
   recipientId String
   createdAt DateTime @default(now())
+  status      String   @default("READ")
 
   sender      User     @relation("SentMessages", fields: [senderId], references: [id])
   recipient   User     @relation("ReceivedMessages", fields: [recipientId], references: [id])

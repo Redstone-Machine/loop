@@ -121,7 +121,8 @@ function MyComponent({ Component, pageProps }) {
     } else {
       document.body.classList.remove('no-scroll');
     }
-  }, [activePage, router.pathname]);
+    setIsKeyboardVisible(false);
+  }, [activePage, router.pathname, isKeyboardVisible]);
 
 
 
