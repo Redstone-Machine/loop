@@ -8,6 +8,29 @@
   }
 
 
+
+  /* styles.css
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+@media screen and (orientation: landscape) {
+  body {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+} */
+
+
+
+
   @keyframes slideIn {
     0% {
       transform: translateY(-7px);

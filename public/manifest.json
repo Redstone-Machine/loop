@@ -16,8 +16,29 @@
       }
 
     ],
+
+    "shortcuts" : [
+      {
+        "name": "Startsida",
+        "url": "/main-page",
+        "description": "Startsidan för Loop"
+      },
+      {
+        "name": "Vänner",
+        "url": "/friends"
+      }
+    ],
+
+    "orientation": "portrait-primary",
+
     "start_url": "/",
     "display": "standalone",
     "theme_color": "#000000",
     "background_color": "#000000"
+
+
+
+    
   }
+
+  

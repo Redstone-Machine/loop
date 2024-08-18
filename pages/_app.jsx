@@ -5,13 +5,13 @@ import messages_en from '../locales/en';
 import messages_sv from '../locales/sv';
 import App from 'next/app';
 import { getSession } from 'next-auth/react';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { LanguageProvider, LanguageContext } from '../contexts/LanguageContext';
 import { ThemeProvider, ThemeContext } from '../contexts/ThemeContext';
 import { ThemeColorProvider, ThemeColorContext } from '../contexts/ThemeColorContext';
 import Head from 'next/head';
 
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 
 import { useRouter } from 'next/router';
 
@@ -61,6 +61,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   );
 }
 
+
+
 function MyComponent({ Component, pageProps }) {
   const { locale, switchToEnglish, switchToSwedish } = useContext(LanguageContext);
   const { theme, switchToLightMode, switchToDarkMode } = useContext(ThemeContext);
@@ -70,18 +72,64 @@ function MyComponent({ Component, pageProps }) {
 
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-  useEffect(() => {
-    const handleFocus = () => setIsKeyboardVisible(true);
-    const handleBlur = () => setIsKeyboardVisible(false);
+  // useEffect(() => {
+  //   console.log('useEffect hook triggered');
   
-    window.addEventListener('focusin', handleFocus);
-    window.addEventListener('focusout', handleBlur);
+  //   const handleFocus = () => {
+  //     console.log('Focus event triggered');
+  //     setIsKeyboardVisible(true);
+  //   };
+  //   const handleBlur = () => {
+  //     console.log('Blur event triggered');
+  //     setIsKeyboardVisible(false);
+  //   };
+  
+  //   window.addEventListener('focus', handleFocus);
+  //   window.addEventListener('blur', handleBlur);
+  
+  //   return () => {
+  //     window.removeEventListener('focus', handleFocus);
+  //     window.removeEventListener('blur', handleBlur);
+  //   };
+  // }, []);
+  useEffect(() => {
+    const handleFocusIn = () => {
+      console.log('FocusIn event triggered');
+      setIsKeyboardVisible(true);
+      // console.log('isKeyboardVisible should be true:', isKeyboardVisible);
+    };
+  
+    const handleFocusOut = () => {
+      console.log('FocusOut event triggered');
+      setIsKeyboardVisible(false);
+      // console.log('isKeyboardVisible:', isKeyboardVisible);
+    };
+  
+    window.addEventListener('focusin', handleFocusIn);
+    window.addEventListener('focusout', handleFocusOut);
+  
+    // Initial check
+    if (document.hasFocus()) {
+      handleFocusIn();
+    } else {
+      handleFocusOut();
+    }
+
+    
   
     return () => {
-      window.removeEventListener('focusin', handleFocus);
-      window.removeEventListener('focusout', handleBlur);
+      window.removeEventListener('focusin', handleFocusIn);
+      window.removeEventListener('focusout', handleFocusOut);
     };
   }, []);
+
+  useEffect(() => {
+    console.log('isKeyboardVisible updated:', isKeyboardVisible);
+  }, [isKeyboardVisible]);
+
+  // useEffect(() => {
+
+  // }, [isKeyboardVisible]);
 
   useEffect(() => {
     // Kontrollera skärmdimensionerna vid första renderingen
@@ -95,6 +143,11 @@ function MyComponent({ Component, pageProps }) {
       window.removeEventListener('resize', checkScreenDimensions);
     };
   }, []);
+
+  // useEffect(() => {
+  //   // Döljer tangentbordet när komponenten renderas
+
+  // }, [isKeyboardVisible]);
 
 
   const checkScreenDimensions = () => {
@@ -122,8 +175,33 @@ function MyComponent({ Component, pageProps }) {
       document.body.classList.remove('no-scroll');
     }
     setIsKeyboardVisible(false);
-  }, [activePage, router.pathname, isKeyboardVisible]);
+  }, [activePage, router.pathname]);
 
+
+
+  useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      if (window.screen.orientation && window.screen.orientation.lock) {
+        window.screen.orientation.lock('portrait').catch((err) => {
+          console.error('Orientation lock failed: ', err);
+        });
+      } else if (window.screen.lockOrientation) {
+        window.screen.lockOrientation('portrait').catch((err) => {
+          console.error('Orientation lock failed: ', err);
+        });
+      } else if (window.screen.mozLockOrientation) {
+        window.screen.mozLockOrientation('portrait').catch((err) => {
+          console.error('Orientation lock failed: ', err);
+        });
+      } else if (window.screen.msLockOrientation) {
+        window.screen.msLockOrientation('portrait').catch((err) => {
+          console.error('Orientation lock failed: ', err);
+        });
+      } else {
+        console.warn('Screen orientation lock is not supported on this device.');
+      }
+    }
+  }, []);
 
 
 
@@ -139,12 +217,14 @@ function MyComponent({ Component, pageProps }) {
   };
 
   const mobileMenubarDistance = {
-    height: 'calc(0.5rem + 125px)' // Adjust this value to match the height of your navbar
+       height: 'calc(0.5rem + 125px)'
   };
 
   // const mainContentStyle = { 
   //   marginTop: 'calc(0.5rem + 80px)' // Adjust this value to match the height of your navbar
   // };
+
+  
 
 
   return (
@@ -167,13 +247,15 @@ function MyComponent({ Component, pageProps }) {
       <br /> */}
 
 
-      {phoneLayout && !isKeyboardVisible && activePage !== 'login' &&
-        <div style={mobileMenubarDistance}></div>
-      }
+      {phoneLayout && !isKeyboardVisible && activePage !== 'login' && (
+        <div
+          style={mobileMenubarDistance}>
+        </div>
+      )}
 
-      {activePage === 'chat' && activeInsidePage &&
+      {activePage === 'chat' && activeInsidePage && (
         <div style={chatDistance}></div> 
-      }
+      )}
 
       {/* <button onClick={switchToEnglish}>Switch to English</button>
       <button onClick={switchToSwedish}>Byt till Svenska</button>
