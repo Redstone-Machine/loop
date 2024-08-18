@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 export default async function handle(req, res) {
   const { senderId, recipientId } = req.query;
 
+
+
   const messages = await prisma.message.findMany({
     where: {
       OR: [
@@ -24,6 +26,18 @@ export default async function handle(req, res) {
     },
     orderBy: {
       createdAt: 'asc'
+    }
+  });
+
+  // Uppdatera alla meddelanden som skickats av recipientId till status 'READ'
+  await prisma.message.updateMany({
+    where: {
+      senderId: recipientId,
+      recipientId: senderId,
+      status: 'SENT' // Om du bara vill uppdatera meddelanden som är 'SENT'
+    },
+    data: {
+      status: 'READ'
     }
   });
 

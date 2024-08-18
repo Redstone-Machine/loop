@@ -315,6 +315,7 @@ const ChatPage = () => {
         userId: userId,
         recipientId: reciverUserId,
         createdAt: new Date().toISOString(), // Lägg till tidsstämpel
+        status: 'SENDING',
       };
 
       // Rensa meddelandeinputen direkt
@@ -647,6 +648,18 @@ const ChatPage = () => {
         return text.replace(urlPattern, (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
       }
 
+    const messageStatus = {
+      fontSize: '0.8em', 
+      color: 'gray',
+      marginTop: '5px',
+      display: 'block',
+      fontSize: '1.2rem',
+      fontFamily: 'SF Pro sans-serif',
+      alignSelf: 'flexEnd',
+      width: '100%',
+      textAlign: 'end',
+    }
+
 
 
 
@@ -686,6 +699,11 @@ const ChatPage = () => {
             } else {
               formattedTimestamp = format(currentTimestamp, 'EEE d MMM HH:mm', { locale: sv }); // Ex: "mån 10 juli 16:30"
             }
+
+            // Hitta det senaste meddelandet som användaren själv skickat
+            const latestUserMessage = messages
+            .filter(msg => msg.senderId === userId)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
 
             // Sanera innehållet innan det sätts in i DOM
@@ -729,10 +747,22 @@ const ChatPage = () => {
                     </div>
                   </div>
                 )}
-                <div className={`message-wrapper ${sameSenderWithinHour ? 'same-sender' : ''}`}>
+                {/* <div className={`message-wrapper ${sameSenderWithinHour ? 'same-sender' : ''}`}>
                   {/* <p className={messageClass}>{message.content}</p> */}
-                  <p className={messageClass} dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+                  {/* <p className={messageClass} dangerouslySetInnerHTML={{ __html: sanitizedContent }} /> */}
+                {/* </div> */}
+
+                <div className={`message-wrapper ${sameSenderWithinHour ? 'same-sender' : ''}`}>
+                  <p className={message.senderId === userId ? 'sent' : 'received'}>
+                    {message.content}
+                  </p>
+                  {message.senderId === userId && message === latestUserMessage && (
+                    <div style={messageStatus}>
+                      {message.status}
+                    </div>
+                  )}
                 </div>
+
               </React.Fragment>
             );
           })}
@@ -744,6 +774,8 @@ const ChatPage = () => {
       <style jsx>{`
         .message-wrapper {
           display: flex;
+          flex-direction: column; /* Ensure children are stacked vertically */
+          align-items: flex-start;
           // margin-bottom: 10px; // Avstånd mellan meddelanden
         }
 
