@@ -320,6 +320,8 @@ const ChatPage = () => {
 
     const [isSending, setIsSending] = useState(false);
 
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
     const handleSubmit = async (event) => {
       event.preventDefault();
 
@@ -333,6 +335,7 @@ const ChatPage = () => {
       const message = {
         content: messageText,
         userId: userId,
+        senderId: userId,
         recipientId: reciverUserId,
         createdAt: new Date().toISOString(), // Lägg till tidsstämpel
         status: 'SENDING',
@@ -340,7 +343,11 @@ const ChatPage = () => {
 
       // Rensa meddelandeinputen direkt
       setMessageText('');
-      setSentMessages(prevMessages => [...prevMessages, message]);
+      // setSentMessages(prevMessages => [...prevMessages, message]);
+      setMessages(prevMessages => [...prevMessages, message]);
+
+      // await delay(2000); // Vänta i 2 sekunder
+      // // setSentMessages(message);
     
       // Kontrollera om socket är ansluten
       if (socket && socket.connected) {
@@ -382,6 +389,8 @@ const ChatPage = () => {
               chatId: userId
             }),
           });
+
+
   
           const notificationData = await notificationResponse.json();
   
@@ -634,8 +643,8 @@ const ChatPage = () => {
             const received = messages.filter(message => message.recipientId === userId);
             const combined = [...sent, ...received];
             combined.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-            setSentMessages(sent);
-            setReceivedMessages(received);
+            // setSentMessages(sent);
+            // setReceivedMessages(received);
             setMessages(combined);
           });
 
@@ -768,7 +777,8 @@ const ChatPage = () => {
             };
 
             // Kontrollera om meddelandet endast innehåller emojis och om antalet emojis är högst 3
-            const messageClass = `${message.senderId === userId ? 'sent' : 'received'} ${isOnlyEmojisAndMaxThree(message.content) ? 'only-emoji' : ''}`;
+            const messageClass = `${message.senderId === userId ? 'sent' : 'received'}
+            ${isOnlyEmojisAndMaxThree(message.content) ? 'only-emoji' : ''}`;
 
 
             return (
