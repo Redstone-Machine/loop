@@ -134,9 +134,19 @@ io.on('connection', (socket) => {
   console.log(`A user connected with id: ${socket.id}`);
   
   // När en användare ansluter, spara deras socket-id
-  socket.on('register', (userId) => {
+  socket.on('register', (userId, reciverUserId) => {
     users[userId] = socket.id;
     console.log(`User registered with id: ${userId} and socket id: ${socket.id}`);
+
+
+    // Hämta mottagarens socket-id
+    const receiverSocketId = users[reciverUserId];
+    if (receiverSocketId) {
+      // Skicka 'update messages' till mottagaren
+      io.to(receiverSocketId).emit('update messages');
+    }
+
+    
   });
 
   // När ett meddelande skickas, skicka det till rätt mottagare

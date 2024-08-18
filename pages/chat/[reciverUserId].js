@@ -223,7 +223,11 @@ const ChatPage = () => {
         console.log(`Connected with socket id: ${newSocket.id}`);
         
         // Skicka register-händelsen med userId
-        newSocket.emit('register', userId);
+        newSocket.emit('register', userId, reciverUserId);
+      });
+
+      newSocket.on('update messages', () => {
+        fetchMessages();
       });
   
       // Hantera inkommande meddelanden
@@ -633,6 +637,15 @@ const ChatPage = () => {
             setReceivedMessages(received);
             setMessages(combined);
           });
+
+        // Kontrollera om socket är ansluten
+          // if (socket && socket.connected) {
+          //   console.log('Socket is connected, emitting update messages');
+          //   // Skicka uppdateringsmeddelandet i realtid via WebSocket
+          //   socket.emit('update messages');
+          // } else {
+          //   console.error('Socket is not connected');
+          // }
       }
     };
   
