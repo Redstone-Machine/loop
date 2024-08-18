@@ -494,6 +494,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   const handleSignOut = () => {
     setExpandMobileLowerMenubar(false);
     signOut();
+    navigate('/login');
   }
 
   if (!session) {
