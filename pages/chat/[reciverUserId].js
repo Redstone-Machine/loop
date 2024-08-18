@@ -658,6 +658,8 @@ const ChatPage = () => {
       alignSelf: 'flexEnd',
       width: '100%',
       textAlign: 'end',
+      position: 'relative', // Add relative positioning
+      // right: '7px', // Move 20px from the right
     }
 
 
@@ -757,7 +759,7 @@ const ChatPage = () => {
                     {message.content}
                   </p>
                   {message.senderId === userId && message === latestUserMessage && (
-                    <div style={messageStatus}>
+                    <div className="message-status" style={messageStatus}>
                       {message.status}
                     </div>
                   )}
@@ -842,6 +844,10 @@ const ChatPage = () => {
           display: block; /* Säkerställer att timestampen visas på en egen rad */
         }
 
+        .message-status {
+          right: 7px;
+        } 
+
         @media (min-width: 1000px) {
           .sent {
             margin-right: 10%;
@@ -852,7 +858,13 @@ const ChatPage = () => {
             margin-left: 10%;
             max-width: calc(100% - 40%);
           }
+
+          .message-status {
+            right: 10%;
+          }
         }
+
+
 
         @media (max-width: 600px) {
         .sent {

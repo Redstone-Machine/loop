@@ -10,7 +10,7 @@ import React from 'react';
 import { subscribeUserToPush } from '../../public/pushNotifications';
 
 
-import NotificationButton from '../../app/components/NotificationButton';
+
 
 const SettingsPage = () => {
 
