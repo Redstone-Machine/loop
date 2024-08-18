@@ -493,11 +493,16 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
 
   const handleSignOut = () => {
     setExpandMobileLowerMenubar(false);
-    signOut();
-    // Lägg till en liten fördröjning för att säkerställa att signOut är klar
-    setTimeout(() => {
-      navigate('/login');
-    }, 100); // 100 ms fördröjning
+    signOut().then(() => {
+      console.log('Sign out successful');
+      // Lägg till en liten fördröjning för att säkerställa att signOut är klar
+      setTimeout(() => {
+        console.log('Navigating to login page');
+        window.location.href = '/login'; // Alternativ navigeringsmetod
+      }, 100); // 100 ms fördröjning
+    }).catch(error => {
+      console.error('Error during sign out:', error);
+    });
   }
 
   if (!session) {
