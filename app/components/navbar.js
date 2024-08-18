@@ -494,7 +494,10 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   const handleSignOut = () => {
     setExpandMobileLowerMenubar(false);
     signOut();
-    navigate('/login');
+    // Lägg till en liten fördröjning för att säkerställa att signOut är klar
+    setTimeout(() => {
+      navigate('/login');
+    }, 100); // 100 ms fördröjning
   }
 
   if (!session) {
