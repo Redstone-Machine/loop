@@ -227,6 +227,7 @@ const ChatPage = () => {
       });
 
       newSocket.on('update messages', () => {
+        console.log('Received update messages event');
         fetchMessages();
       });
   

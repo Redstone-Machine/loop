@@ -141,6 +141,7 @@ io.on('connection', (socket) => {
 
     // Hämta mottagarens socket-id
     const receiverSocketId = users[reciverUserId];
+    console.log(`Receiver user id för update message: ${reciverUserId}`);
     if (receiverSocketId) {
       // Skicka 'update messages' till mottagaren
       io.to(receiverSocketId).emit('update messages');
