@@ -256,7 +256,7 @@ const ChatPage = () => {
         const handleTyping = () => {
           newSocket.emit('typing', reciverUserId);
         };
-
+      
         const inputElement = document.getElementById('messageInput');
         if (inputElement) {
           inputElement.addEventListener('input', handleTyping);
