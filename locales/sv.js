@@ -51,6 +51,9 @@ export default {
     chatTitlePart2: 'och',
     writeMessage: 'Skriv ett meddelande...',
     send: 'Skicka',
+    messageSending: 'Skickar',
+    messageSent: 'Levererat',
+    messageRead: 'Läst',
 
   // profile:
     profileTitle: 'Profil',

@@ -52,6 +52,9 @@ export default {
     chatTitlePart2: 'and',
     writeMessage: 'Type a message...',
     send: 'Send',
+    messageSending: 'Sending',
+    messageSent: 'Sent',
+    messageRead: 'Read',
 
   // profile:
     profileTitle: 'Profile',
@@ -67,7 +70,6 @@ export default {
     currentProfilePicture: 'Current Profile Picture',
     infoAboutProfilePicture: 'The profile picture should be a jpg-, png- or heic file and have a maximum size of 10 MB. The picture will be cropped to a square.',
 
-    
   
   // add-friends:
     addFriendsTitle: 'Add Friends',

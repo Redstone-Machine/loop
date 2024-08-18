@@ -651,10 +651,12 @@ const ChatPage = () => {
     const messageStatus = {
       fontSize: '0.8em', 
       color: 'gray',
-      marginTop: '5px',
+      marginTop: '1px',
       display: 'block',
-      fontSize: '1.2rem',
-      fontFamily: 'SF Pro sans-serif',
+      fontSize: '0.7rem',
+      fontFamily: "'SF Pro', sans-serif",
+      fontWeight: 'bold',
+      letterSpacing: '-0.7px',
       alignSelf: 'flexEnd',
       width: '100%',
       textAlign: 'end',
@@ -760,7 +762,15 @@ const ChatPage = () => {
                   </p>
                   {message.senderId === userId && message === latestUserMessage && (
                     <div className="message-status" style={messageStatus}>
-                      {message.status}
+                      {message.status === 'SENDING' && (
+                        <FormattedMessage id="messageSending" {...messages.sending} />
+                      )}
+                      {message.status === 'SENT' && (
+                        <FormattedMessage id="messageSent" {...messages.sent} />
+                      )}
+                      {message.status === 'READ' && (
+                        <FormattedMessage id="messageRead" {...messages.read} />
+                      )}
                     </div>
                   )}
                 </div>
@@ -845,7 +855,7 @@ const ChatPage = () => {
         }
 
         .message-status {
-          right: 7px;
+          right: 10px;
         } 
 
         @media (min-width: 1000px) {
@@ -860,7 +870,7 @@ const ChatPage = () => {
           }
 
           .message-status {
-            right: 10%;
+            right: calc(10% + 7px);
           }
         }
 
