@@ -882,9 +882,11 @@ const ChatPage = () => {
                 {/* </div> */}
 
                 <div className={`message-wrapper ${sameSenderWithinHour ? 'same-sender' : ''}`}>
-                  <p className={message.senderId === userId ? 'sent' : 'received'}>
+                  {/* <p className={message.senderId === userId ? 'sent' : 'received'}>
                     {message.content}
-                  </p>
+                  </p> */}
+                  <p className={messageClass} dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+                  
                   {message.senderId === userId && message === latestUserMessage && (
                     <div className="message-status" style={messageStatus}>
                       {message.status === 'SENDING' && (
