@@ -161,6 +161,18 @@ html, body {
 
   }
 
+  .loop-logo-big {
+    mask-image: url(../public/loop_logo_white.png);
+    -webkit-mask-image: url(../public/loop_logo_white.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 50%;
+    max-width: 250px;
+    aspect-ratio: 472 / 396;
+    background-color: var(--themeColor);
+
+  }
+
   .check-mark {
     mask-image: url(../public/png_icons/check_white.png);
     -webkit-mask-image: url(../public/png_icons/check_white.png);
@@ -300,6 +312,43 @@ html, body {
   }
   .friends-icon:hover {
     background-color: grey;
+  }
+
+
+  .main-loop-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_loop_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_loop_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 75px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    transition: ease-out 0.2s;
+  }
+
+  .back-button-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_back_button.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_back_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 60px; */
+    width: 75px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* transition: ease-out 0.2s; */
+  }
+
+
+  .hamburger-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_hamburger_menu.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_hamburger_menu.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 60px; */
+    width: 75px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* transition: ease-out 0.2s; */
   }
 
   @font-face {

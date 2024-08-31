@@ -17,7 +17,7 @@ import { signOut } from 'next-auth/react';
 import useSWR, { mutate } from 'swr'
 import Link from 'next/link'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 // import useSWR from 'swr';
@@ -26,6 +26,9 @@ async function fetcher(url) {
   const res = await fetch(url)
   return res.json()
 }
+
+
+import { PageLoadContext } from '../contexts/PageLoadContext';
 
 
 const MainPage = () => {
@@ -69,6 +72,39 @@ const MainPage = () => {
     }, false)
   }
 
+
+  const { setIsPageLoaded } = useContext(PageLoadContext);
+
+  useEffect(() => {
+    console.log('useEffect for page load ran');
+    
+    const handlePageLoad = () => {
+      console.log('Page is loaded');
+      
+      // Vänta tills nästa renderingscykel är klar
+      new Promise(resolve => requestAnimationFrame(resolve)).then(() => {
+        // Vänta tills alla typsnitt har laddats
+        document.fonts.ready.then(() => {
+          setTimeout(() => {
+            setIsPageLoaded(true);
+          }, 500);
+        });
+      });
+    };
+  
+    console.log('Document readyState:', document.readyState);
+    if (document.readyState === 'complete') {
+      // If the page is already loaded, call the handler immediately
+      handlePageLoad();
+    } else {
+      // Otherwise, wait for the load event
+      window.addEventListener('load', handlePageLoad);
+    }
+  
+    return () => {
+      window.removeEventListener('load', handlePageLoad);
+    };
+  }, [setIsPageLoaded]);
 
 
   // const usersIsLoading = !userError && !users;

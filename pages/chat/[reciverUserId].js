@@ -606,7 +606,7 @@ const ChatPage = () => {
         width: '100%',
         // gap: '10px',
         position: 'fixed',
-        bottom: isKeyboardVisible ? '0' : (phoneLayout ? 'calc(0.5rem + 125px)' : '0'),
+        bottom: isKeyboardVisible ? '0' : (phoneLayout ? 'calc(0.5rem + 105px)' : '0'),
         paddingBottom: '30px',
         // paddingTop: '10px',
         backgroundColor: theme === 'light' ?  'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
@@ -886,7 +886,7 @@ const ChatPage = () => {
                     {message.content}
                   </p> */}
                   <p className={messageClass} dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
-                  
+
                   {message.senderId === userId && message === latestUserMessage && (
                     <div className="message-status" style={messageStatus}>
                       {message.status === 'SENDING' && (

@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from 'react';
 import { LanguageProvider, LanguageContext } from '../contexts/LanguageContext';
 import { ThemeProvider, ThemeContext } from '../contexts/ThemeContext';
 import { ThemeColorProvider, ThemeColorContext } from '../contexts/ThemeColorContext';
+import { PageLoadProvider } from '../contexts/PageLoadContext';
 import Head from 'next/head';
 
 // import React, { useState } from 'react';
@@ -17,6 +18,7 @@ import { useRouter } from 'next/router';
 
 
 import Navbar from '../app/components/navbar';
+import StartScreen from '../app/components/startScreen';
 import '../styles/styles.css';
 
 const messages = {
@@ -53,7 +55,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       <LanguageProvider>
         <ThemeProvider>
           <ThemeColorProvider>
-            <MyComponent Component={Component} pageProps={pageProps} />
+            <PageLoadProvider>
+              <MyComponent Component={Component} pageProps={pageProps} />
+            </PageLoadProvider>
           </ThemeColorProvider>
         </ThemeProvider>
       </LanguageProvider>
@@ -205,19 +209,12 @@ function MyComponent({ Component, pageProps }) {
 
 
 
-  const goHome = async () => {
-    console.log('main-page load');
-    await router.prefetch('/main-page');
-    console.log('main-page loaded');
-    router.push('/main-page');
-  }
-
   const chatDistance = {
     height: 'calc(6rem + 16px)',
   };
 
   const mobileMenubarDistance = {
-       height: 'calc(0.5rem + 125px)'
+       height: 'calc(0.5rem + 105px)'
   };
 
   // const mainContentStyle = { 
@@ -229,6 +226,7 @@ function MyComponent({ Component, pageProps }) {
 
   return (
     <IntlProvider locale={locale} messages={messages[locale]}>
+      <StartScreen activePage={activePage} activeInsidePage={activeInsidePage} theme={theme} themeColor={themeColor} language={locale} />
       <Navbar activePage={activePage} activeInsidePage={activeInsidePage} theme={theme} themeColor={themeColor} language={locale} />
       <Component {...pageProps} />
       <Head>

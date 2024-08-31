@@ -2,7 +2,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import Head from 'next/head';
 
 // import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/react';
 
@@ -14,6 +14,8 @@ import { usePageSetup } from '../hooks/usePageSetup';
 import GoogleLogo from '../public/company_logos/google_logo';
 import AppleLogo from '../public/company_logos/apple_logo';
 
+import { PageLoadContext } from '../contexts/PageLoadContext';
+
 
 const Login = () => {
 
@@ -24,6 +26,41 @@ const Login = () => {
   useEffect(() => {
     // Detta säkerställer att usePageSetup körs igen vid sidladdning
   }, []);
+
+
+
+
+  const { setIsPageLoaded } = useContext(PageLoadContext);
+
+  useEffect(() => {
+    console.log('useEffect for page load ran');
+    
+    const handlePageLoad = () => {
+      console.log('Page is loaded');
+      
+    // Vänta tills nästa renderingscykel är klar
+    setTimeout(() => {
+      // Vänta tills alla typsnitt har laddats
+      document.fonts.ready.then(() => {
+        setIsPageLoaded(true);
+      });
+    }, 400);
+  };
+  
+    console.log('Document readyState:', document.readyState);
+    if (document.readyState === 'complete') {
+      // If the page is already loaded, call the handler immediately
+      handlePageLoad();
+    } else {
+      // Otherwise, wait for the load event
+      window.addEventListener('load', handlePageLoad);
+    }
+  
+    return () => {
+      window.removeEventListener('load', handlePageLoad);
+    };
+  }, [setIsPageLoaded]);
+
 
 
   const [username, setUsername] = useState('');

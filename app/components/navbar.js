@@ -5,7 +5,7 @@ import { ThemeColorContext } from '../../contexts/ThemeColorContext';
 
 
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, act } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -45,11 +45,12 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
 
 
 
+  
 
 
   console.log('activePage:', activePage);
-  console.log('activeInsidePage:', activeInsidePage);
-  console.log('language:', language);
+  // console.log('activeInsidePage:', activeInsidePage);
+  // console.log('language:', language);
 
   const { data: session, status } = useSession();
   const userId = getUserIdFromSession(session, status);
@@ -117,6 +118,8 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
       window.removeEventListener('resize', checkScreenDimensions);
     };
   }, []);
+
+  
 
   
 
@@ -398,6 +401,20 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   //   mutate('/api/changeLanguageOption', newLanguage);
 
   // };
+
+
+
+  if (!session) {
+    return null;
+  }
+
+  const pagesWithoutNavbar = ['login', 'register', ''];
+
+  if (pagesWithoutNavbar.includes(activePage)) {
+    return null;
+  }
+
+  
   const handleLanguageChange = async (newLanguage) => {
     // Update the language in the backend
     const response = await fetch('/api/changeLanguageOption', {
@@ -446,7 +463,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   const handleThemeChange = async (newTheme) => {
     // Update the theme in the backend
 
-    console.log('newTheme!!!:', newTheme);
+    // console.log('newTheme!!!:', newTheme);
     const response = await fetch('/api/changeThemeOption', {
       method: 'POST',
       headers: {
@@ -505,10 +522,6 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
     }).catch(error => {
       console.error('Error during sign out:', error);
     });
-  }
-
-  if (!session) {
-    return null;
   }
 
 const menuStyle = {
@@ -642,7 +655,7 @@ const menuStyle = {
   
       borderTop: '1px solid #AAAAAA', 
       width: '100%',
-      height: expandMobileLowerMenubar ? '80%' : 'calc(0.5rem + 125px)',
+      height: expandMobileLowerMenubar ? '80%' : 'calc(0.5rem + 105px)',
 
 
       boxSizing: 'border-box',
@@ -655,7 +668,7 @@ const menuStyle = {
 
       transition: 'all 0.3s ease-in-out',
 
-      paddingBottom: '18px',
+      paddingBottom: '25px',
       
   
       // backgroundColor: theme === 'light' ? 'white' : 'black',
@@ -1100,7 +1113,8 @@ const menuStyle = {
   };
 
   return (
-    <>
+    <> 
+    {userId}
     {/* <div style={{ paddingBottom: 'calc(0.5rem + 120px)' }}> */}
 
       <div style={{ height: 'calc(0.5rem + 80px)' }} /> {/* This div acts as a margin */}
@@ -1313,9 +1327,20 @@ const menuStyle = {
           )}
 
           <div style={mobileLowerMenuIcons}>
-            <img onClick={goBack} src="/menubar_icons/menubar_back_button.png" width="85px" height='85px' alt="Profile" style={theMobileLowerMenuIconsLeft}/>
-            <img onClick={() => navigate('/main-page')} src="/menubar_icons/menubar_loop_icon.png" width="100px" height='100px' alt="Profile" style={theMobileLowerMenuIconsMain}/>
-            <img onClick={toggleExpandMobileLowerMenubar} src="/menubar_icons/menubar_hamburger_menu.png" width="85px" height='85px' alt="Profile" style={theMobileLowerMenuIconsLeft}/>
+            {/* <img onClick={goBack} src="/menubar_icons/menubar_back_button.png" width="85px" height='85px' alt="Profile" style={theMobileLowerMenuIconsLeft}/> */}
+            {/* <img onClick={() => navigate('/main-page')} src="/menubar_icons/menubar_loop_icon.png" width="100px" height='100px' alt="Profile" style={theMobileLowerMenuIconsMain}/> */}
+            {/* <img onClick={toggleExpandMobileLowerMenubar} src="/menubar_icons/menubar_hamburger_menu.png" width="85px" height='85px' alt="Profile" style={theMobileLowerMenuIconsLeft}/> */}
+            <div style={theMobileLowerMenuIconsLeft} onClick={goBack}>
+              <div className="back-button-icon-phone" style={{'--themeColor': themeColor }}> </div>
+            </div>
+
+            <div style={theMobileLowerMenuIconsMain} onClick={() => navigate('/main-page')}>
+              <div className="main-loop-icon-phone" style={{'--themeColor': themeColor }}> </div>
+            </div>
+
+            <div style={theMobileLowerMenuIconsLeft} onClick={toggleExpandMobileLowerMenubar}>
+              <div className="hamburger-icon-phone" style={{'--themeColor': themeColor }}> </div>
+            </div>
 
           </div>
 
