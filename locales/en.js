@@ -28,6 +28,7 @@ export default {
     settings: 'Settings',
     darkMode: 'Dark Mode',
     lightMode: 'Light Mode',
+    notifications: 'Notifications',
 
   // login:
     logInTitle: 'Log in to',

@@ -48,7 +48,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   
 
 
-  console.log('activePage:', activePage);
+  // console.log('activePage:', activePage);
   // console.log('activeInsidePage:', activeInsidePage);
   // console.log('language:', language);
 
@@ -209,7 +209,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
 
 
 
-  console.log('userLanguage:', userLanguage);
+  // console.log('userLanguage:', userLanguage);
 
   const goBack = () => {
     router.back();
@@ -327,7 +327,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   useEffect(() => {
     // Döljer tangentbordet när komponenten renderas
     if (activePage === 'main-page') {
-      console.log('Hiding keyboard');
+      // console.log('Hiding keyboard');
       if (typeof document !== 'undefined' && document.activeElement) {
         document.activeElement.blur();
       }
@@ -434,7 +434,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
     }
 
 
-    console.log('vad är userLanguage:', newLanguage);
+    // console.log('vad är userLanguage:', newLanguage);
 
     if (newLanguage && newLanguage !== 'automatic') {
       if (newLanguage == 'swedish') {
@@ -481,7 +481,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
     }
 
 
-    console.log('vad är userTheme:', newTheme);
+    // console.log('vad är userTheme:', newTheme);
 
     if (newTheme && newTheme !== 'automatic') {
       if (newTheme == 'light') {
@@ -655,7 +655,11 @@ const menuStyle = {
   
       borderTop: '1px solid #AAAAAA', 
       width: '100%',
-      height: expandMobileLowerMenubar ? '80%' : 'calc(0.5rem + 105px)',
+      // height: expandMobileLowerMenubar ? '90%' : 'calc(0.5rem + 105px)',
+      // height: window.innerHeight < 700 ? '100%' : (expandMobileLowerMenubar ? '90%' : 'calc(0.5rem + 105px)'),
+
+      height: !expandMobileLowerMenubar ? 'calc(0.5rem + 105px)' : (window.innerHeight < 720 ? '99%' : (window.innerHeight < 850  ? '90%' : '83%')),
+ 
 
 
       boxSizing: 'border-box',
@@ -732,17 +736,58 @@ const menuStyle = {
     alignContent: 'start',
   }
 
-  const mobileLowerExpandedMenubarText = {
+  const mobileLowerExpandedMenubarTextCombined = {
     display: 'flex',
     justifyContent: 'center',
-    fontSize: '2.1rem',
+    alignItems: 'center',
+    fontSize: '1.8rem',
     userSelect: 'none',
     // gap: '1rem',
-    padding: '0.2rem',
+    // padding: '0.2rem',
 
     fontFamily: "'SF Pro', sans-serif",
+    marginBlockEnd: '0',
+    marginBlockStart: '0',
+    fontWeight: 'bold',
+    
   }
 
+  const mobileLowerExpandedMenubarText = {
+    ...mobileLowerExpandedMenubarTextCombined,
+    color: themeColor,
+  }
+
+  const mobileLowerExpandedMenubarTextLogOut = {
+    ...mobileLowerExpandedMenubarTextCombined,
+    color: 'red',
+  }
+
+  const mobileLowerExpandedMenubarTextContainer = {
+    display: 'flex',
+    justifyContent: 'center',
+    // fontSize: '2.1rem',
+    // userSelect: 'none',
+    // gap: '1rem',
+    // padding: '0.2rem',
+    height: '53px',
+    marginTop: '0.6rem',
+    marginBottom: '0.6rem',
+    gap: '0.8rem',
+    // borderTop: '1px solid #AAAAAA', 
+  }
+
+  // const mobileLowerExpandedMenubarTheText = {
+    // display: 'flex',
+    // justifyContent: 'center',
+    // fontSize: '2.1rem',
+    // userSelect: 'none',
+    // // gap: '1rem',
+    // padding: '0.2rem',
+
+    // fontFamily: "'SF Pro', sans-serif",
+  //   marginBlockEnd: '0',
+  //   marginBlockStart: '0',
+  // }
 
 
 
@@ -1026,6 +1071,204 @@ const menuStyle = {
     // Add more styles as needed
   };
 
+  const wrapperThemeMenuStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // height: '100vh', // Justera höjden efter behov
+  };
+
+
+  const themeMenuStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // gap: '1.5rem',
+    // padding: '0.8rem',
+    border: '1px solid #AAAAAA',
+    borderRadius: '15px',
+    // marginLeft: '4rem',
+    // marginRight: '4rem',
+    marginTop: '0.8rem',  
+
+  }
+
+  const themeMenuTextStyle = {
+    fontFamily: "'SF Pro', sans-serif",
+    fontSize: '2.2rem',
+    color: themeColor,
+    fontWeight: 'bolder',
+    marginBlockStart: '0rem',
+    marginBlockEnd: '0rem',
+    padding: '0.4rem',
+    margin: '0.55rem',
+    userSelect: 'none',
+    WebkitUserSelect: 'none', // För Safari
+    MozUserSelect: 'none',
+
+  }
+
+  const themeMenuTextStyleWrapper = {
+    // backgroundColor: 'red',
+    backgroundColor: userTheme === 'automatic' ? 'grey' : 'transparent',
+    // height: '100%',
+    // top: 0,
+    // bottom: 0,
+    borderTopRightRadius: '13px',
+    borderBottomRightRadius: '13px',
+    transition: 'all 0.2s ease-in-out',
+    userSelect: 'none',
+    WebkitUserSelect: 'none', // För Safari
+    MozUserSelect: 'none', // För Firefox
+
+  }
+
+  const themeMenuSunStyle = {
+
+    margin: '0.4rem',
+    // padding: '0.4rem',
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+
+  }
+
+  const themeMenuMoonStyle = {
+    margin: '0.4rem',
+    // padding: '0.4rem',
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+    
+
+  }
+
+  const themeMenuBackgroundSunStyle = {
+    borderTopLeftRadius: '13px',
+    borderBottomLeftRadius: '13px',
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+    // backgroundColor: 'red',
+
+    backgroundColor: userTheme === 'light' ? 'grey' : 'transparent',
+    transition: 'all 0.2s ease-in-out',
+
+  }
+
+  const themeMenuBackgroundMoonStyle = {
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+
+    
+    backgroundColor: userTheme === 'dark' ? 'grey' : 'transparent',
+    transition: 'all 0.2s ease-in-out',
+  }
+
+
+
+
+
+  
+
+  const wrapperLanguageMenuStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // height: '100vh', // Justera höjden efter behov
+  };
+
+
+  const languageMenuStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // gap: '1.5rem',
+    // padding: '0.8rem',
+    border: '1px solid #AAAAAA',
+    borderRadius: '15px',
+    // marginLeft: '4rem',
+    // marginRight: '4rem',
+    marginTop: '0.8rem',  
+
+  }
+
+  const languageMenuTextStyle = {
+    fontFamily: "'SF Pro', sans-serif",
+    fontSize: '2.2rem',
+    color: themeColor,
+    fontWeight: 'bolder',
+    marginBlockStart: '0rem',
+    marginBlockEnd: '0rem',
+    padding: '0.4rem',
+    margin: '0.55rem',
+    userSelect: 'none',
+    WebkitUserSelect: 'none', // För Safari
+    MozUserSelect: 'none',
+
+  }
+
+  const languageMenuTextStyleWrapper = {
+    // backgroundColor: 'red',
+    backgroundColor: userLanguage === 'automatic' ? 'grey' : 'transparent',
+    // height: '100%',
+    // top: 0,
+    // bottom: 0,
+    borderTopRightRadius: '13px',
+    borderBottomRightRadius: '13px',
+    transition: 'all 0.2s ease-in-out',
+    userSelect: 'none',
+    WebkitUserSelect: 'none', // För Safari
+    MozUserSelect: 'none', // För Firefox
+
+  }
+
+  const languageMenuSwedenStyle = {
+
+    margin: '0.4rem',
+    // padding: '0.4rem',
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+
+  }
+
+  const languageMenuEnglandStyle = {
+    margin: '0.4rem',
+    // padding: '0.4rem',
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+    
+
+  }
+
+  const languageMenuBackgroundSwedenStyle = {
+    borderTopLeftRadius: '13px',
+    borderBottomLeftRadius: '13px',
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+    // backgroundColor: 'red',
+
+    backgroundColor: userLanguage === 'swedish' ? 'grey' : 'transparent',
+    transition: 'all 0.2s ease-in-out',
+
+  }
+
+  const languageMenuBackgroundEnglandStyle = {
+    // backgroundColor: theme === 'light' ? 'white' : 'black',
+
+    
+    backgroundColor: userLanguage === 'english' ? 'grey' : 'transparent',
+    transition: 'all 0.2s ease-in-out',
+  }
+
+
+  const logOutIconStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '48px',
+  }
+
+  
+  const menubarIconStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '48px',
+  }
+
+
+  
 
 
   const navigate = (url) => {
@@ -1318,11 +1561,172 @@ const menuStyle = {
 
           {expandMobileLowerMenubar && (
             <div style={mobileLowerExpandedMenubar}>
-              <p onClick={() => { handleSignOut(); closeProfilePopUpMenu(); }} style={mobileLowerExpandedMenubarText}>Logga ut</p>
-              <p onClick={() => navigate(`/profile/${userId}`, setExpandMobileLowerMenubar(false))}style={mobileLowerExpandedMenubarText}>Min profil</p>
-              <p onClick={() => navigate(`/settings`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Inställningar</p>
-              <p onClick={() => navigate(`/add-friends`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Lägg till vänner</p> 
-              <p onClick={() => navigate(`/friends`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Vänner</p> 
+
+              <div style={wrapperThemeMenuStyle}>
+
+                <div style={themeMenuStyle}>
+                  <div style={themeMenuBackgroundSunStyle}>
+                  <div
+                    onClick={() => { handleThemeChange('light'); }}
+                    className="sun-icon-menu no-select"
+                    style={{'--themeColor': themeColor, ...themeMenuSunStyle
+                    }}
+                    // style={themeMenuSunStyle}
+                    >
+                  </div>
+                  </div>
+
+                  <div style={themeMenuBackgroundMoonStyle}>
+                  <div
+                    onClick={() => { handleThemeChange('dark'); }}
+                    className="moon-icon-menu no-select"
+                    style={{'--themeColor': themeColor, ...themeMenuMoonStyle
+                    }}
+                    // style={themeMenuMoonStyle}
+                    >
+
+                  </div>
+                  </div>
+                  <div class="no-select" style={themeMenuTextStyleWrapper} onClick={() => { handleThemeChange('automatic'); }}>
+                    <p style={themeMenuTextStyle}>Auto</p>
+                  </div>
+                </div>
+              </div>
+
+
+              <div style={wrapperLanguageMenuStyle}>
+                <div style={languageMenuStyle}>
+                  <div style={languageMenuBackgroundSwedenStyle}>
+                    <div
+                      onClick={() => { handleLanguageChange('swedish'); }}
+                      className="sweden-icon-menu no-select"
+                      style={{'--themeColor': themeColor, ...languageMenuSwedenStyle
+                      }}
+                      >
+                    </div>
+                  </div>
+
+                  <div style={languageMenuBackgroundEnglandStyle}>
+                    <div
+                      onClick={() => { handleLanguageChange('english'); }}
+                      className="england-icon-menu no-select"
+                      style={{'--themeColor': themeColor, ...languageMenuEnglandStyle
+                      }}
+                      // style={themeMenuMoonStyle}
+                      >
+
+                    </div>
+                  </div>
+                  <div class="no-select" style={languageMenuTextStyleWrapper} onClick={() => { handleLanguageChange('automatic'); }}>
+                    <p style={languageMenuTextStyle}>Auto</p>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div style={mobileLowerExpandedMenubarTextContainer} onClick={() => { handleSignOut(); closeProfilePopUpMenu(); }} className="no-select">
+                <div
+                    className="log-out-icon-phone"
+                    style={{'--themeColor': themeColor, ...logOutIconStyle
+                    }}
+                    >
+                </div>
+
+                <p style={mobileLowerExpandedMenubarTextLogOut}>
+                  <FormattedMessage id="signOut" />
+                </p>
+              </div>
+
+
+
+              <div style={mobileLowerExpandedMenubarTextContainer} onClick={() => navigate(`/profile/${userId}`, setExpandMobileLowerMenubar(false))}
+
+              className="no-select">
+                <div
+                    className="profile-icon-phone"
+                    style={{'--themeColor': themeColor, ...menubarIconStyle
+                    }}
+                    >
+                </div>
+
+                <p style={mobileLowerExpandedMenubarText}>
+                  <FormattedMessage id="myProfile" />
+                </p>
+              </div>
+
+
+              <div style={mobileLowerExpandedMenubarTextContainer} onClick={() => navigate(`/notifications`, setExpandMobileLowerMenubar(false))}
+
+              className="no-select">
+                <div
+                    className="notification-icon-phone"
+                    style={{'--themeColor': themeColor, ...menubarIconStyle
+                    }}
+                    >
+                </div>
+
+                <p style={mobileLowerExpandedMenubarText}>
+                  <FormattedMessage id="notifications" />
+                </p>
+              </div>
+
+
+              <div style={mobileLowerExpandedMenubarTextContainer}      onClick={() => navigate(`/settings`, setExpandMobileLowerMenubar(false))}
+
+                className="no-select">
+                  <div
+                      className="settings-icon-phone"
+                      style={{'--themeColor': themeColor, ...menubarIconStyle
+                      }}
+                      >
+                  </div>
+
+                  <p style={mobileLowerExpandedMenubarText}>
+                    <FormattedMessage id="settings" />
+                  </p>
+              </div>
+
+
+              <div style={mobileLowerExpandedMenubarTextContainer}      onClick={() => navigate(`/add-friends`, setExpandMobileLowerMenubar(false))}
+
+              className="no-select">
+                <div
+                    className="plus-icon-phone"
+                    style={{'--themeColor': themeColor, ...menubarIconStyle
+                    }}
+                    >
+                </div>
+
+                <p style={mobileLowerExpandedMenubarText}>
+                  <FormattedMessage id="addFriends" />
+                </p>
+              </div>
+
+              <div style={mobileLowerExpandedMenubarTextContainer}      onClick={() => navigate(`/friends`, setExpandMobileLowerMenubar(false))}
+
+              className="no-select">
+                <div
+                    className="friends-icon-phone"
+                    style={{'--themeColor': themeColor,
+                    }}
+                    >
+                </div>
+
+                <p style={mobileLowerExpandedMenubarText}>
+                  <FormattedMessage id="friends" />
+                </p>
+              </div>
+
+
+
+              {/* <p onClick={() => navigate(`/profile/${userId}`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Min profil</p> */}
+
+              {/* <p onClick={() => navigate(`/settings`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Inställningar</p> */}
+
+              {/* <p onClick={() => navigate(`/add-friends`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Lägg till vänner</p>
+
+              <p onClick={() => navigate(`/friends`, setExpandMobileLowerMenubar(false))} style={mobileLowerExpandedMenubarText}>Vänner</p>  */}
             </div>
           )}
 
@@ -1331,15 +1735,15 @@ const menuStyle = {
             {/* <img onClick={() => navigate('/main-page')} src="/menubar_icons/menubar_loop_icon.png" width="100px" height='100px' alt="Profile" style={theMobileLowerMenuIconsMain}/> */}
             {/* <img onClick={toggleExpandMobileLowerMenubar} src="/menubar_icons/menubar_hamburger_menu.png" width="85px" height='85px' alt="Profile" style={theMobileLowerMenuIconsLeft}/> */}
             <div style={theMobileLowerMenuIconsLeft} onClick={goBack}>
-              <div className="back-button-icon-phone" style={{'--themeColor': themeColor }}> </div>
+              <div className="back-button-icon-phone no-select" style={{'--themeColor': themeColor }}> </div>
             </div>
 
             <div style={theMobileLowerMenuIconsMain} onClick={() => navigate('/main-page')}>
-              <div className="main-loop-icon-phone" style={{'--themeColor': themeColor }}> </div>
+              <div className="main-loop-icon-phone no-select" style={{'--themeColor': themeColor }}> </div>
             </div>
 
             <div style={theMobileLowerMenuIconsLeft} onClick={toggleExpandMobileLowerMenubar}>
-              <div className="hamburger-icon-phone" style={{'--themeColor': themeColor }}> </div>
+              <div className="hamburger-icon-phone no-select" style={{'--themeColor': themeColor }}> </div>
             </div>
 
           </div>

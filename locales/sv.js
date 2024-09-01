@@ -28,6 +28,7 @@ export default {
     settings: 'Inställningar',
     darkMode: 'Mörkt läge',
     lightMode: 'Ljust läge',
+    notifications: 'Notifikationer',
 
   // login:
     logInTitle: 'Logga in på',

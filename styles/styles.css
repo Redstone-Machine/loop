@@ -237,6 +237,144 @@ html, body {
     background-color: var(--themeColor);
     transition: ease-out 0.2s;
   }
+
+  .sweden-icon-menu {
+    /* mask-image: url(../public/png_icons/sweden_flag.png);
+    -webkit-mask-image: url(../public/png_icons/sweden_flag.png);
+    mask-size: contain;
+    -webkit-mask-size: contain; */
+
+    background-image: url(../public/png_icons/sweden_flag.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    width: 60px;
+    aspect-ratio: 1000 / 1000;
+    /* background-color: var(--themeColor); */
+    /* transition: ease-out 0.2s; */
+  }
+  .england-icon-menu {
+    /* mask-image: url(../public/png_icons/uk_flag.png);
+    -webkit-mask-image: url(../public/png_icons/uk_flag.png);
+    mask-size: contain;
+    -webkit-mask-size: contain; */
+    background-image: url(../public/png_icons/uk_flag.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    width: 60px;
+    aspect-ratio: 1000 / 1000;
+    /* background-color: var(--themeColor); */
+    /* transition: ease-out 0.2s; */
+  }
+
+
+  .moon-icon-menu {
+    mask-image: url(../public/navbar_icons/moon_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/moon_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 60px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* transition: ease-out 0.2s; */
+  }
+  .sun-icon-menu {
+    mask-image: url(../public/navbar_icons/sun_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/sun_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 60px;
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* transition: ease-out 0.2s; */
+  }
+
+
+  .log-out-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_log_out_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_log_out_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 75px; */
+    aspect-ratio: 1000 / 1000;
+    /* background-color: var(--themeColor); */
+    background-color: red;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .notification-icon-phone {
+    mask-image: url(../public/navbar_icons/notification_bell_button.png);
+    -webkit-mask-image: url(../public/navbar_icons/notification_bell_button.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 75px; */
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* background-color: red; */
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .profile-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_profile_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_profile_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 75px; */
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* background-color: red; */
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .settings-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_settings_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_settings_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 75px; */
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* background-color: red; */
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .plus-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_plus_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_plus_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 75px; */
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* background-color: red; */
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .friends-icon-phone {
+    mask-image: url(../public/menubar_icons/menubar_friends_icon.png);
+    -webkit-mask-image: url(../public/menubar_icons/menubar_friends_icon.png);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    /* width: 75px; */
+    aspect-ratio: 1000 / 1000;
+    background-color: var(--themeColor);
+    /* background-color: red; */
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+
+
+
+
+
+
   
   .profile-picture {
     position: relative;
@@ -376,3 +514,10 @@ html, body {
 
 
 
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    cursor: default;
+  }

@@ -608,7 +608,7 @@ const ChatPage = () => {
         position: 'fixed',
         bottom: isKeyboardVisible ? '0' : (phoneLayout ? 'calc(0.5rem + 105px)' : '0'),
         paddingBottom: '30px',
-        // paddingTop: '10px',
+        paddingTop: '10px',
         backgroundColor: theme === 'light' ?  'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
