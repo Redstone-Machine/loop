@@ -489,6 +489,43 @@ html, body {
     /* transition: ease-out 0.2s; */
   }
 
+
+
+  .loop-background {
+  mask-image: url(../public/loop_background.png);
+  -webkit-mask-image: url(../public/loop_background.png);
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  width: 170px;
+  aspect-ratio: 1000 / 1000;
+  background-color: var(--loopColor);
+}
+
+.plus-icon-loop {
+  
+  
+  mask-image: url(../public/menubar_icons/menubar_plus_icon.png);
+  -webkit-mask-image: url(../public/menubar_icons/menubar_plus_icon.png);
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  width: 100px;
+  margin-left: 35px;
+  margin-top: 35px;
+   
+  aspect-ratio: 1000 / 1000;
+  background-color: var(--themeColor);
+  /* background-color: red; */
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition: ease-out 0.1s;
+
+}
+
+.plus-icon-loop:hover {
+  background-color: grey;
+}
+
+
   @font-face {
     font-family: 'SF Pro';
     src: url('/fonts/SF-Pro.ttf') format('truetype');
@@ -497,6 +534,7 @@ html, body {
     font-display: swap;
   }
 
+  
   .dummy-checkmark {
     visibility: hidden;
   }

@@ -136,6 +136,11 @@ const MainPage = () => {
               <FormattedMessage id="welcomeTitle" />
               , {userName}!
             </h1>
+
+            <a href={`/new-main-page`}>nya startsidan</a>
+            <br />
+            <br />
+
             {/* <FormattedMessage id="welcome" /> */}
 
             <button onClick={handleSignOut}>
