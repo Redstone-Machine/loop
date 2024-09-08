@@ -77,13 +77,13 @@ const NewMainPage = () => {
         }
     };
 
+    const handleProfileClick = async (friendId) => {
+        await router.prefetch(`/chat/${friendId}`);
+        router.push(`/chat/${friendId}`);
+    };
 
-    const profilePictureStyle = {
-        width: '110px',
-        height: '110px',
-        borderRadius: '50%',
-        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
-      }
+
+
 
 
 
@@ -109,11 +109,11 @@ const NewMainPage = () => {
 
     const gridStyle = {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-        gap: '16px',
-        marginTop: '16px',
-        marginRight: '14px',
-        marginLeft: '14px',
+        // gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+        // gap: '16px',
+        // marginTop: '16px',
+        // marginRight: '14px',
+        // marginLeft: '14px',
       }
 
 
@@ -152,6 +152,54 @@ const NewMainPage = () => {
     
     }
 
+
+    const containerFriends = {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        paddingBlock: '17px',
+        paddingInline: '15px',
+        borderBottom: '1px solid #AAAAAA',
+        
+
+    }
+
+    
+
+    const profilePictureStyle = {
+        width: '75px',
+        height: '75px',
+        borderRadius: '50%',
+        // boxShadow: '0 2px 5px rgba(0, 0, 0, 0.05)',
+    }
+
+    const textStyleFriend = {
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: "'SF Pro', sans-serif",
+
+    }
+
+    const latestMessage = {
+        paddingLeft: '15px',
+        fontSize: '1.2rem',
+        paddingTop: '2px',
+        color: 'grey',
+
+    }
+
+    const nameTextStyle = {
+        paddingLeft: '15px',
+        paddingTop: '11px',
+        position: 'relative',
+        textAlign: 'start',
+        fontSize: '1.4rem',
+
+        // textShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+        // marginBottom: '8px',
+    
+    }
+
     const getMessagesStyle = (position, friend) => ({
         position: 'absolute',
         top: `${position.top}%`,
@@ -171,7 +219,7 @@ const NewMainPage = () => {
     const loopBox = {
         // display: 'flex',
         // width: phoneLayout ? '100%' : '65%',
-        width: '100%',
+        // width: '100%',
         // justifyContent: 'center',
         marginLeft: marginLeft,
         // borderRight: '1px solid #AAAAAA',
@@ -211,15 +259,7 @@ const NewMainPage = () => {
         marginBlockEnd: '0px',
     }
 
-    const nameTextStyle = {
-        position: 'relative',
-        textAlign: 'center',
-        fontSize: '1.3rem',
-        fontFamily: "'SF Pro', sans-serif",
-        textShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
-        marginBottom: '8px',
-    
-      }
+
 
     const title = {
         fontFamily: "'SF Pro', sans-serif",
@@ -234,6 +274,7 @@ const NewMainPage = () => {
     const extraSpace = {
         height: '170px',
     }
+
 
     const plusIcon = {
         // maxWidth: '80%',
@@ -291,7 +332,10 @@ const NewMainPage = () => {
                             color: themeColor
                         }}
                     >
-                        Skapa en ny loop
+                        {/* Skapa en ny loop */}
+                        +
+                        
+                        
                     </p>
                 </div>
 
@@ -304,38 +348,42 @@ const NewMainPage = () => {
 
 
             { !phoneLayout && (
-            <div style={gridStyle}>
 
+                <div style={OuterContainerFriends}>
+                    <div style={gridStyle}>
+                
+                        {friends.map(friend => {
+                            const position = positions[friend.id] || { top: 50, left: 50 };
+                    
+                            return (
 
+                                <div key={friend.id} style={containerFriends} onClick={() => handleProfileClick(friend.id)} >
+                                    <img
+                                        src={friend.user.profilePicture}
+                                        alt={`${friend.user.userName}'s profile`}
+                                        style={profilePictureStyle}
+                                    />
+                                    <div style={textStyleFriend}>
+                                        <div style={nameTextStyle}>{friend.user.userName}</div>
+                                        {/* {friend.latestMessage && (
+                                            <div style={getMessagesStyle(position, friend)}>
+                                            {friend.latestMessage.length > 20 ? `${friend.latestMessage.substring(0, 20)}...` : friend.latestMessage}
+                                            </div>
+                                        )} */}
+                                        {friend.latestMessage && (
+                                            <div style={latestMessage}>
+                                                {friend.latestMessage.length > 30 ? `${friend.latestMessage.substring(0, 30)}...` : friend.latestMessage}
+                                            </div>
+                                        )}
+                                    </div>
 
-        <div style={OuterContainerFriends}>
-    
-        {friends.map(friend => {
-          const position = positions[friend.id] || { top: 50, left: 50 };
-  
-          return (
-            <div key={friend.id} style={nameTextStyle} onClick={() => handleProfileClick(friend.id)} >
-              <img
-                src={friend.user.profilePicture}
-                alt={`${friend.user.userName}'s profile`}
-                style={profilePictureStyle}
-              />
-              <div>{friend.user.userName}</div>
-              {friend.latestMessage && (
-                <div style={getMessagesStyle(position, friend)}>
-                  {friend.latestMessage.length > 20 ? `${friend.latestMessage.substring(0, 20)}...` : friend.latestMessage}
+                                </div>
+                            );
+                        })}
+
+                    </div>
                 </div>
-              )}
-            </div>
-          );
-        })}
-
-        </div>
-
-
-
-      </div>
-              )}
+            )}
         </div>
 
         </>
