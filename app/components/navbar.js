@@ -119,6 +119,18 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!showThemePopUpMenu) {
+      closeThemePopUpMenu();
+    }
+    if (!showLanguagePopUpMenu) {
+      closeLanguagePopUpMenu();
+    }
+    if (!showProfilePopUpMenu) {
+      closeProfilePopUpMenu();
+    }
+  }, [activePage]);
+
   
 
   
@@ -1359,7 +1371,7 @@ const menuStyle = {
     <> 
     {/* {userId} */}
 
-    
+
     {/* <div style={{ paddingBottom: 'calc(0.5rem + 120px)' }}> */}
 
       <div style={{ height: 'calc(0.5rem + 80px)' }} /> {/* This div acts as a margin */}

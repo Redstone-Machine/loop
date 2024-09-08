@@ -7,6 +7,7 @@ import useSWR, { mutate } from 'swr'
 
 import Link from 'next/link'
 import { min } from 'lodash';
+// import { text } from 'stream/consumers';
 
 
 async function fetcher(url) {
@@ -23,6 +24,8 @@ const NewMainPage = () => {
 
     const [phoneLayout, setPhoneLayout] = useState(false);
     const [marginLeft, setMarginLeft] = useState('0px');
+
+    const [loopBackgroundWidth, setLoopBackgroundWidth] = useState(160);
 
     const { data: friends, error: friendError } = useSWR(`/api/getLatestFriendsById?userId=${userId}`, fetcher)
 
@@ -47,6 +50,12 @@ const NewMainPage = () => {
       }
     }, [friends]);
 
+
+    useEffect(() => {
+
+        setThemeColor('#3de434');
+    
+    }, []);
     
 
 
@@ -71,8 +80,10 @@ const NewMainPage = () => {
 
     const checkScreenDimensions = () => {
         if (window.innerWidth <= 700) {
+            setLoopBackgroundWidth(window.innerWidth * 0.3);
             setPhoneLayout(true);
         } else {
+            setLoopBackgroundWidth(160);
             setPhoneLayout(false);
         }
     };
@@ -88,16 +99,32 @@ const NewMainPage = () => {
 
 
     const updateMarginLeft = () => {
+        
+
+
+
+
         let percentageWidth;
+        let loopBackgroundWidthVar;
+
         if (window.innerWidth <= 700) {
             percentageWidth = window.innerWidth; // Använd 80% av fönsterbredden om bredden är 700px eller mindre
+            loopBackgroundWidthVar = window.innerWidth * 0.3;
+
         } else {
             percentageWidth = 0.65 * window.innerWidth - 2; // Använd 65% av fönsterbredden annars
+            loopBackgroundWidthVar = 160;
+            // setLoopBackgroundWidth(160);
         }
+
+
+        const loopBackgroundWidthWithMargin = loopBackgroundWidthVar + 40;
+        console.log('loopBackgroundWidthWithMargin', loopBackgroundWidthWithMargin);
+
         // const percentageWidth = 0.65 * window.innerWidth; // 65% av fönsterbredden
-        const amountOfLoopsRow = Math.floor(percentageWidth / 210 ); // Dela med 170px och avrunda nedåt
+        const amountOfLoopsRow = Math.floor(percentageWidth / loopBackgroundWidthWithMargin ); // Dela med 170px och avrunda nedåt
         console.log('amount of loops row', amountOfLoopsRow);
-        const loopsTotalWidth = 210 * amountOfLoopsRow;
+        const loopsTotalWidth = loopBackgroundWidthWithMargin * amountOfLoopsRow;
         console.log('loops total width', loopsTotalWidth);
         const marginRightStandard = percentageWidth - loopsTotalWidth;
         console.log('margin right standard', marginRightStandard);
@@ -136,7 +163,7 @@ const NewMainPage = () => {
 
         
 
-        borderRight: '1px solid #AAAAAA',
+        borderRight: phoneLayout ? 'none' : '1px solid #AAAAAA',
         overflow: 'auto',
     }
 
@@ -152,6 +179,7 @@ const NewMainPage = () => {
         flexDirection: 'row',
         width: '100%',
         height: 'calc(100vh - (0.5rem + 80px))',
+        overflow: 'hidden',
     
     }
 
@@ -159,7 +187,7 @@ const NewMainPage = () => {
     const containerFriends = {
         display: 'flex',
         flexDirection: 'row',
-        width: '100%',
+        // width: '100%',
         paddingBlock: '17px',
         paddingInline: '15px',
         borderBottom: '1px solid #AAAAAA',
@@ -257,9 +285,10 @@ const NewMainPage = () => {
 
     const textUnderLoop = {
         fontFamily: "'SF Pro', sans-serif",
-        fontSize: '1.6rem',
+        fontSize: '1.5rem',
         marginBlockStart: '0px',
         marginBlockEnd: '0px',
+        // fontWeight: 'bold',
     }
 
 
@@ -267,11 +296,13 @@ const NewMainPage = () => {
     const title = {
         fontFamily: "'SF Pro', sans-serif",
         fontSize: '2.5rem',
+        fontWeight: 'bold',
         marginBlockStart: '0px',
         marginBlockEnd: '0px',
         paddingTop: '1.5rem',
-        paddingLeft: '3rem',
+        paddingLeft: phoneLayout ? '0.5rem' : '3rem',
         paddingBottom: '0.5rem',
+        textAlign: phoneLayout ? 'center' : 'start',
     }
 
     const extraSpace = {
@@ -306,13 +337,14 @@ const NewMainPage = () => {
                         ? loops.map(loop => (
                             <div key={loop.id}  style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}>
                                 {/* <div style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}> */}
-                                <div className="loop-background" style={{'--loopColor': loop?.color }}> </div>
+                                <div className="loop-background" style={{'--loopColor': loop?.color, '--loopBackgroundWidth': loopBackgroundWidth + 'px' }}> </div>
                                 {/* <Link style={{ color: loop?.color, backgroundColor: '#ededed' }} href={`/loop/${loop.id}`}> */}
                                 <p
                                     style={{
                                         ...textUnderLoop,
-                                        color: loop?.color
+                                        color: loop?.color,
                                     }}
+                                    className="no-select"
                                 >
                                     {loop.name}
                                 </p>
@@ -322,12 +354,13 @@ const NewMainPage = () => {
                             </div>
                             )
                         )
-                        : <div>Finns inga loops</div>
+                        // : <div>Finns inga loops</div>
+                        : <div> </div>
                     : <div>Loading... loops</div>
                 }
                 <div style={loopWrapper} onClick={() => navigate('/create-loop')}>
-                    <div className="loop-background" style={{'--loopColor': themeColor }}>
-                        <div className="plus-icon-loop" style={{'--themeColor': 'black' }}> </div>
+                    <div className="loop-background" style={{'--loopColor': themeColor, '--loopBackgroundWidth': loopBackgroundWidth + 'px' }}>
+                        <div className="plus-icon-loop" style={{'--themeColor': 'black', '--loopPlusWidth': loopBackgroundWidth * 0.6 + 'px', '--loopPlusMargin': loopBackgroundWidth * 0.2 + 'px' }}> </div>
                     </div>
                     <p
                         style={{
@@ -360,7 +393,7 @@ const NewMainPage = () => {
                     
                             return (
 
-                                <div key={friend.id} style={containerFriends} onClick={() => handleProfileClick(friend.id)} >
+                                <div key={friend.id} style={containerFriends} className="container-friends no-select" onClick={() => handleProfileClick(friend.id)} >
                                     <img
                                         src={friend.user.profilePicture}
                                         alt={`${friend.user.userName}'s profile`}

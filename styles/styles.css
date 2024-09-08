@@ -496,7 +496,8 @@ html, body {
   -webkit-mask-image: url(../public/loop_background.png);
   mask-size: contain;
   -webkit-mask-size: contain;
-  width: 170px;
+  width: var(--loopBackgroundWidth);
+  /* width: 170px; */
   aspect-ratio: 1000 / 1000;
   background-color: var(--loopColor);
   transition: ease-out 0.2s;
@@ -512,9 +513,9 @@ html, body {
   -webkit-mask-image: url(../public/menubar_icons/menubar_plus_icon.png);
   mask-size: contain;
   -webkit-mask-size: contain;
-  width: 100px;
-  margin-left: 35px;
-  margin-top: 35px;
+  width: var(--loopPlusWidth);
+  margin-left: var(--loopPlusMargin);
+  margin-top: var(--loopPlusMargin);
    
   aspect-ratio: 1000 / 1000;
   background-color: var(--themeColor);
@@ -527,6 +528,14 @@ html, body {
 
 .plus-icon-loop:hover {
   background-color: darkgray;
+}
+
+/* .containerFriends {
+ background-color: black;
+} */
+.container-friends:hover {
+  background-color: darkgrey;
+  transition: ease-out 0.2s;
 }
 
 
