@@ -499,6 +499,10 @@ html, body {
   width: 170px;
   aspect-ratio: 1000 / 1000;
   background-color: var(--loopColor);
+  transition: ease-out 0.2s;
+}
+.loop-background:hover {
+  background-color: grey;
 }
 
 .plus-icon-loop {
@@ -517,12 +521,12 @@ html, body {
   /* background-color: red; */
   background-repeat: no-repeat;
   background-size: contain;
-  transition: ease-out 0.1s;
+  transition: ease-out 0.2s;
 
 }
 
 .plus-icon-loop:hover {
-  background-color: grey;
+  background-color: darkgray;
 }
 
 

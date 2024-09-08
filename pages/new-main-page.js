@@ -137,18 +137,21 @@ const NewMainPage = () => {
         
 
         borderRight: '1px solid #AAAAAA',
+        overflow: 'auto',
     }
 
     const OuterContainerFriends = {
         width: phoneLayout ? '100%' : '35%', // Justera bredden så att den passar bredvid Loop
         minHeight: 'calc(100vh - (0.5rem + 80px))',
         height: 'calc(100%)',
+        overflow: 'auto',
     }
 
     const OuterContainer = {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
+        height: 'calc(100vh - (0.5rem + 80px))',
     
     }
 
