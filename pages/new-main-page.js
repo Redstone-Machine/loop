@@ -398,7 +398,7 @@ const NewMainPage = () => {
                             <div key={loop.id} style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}>
                                 
                             {loopFriends[loop.id]?.map((friend, index) => (
-                              <div key={friend.id} style={{ position: 'absolute' }}>
+                              <div key={friend.id} style={{ position: 'relative' }}>
                                 {index === 0 && (
                                   <img
                                     src={friend.profilePicture}
@@ -407,9 +407,9 @@ const NewMainPage = () => {
                                     style={{
                                         width: `calc(${loopBackgroundWidth}px * 0.48)`,
                                         zIndex: 3,
-                                        right: `calc(${loopBackgroundWidth}px * 0.15)`,
-                                        top: `calc(${loopBackgroundWidth}px * 0.00`,
-                                        position: 'relative',
+                                        right: `calc(${loopBackgroundWidth}px * (-0.12))`,
+                                        top: `calc(${loopBackgroundWidth}px * 0.32`,
+                                        position: 'absolute',
                                         borderRadius: '50%',
                                         border: '1px solid white' }}
                                   />
@@ -420,11 +420,12 @@ const NewMainPage = () => {
                                     alt={`${friend.userName}'s profile`}
                                     className="friend-img-medium"
                                     style={{
-                                        width: `calc(${loopBackgroundWidth}px * 0.41)`,
+                                        
+                                        width: `calc(${loopBackgroundWidth}px * 0.42)`,
                                         zIndex: 2,
-                                        left: `calc(${loopBackgroundWidth}px * 0.1)`,
-                                        bottom: `calc(${loopBackgroundWidth}px * 0.18)`,
-                                        position: 'relative',
+                                        right: `calc(${loopBackgroundWidth}px * (-0.29))`,
+                                        top: `calc(${loopBackgroundWidth}px * 0.17`,
+                                        position: 'absolute',
                                         borderRadius: '50%',
                                         border: '1px solid white' }}
                                         
@@ -437,9 +438,9 @@ const NewMainPage = () => {
                                     className="friend-img-small"
                                     style={{ width: `calc(${loopBackgroundWidth}px * 0.36)`,
                                         zIndex: 1,
-                                        position: 'relative',
-                                        left: `calc(${loopBackgroundWidth}px * 0.1)`,
-                                        top: `calc(${loopBackgroundWidth}px * 0.18)`,
+                                        position: 'absolute',
+                                        right: `calc(${loopBackgroundWidth}px * (-0.39))`,
+                                        top: `calc(${loopBackgroundWidth}px * 0.44`,
                                         borderRadius: '50%',
                                         border: '1px solid white' }}
                                   />

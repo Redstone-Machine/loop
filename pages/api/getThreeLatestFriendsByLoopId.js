@@ -14,19 +14,46 @@ export default async function getUsersFromLoopByLoopId(req, res) {
       where: {
         id: loopId
       },
-      include: {
+      select: {
+        ownerId: true, // Hämta ownerId
         users: {
-          include: {
+          select: {
             user: true
           }
         }
       }
     })
+    
 
     if (!loopWithUsers) {
         res.status(404).json({ message: 'Loop not found.' });
         return;
       }
+
+
+    const ownerId = loopWithUsers.ownerId;
+
+    const friends = await prisma.friend.findMany({
+        where: {
+          OR: [
+            {
+              requesterId: ownerId,
+              status: 'accepted',
+            },
+            {
+              addresseeId: ownerId,
+              status: 'accepted',
+            },
+          ],
+        },
+        select: {
+          requesterId: true,
+          addresseeId: true,
+          lastMessageAt: true,
+        },
+    });
+
+
   
       const userIds = loopWithUsers.users.map(userLoop => userLoop.user.id);
 
@@ -43,9 +70,39 @@ export default async function getUsersFromLoopByLoopId(req, res) {
         })
       );
 
-    // Sortera användarna baserat på lastMessageAt
-    const sortedUsers = users.sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
+    // Lägg till väninformation till varje användare
+    const usersWithFriends = users.map(user => {
+        const userFriends = friends.filter(friend => 
+        friend.requesterId === user.id || friend.addresseeId === user.id
+        );
+    
+        // Hitta den senaste lastMessageAt bland användarens vänner
+        const lastMessageAt = userFriends.reduce((latest, friend) => {
+        const friendLastMessageAt = new Date(friend.lastMessageAt);
+        return friendLastMessageAt > latest ? friendLastMessageAt : latest;
+        }, new Date(0)); // Börja med ett mycket gammalt datum
+    
+        return {
+        ...user,
+        lastMessageAt: lastMessageAt !== new Date(0) ? lastMessageAt : null, // Om ingen lastMessageAt hittades, sätt till null
+        };
+    });
 
+    // Kombinera användare och vänner i en enda lista
+    const combinedList = [
+        ...usersWithFriends,
+        // ...friends.map(friend => ({
+        // id: friend.requesterId === ownerId ? friend.addresseeId : friend.requesterId,
+        // lastMessageAt: friend.lastMessageAt,
+        // }))
+    ];
+
+    console.log('combinedList:', combinedList);
+
+    // Sortera den kombinerade listan baserat på lastMessageAt
+    const sortedUsers = combinedList.sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
+
+    console.log('sortedUsers:', sortedUsers);
     // Ta de tre senaste användarna
     const latestThreeUsers = sortedUsers.slice(0, 3);
 
