@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 export default async function getFriendsRequests(req, res) {
   const { userId } = req.query 
 
-  console.log('userId in getLatestFriend', userId);
+  // console.log('userId in getLatestFriend', userId);
   try {
     const friends = await prisma.friend.findMany({
       where: {
@@ -30,7 +30,7 @@ export default async function getFriendsRequests(req, res) {
       },
     })
 
-    console.log('friends latest:', friends);
+    // console.log('friends latest:', friends);
 
     // Sortera listan manuellt efter lastMessageAt
     const sortedFriends = friends.sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
@@ -40,7 +40,7 @@ export default async function getFriendsRequests(req, res) {
       lastMessageAt: friend.lastMessageAt,
     }));
 
-    console.log('friendIds:', friendIds);
+    // console.log('friendIds:', friendIds);
 
     // Hämta all information om användarna baserat på friendIds
     const userIds = friendIds.map(friend => friend.id);
@@ -57,7 +57,8 @@ export default async function getFriendsRequests(req, res) {
           surName: true,
         },
       });
-          // Hämta profilbilder och senaste meddelanden för varje användare
+
+    // Hämta profilbilder och senaste meddelanden för varje användare
     const friendsWithUserInfo = await Promise.all(friendIds.map(async friend => {
         const user = users.find(user => user.id === friend.id);
         const profilePictureResponse = await axios.get(`http://localhost:3000/api/getProfilePictureById?id=${friend.id}`, {
@@ -87,7 +88,7 @@ export default async function getFriendsRequests(req, res) {
             },
           });
 
-        console.log('latestMessage:', latestMessage);
+        // console.log('latestMessage:', latestMessage);
   
         return {
           ...friend,
@@ -99,7 +100,7 @@ export default async function getFriendsRequests(req, res) {
         };
       }));
 
-    console.log('friendsWithUserInfo:', friendsWithUserInfo);
+    // console.log('friendsWithUserInfo:', friendsWithUserInfo);
 
         // console.log('friendsWithUserInfo:', friendsWithUserInfo);
         // console.log('friendsWithUserInfo:', friendsWithUserInfo.);

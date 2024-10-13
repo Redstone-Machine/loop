@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import { useState, useEffect, useContext, act } from 'react';
 import useSWR, { mutate } from 'swr'
+import axios from 'axios';
 
 import Link from 'next/link'
 import { min } from 'lodash';
@@ -22,6 +23,13 @@ const NewMainPage = () => {
     const { userId, userName, session, status, userLanguage, userTheme, theme, router, setThemeColor, themeColor } = usePageSetup();
     const { data: loops, error: loopsError } = useSWR(`/api/getAllLoopsById?userId=${userId}`, fetcher)
 
+
+
+    console.log('loops', loops)
+
+    // console.log('loopFriends', loopFriends)
+
+
     const [phoneLayout, setPhoneLayout] = useState(false);
     const [marginLeft, setMarginLeft] = useState('0px');
 
@@ -29,7 +37,48 @@ const NewMainPage = () => {
 
     const { data: friends, error: friendError } = useSWR(`/api/getLatestFriendsById?userId=${userId}`, fetcher)
 
+    // const { data: loopFriends, error: loopFriendError } = useSWR(`/api/getThreeLatestFriendsByLoopId?loopId=${loopId}`, fetcher)
+
+    
     const [positions, setPositions] = useState({});
+
+
+
+    const [loopFriends, setLoopFriends] = useState(null);
+    const [loopFriendError, setLoopFriendError] = useState(null);
+  
+    useEffect(() => {
+        if (Array.isArray(loops)) {
+          const fetchLoopFriends = async () => {
+            try {
+              const friendsData = await Promise.all(
+                loops.map(async (loop) => {
+                  const loopFriendsUrl = `/api/getThreeLatestFriendsByLoopId?loopId=${loop.id}`;
+                  console.log('Generated URL:', loopFriendsUrl);
+                  const response = await axios.get(loopFriendsUrl);
+                  return { loopId: loop.id, friends: response.data };
+                })
+              );
+    
+              const friendsByLoopId = friendsData.reduce((acc, { loopId, friends }) => {
+                acc[loopId] = friends;
+                return acc;
+              }, {});
+    
+              setLoopFriends(friendsByLoopId);
+              console.log('Loop Friends Data:', friendsByLoopId);
+            } catch (error) {
+              setLoopFriendError(error);
+              console.log('Loop Friends Error:', error);
+            }
+          };
+    
+          fetchLoopFriends();
+        }
+      }, [loops]);
+
+
+
     useEffect(() => {
       if (friends) {
         const newPositions = {};
@@ -80,7 +129,7 @@ const NewMainPage = () => {
 
     const checkScreenDimensions = () => {
         if (window.innerWidth <= 700) {
-            setLoopBackgroundWidth(window.innerWidth * 0.3);
+            setLoopBackgroundWidth(window.innerWidth * 0.35);
             setPhoneLayout(true);
         } else {
             setLoopBackgroundWidth(160);
@@ -106,19 +155,25 @@ const NewMainPage = () => {
 
         let percentageWidth;
         let loopBackgroundWidthVar;
+        let loopBackgroundWidthWithMargin;
 
         if (window.innerWidth <= 700) {
             percentageWidth = window.innerWidth; // Använd 80% av fönsterbredden om bredden är 700px eller mindre
-            loopBackgroundWidthVar = window.innerWidth * 0.3;
+            loopBackgroundWidthVar = window.innerWidth * 0.35;
+            // loopBackgroundWidthVar = window.innerWidth * 0.35;
+            loopBackgroundWidthWithMargin = loopBackgroundWidthVar + 20;
 
         } else {
             percentageWidth = 0.65 * window.innerWidth - 2; // Använd 65% av fönsterbredden annars
             loopBackgroundWidthVar = 160;
             // setLoopBackgroundWidth(160);
+            loopBackgroundWidthWithMargin = loopBackgroundWidthVar + 20;
         }
 
 
-        const loopBackgroundWidthWithMargin = loopBackgroundWidthVar + 40;
+        // const loopBackgroundWidthWithMargin = loopBackgroundWidthVar + 20;
+        
+
         console.log('loopBackgroundWidthWithMargin', loopBackgroundWidthWithMargin);
 
         // const percentageWidth = 0.65 * window.innerWidth; // 65% av fönsterbredden
@@ -145,7 +200,6 @@ const NewMainPage = () => {
 
 
 
-    console.log('loops', loops)
 
     const navigate = (url) => {
         router.push(url);
@@ -278,7 +332,8 @@ const NewMainPage = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginInline: '20px',
+        // marginInline: '20px',
+        marginInline: '10px',
         marginBlock: '5px',
 
     }
@@ -288,6 +343,7 @@ const NewMainPage = () => {
         fontSize: '1.5rem',
         marginBlockStart: '0px',
         marginBlockEnd: '0px',
+        height: '1lh',
         // fontWeight: 'bold',
     }
 
@@ -320,6 +376,9 @@ const NewMainPage = () => {
     if (friendError) return <div>Error loading friends.</div>;
     if (!friends) return <div>Loading...</div>;
 
+    if (loopsError || loopFriendError) return <div>Error loading data</div>;
+    if (!loops || !loopFriends || Object.keys(loopFriends).length === 0) return <div>Loading...</div>;
+
     return (
         <> 
         <div style={OuterContainer}>           
@@ -332,12 +391,72 @@ const NewMainPage = () => {
             <div style={loopBox}>
             <div style={loopContainer}>
                 
+                
                 {loops
                     ? loops.length > 0
                         ? loops.map(loop => (
-                            <div key={loop.id}  style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}>
-                                {/* <div style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}> */}
-                                <div className="loop-background" style={{'--loopColor': loop?.color, '--loopBackgroundWidth': loopBackgroundWidth + 'px' }}> </div>
+                            <div key={loop.id} style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}>
+                                
+                            {loopFriends[loop.id]?.map((friend, index) => (
+                              <div key={friend.id} style={{ position: 'absolute' }}>
+                                {index === 0 && (
+                                  <img
+                                    src={friend.profilePicture}
+                                    alt={`${friend.userName}'s profile`}
+                                    className="friend-img-large"
+                                    style={{
+                                        width: `calc(${loopBackgroundWidth}px * 0.48)`,
+                                        zIndex: 3,
+                                        right: `calc(${loopBackgroundWidth}px * 0.15)`,
+                                        top: `calc(${loopBackgroundWidth}px * 0.00`,
+                                        position: 'relative',
+                                        borderRadius: '50%',
+                                        border: '1px solid white' }}
+                                  />
+                                )}
+                                {index === 1 && (
+                                  <img
+                                    src={friend.profilePicture}
+                                    alt={`${friend.userName}'s profile`}
+                                    className="friend-img-medium"
+                                    style={{
+                                        width: `calc(${loopBackgroundWidth}px * 0.41)`,
+                                        zIndex: 2,
+                                        left: `calc(${loopBackgroundWidth}px * 0.1)`,
+                                        bottom: `calc(${loopBackgroundWidth}px * 0.18)`,
+                                        position: 'relative',
+                                        borderRadius: '50%',
+                                        border: '1px solid white' }}
+                                        
+                                  />
+                                )}
+                                {index === 2 && (
+                                  <img
+                                    src={friend.profilePicture}
+                                    alt={`${friend.userName}'s profile`}
+                                    className="friend-img-small"
+                                    style={{ width: `calc(${loopBackgroundWidth}px * 0.36)`,
+                                        zIndex: 1,
+                                        position: 'relative',
+                                        left: `calc(${loopBackgroundWidth}px * 0.1)`,
+                                        top: `calc(${loopBackgroundWidth}px * 0.18)`,
+                                        borderRadius: '50%',
+                                        border: '1px solid white' }}
+                                  />
+                                )}
+                              </div>
+
+                                ))}
+
+
+                                <div className="loop-background" style={{'--loopColor': loop?.color, '--loopBackgroundWidth': loopBackgroundWidth + 'px' }}>
+                                 
+                                 
+
+                            
+                            
+                            
+                                </div>
                                 {/* <Link style={{ color: loop?.color, backgroundColor: '#ededed' }} href={`/loop/${loop.id}`}> */}
                                 <p
                                     style={{
@@ -369,7 +488,7 @@ const NewMainPage = () => {
                         }}
                     >
                         {/* Skapa en ny loop */}
-                        +
+                        
                         
                         
                     </p>
