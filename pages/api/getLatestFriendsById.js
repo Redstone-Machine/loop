@@ -61,7 +61,7 @@ export default async function getFriendsRequests(req, res) {
     // Hämta profilbilder och senaste meddelanden för varje användare
     const friendsWithUserInfo = await Promise.all(friendIds.map(async friend => {
         const user = users.find(user => user.id === friend.id);
-        const profilePictureResponse = await axios.get(`http://localhost:3000/api/getProfilePictureById?id=${friend.id}`, {
+        const profilePictureResponse = await axios.get(`http://localhost:3000/api/getProfilePictureById?id=${friend.id}&userId=${userId}`, {
           responseType: 'arraybuffer',
         });
         const profilePicture = Buffer.from(profilePictureResponse.data, 'binary').toString('base64');

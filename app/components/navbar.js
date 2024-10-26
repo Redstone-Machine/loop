@@ -354,7 +354,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   useEffect(() => {
 
       const fetchChatProfilePicture = async () => {
-        const response = await fetch(`/api/getProfilePictureById?id=${chatProfileId}`);
+        const response = await fetch(`/api/getProfilePictureById?id=${chatProfileId}&userId=${userId}`);
         if (response.ok) {
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);
@@ -386,7 +386,7 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
 
       }
       
-  }, [chatProfileId]);
+  }, [chatProfileId, userId]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

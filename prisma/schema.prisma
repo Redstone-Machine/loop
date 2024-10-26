@@ -116,6 +116,15 @@ model User {
   receivedFriendRequests Friend[] @relation("FriendRequestsReceived")
 }
 
+model PersonalProfilePicture {
+  id        String   @id @default(cuid())
+  userId    String
+  userIdOfProfilePicture String
+  profilePictureUrl   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Friend {
   id           String   @id @default(cuid())
   status       String   // you can use this field to represent the status of the friendship (e.g., 'pending', 'accepted', 'declined', 'blocked')

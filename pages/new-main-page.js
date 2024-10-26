@@ -53,7 +53,7 @@ const NewMainPage = () => {
             try {
               const friendsData = await Promise.all(
                 loops.map(async (loop) => {
-                  const loopFriendsUrl = `/api/getThreeLatestFriendsByLoopId?loopId=${loop.id}`;
+                  const loopFriendsUrl = `/api/getThreeLatestFriendsByLoopId?loopId=${loop.id}&requesterId=${userId}`;
                   console.log('Generated URL:', loopFriendsUrl);
                   const response = await axios.get(loopFriendsUrl);
                   return { loopId: loop.id, friends: response.data };
@@ -75,7 +75,7 @@ const NewMainPage = () => {
     
           fetchLoopFriends();
         }
-      }, [loops]);
+      }, [loops, userId]);
 
 
 

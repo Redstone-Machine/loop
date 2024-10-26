@@ -17,11 +17,13 @@ const SettingsPage = () => {
     const [profileSurName, setProfileSurName] = useState(null);
     const [profileEmail, setProfileEmail] = useState(null);
 
+    const [file, setFile] = useState(null);
+
     const { profileUserId } = router.query;
 
     useEffect(() => {
       const fetchProfilePicture = async () => {
-        const response = await fetch(`/api/getProfilePictureById?id=${profileUserId}`);
+        const response = await fetch(`/api/getProfilePictureById?id=${profileUserId}&userId=${userId}`);
         if (response.ok) {
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);
@@ -32,7 +34,7 @@ const SettingsPage = () => {
       if (profileUserId) {
         fetchProfilePicture();
       }
-    }, [profileUserId]);
+    }, [profileUserId, userId]);
     
     useEffect(() => {
         if (profileUserId) {
@@ -46,6 +48,32 @@ const SettingsPage = () => {
               });
         }
     }, [profileUserId]);
+
+    const handleUpload = async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('userId', userId);
+        formData.append('profileUserId', profileUserId);
+        
+        const response = await fetch('/api/uploadProfilePictureOfAnotherUser', {
+            method: 'POST',
+            body: formData,
+        });
+        
+        if (response.ok) {
+            console.log('File uploaded successfully');
+            router.reload();
+        } else {
+            const errorData = await response.json();
+            window.alert(`File upload failed: ${errorData.error}`);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
     
 
     return (
@@ -72,6 +100,11 @@ const SettingsPage = () => {
                             }}>
                             Chatta med {profileUserName}
                         </button>
+
+                        <form onSubmit={handleUpload}>
+                            <input type="file" accept="image/*" onChange={handleFileChange} />
+                            <button type="submit"><FormattedMessage id="uppload" /></button>
+                        </form>
 
                     </div>
                 </>

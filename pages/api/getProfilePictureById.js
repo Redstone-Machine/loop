@@ -7,11 +7,12 @@ const prisma = new PrismaClient();
 
 import fs from 'fs';
 import { promisify } from 'util';
+import { profile } from 'console';
 
 const readFile = promisify(fs.readFile);
 
 export default async function handle(req, res) {
-  const { id } = req.query;
+  const { id, userId } = req.query;
 
   const user = await prisma.user.findUnique({
     where: { id },
@@ -21,6 +22,19 @@ export default async function handle(req, res) {
   if (!user) {
     res.status(404).json({ error: 'User not found' });
     return;
+  }
+
+  if (user.profilePicture && userId ) {
+    console.log('userId i hämta:', userId);
+    console.log('id i hämta:', id);
+    const profile = await prisma.personalProfilePicture.findFirst({
+      where: { userId: userId, userIdOfProfilePicture: id },
+      select: { profilePictureUrl: true },
+    });
+    console.log('profile:', profile);
+    if (profile) {
+      user.profilePicture = profile.profilePictureUrl;
+    }
   }
 
   // const filePath = path.resolve("../loop_data/profile_pictures", user.profilePicture);

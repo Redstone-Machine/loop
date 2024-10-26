@@ -7,7 +7,7 @@ import axios from 'axios';
 const prisma = new PrismaClient()
 
 export default async function getUsersFromLoopByLoopId(req, res) {
-  const { loopId } = req.query
+  const { loopId, requesterId } = req.query
 
   try {
     const loopWithUsers = await prisma.loop.findUnique({
@@ -109,7 +109,7 @@ export default async function getUsersFromLoopByLoopId(req, res) {
     // Hämta profilbilder för de tre senaste användarna
     const usersWithProfilePictures = await Promise.all(
     latestThreeUsers.map(async (user) => {
-        const profilePictureResponse = await axios.get(`http://localhost:3000/api/getProfilePictureById?id=${user.id}`, {
+      const profilePictureResponse = await axios.get(`http://localhost:3000/api/getProfilePictureById?id=${user.id}&userId=${requesterId}`, {
         responseType: 'arraybuffer',
         });
         const profilePicture = Buffer.from(profilePictureResponse.data, 'binary').toString('base64');
