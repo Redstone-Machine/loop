@@ -81,5 +81,42 @@ export default {
   // loop
     loopTitle: 'Skapa en Loop',
 
+  // titlar
+
+    "title.christmas": "God jul",
+    "title.christmas.username": "God jul {userName}",
+    "title.halloween": "Bus eller godis?",
+    "title.halloween.username": "Glad halloween {userName}",
+    "title.easter": "Glad påsk",
+    "title.easter.username": "Glad påsk {userName}",
+    "title.newyear": "Gott nytt år",
+    "title.newyear.username": "Gott nytt år {userName}",
+    "title.valentine": "Glad alla hjärtans dag",
+    "title.valentine.username": "Glad alla hjärtans dag {userName}",
+    "title.firstdaynewyear": "Är du redo för {yearReal}?",
+    "title.firstdaynewyear.username": "Är du redo för {yearReal} {userName}?",
+    "title.cinnamonbunday": "Har du ätit en kanelbulle idag?",
+    "title.cinnamonbunday.username": "Glad kanelbullens dag {userName}", 
+    "title.morning": "God morgon",
+    "title.morning.username": "God morgon {userName}",
+    "title.prenoon": "God förmiddag",
+    "title.prenoon.username": "God förmiddag {userName}",
+    "title.afternoon": "God eftermiddag",
+    "title.afternoon.username": "God eftermiddag {userName}",
+    "title.evening": "God kväll",
+    "title.evening.username": "God kväll {userName}",
+    "title.night": "Är det en nattsuddare här?",
+    "title.night.username": "Välkommen in här på kvällskvisten {userName}",
+    "title.random1": "Välkommen in i Loopen",
+    "title.random1.username": "Välkommen in i Loopen {userName}",
+    "title.random2": "Hej",
+    "title.random2.username": "Hej {userName}",
+    "title.random3": "Trevligt att se dig",
+    "title.random3.username": "Trevligt att se dig {userName}",
+    "title.random4": "Välkommen till Loop",
+    "title.random4.username": "Välkommen till Loop {userName}",
+    "title.random5": "Äta, sova, sen Loop it",
+    "title.random5.username": "Äta, sova, sen Loop it",
+
 
 };

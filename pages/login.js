@@ -121,6 +121,7 @@ const Login = () => {
       alert(intl.formatMessage({ id: 'loginFailed' }));
     } else {
       router.push('/main-page');
+      // router.push('/new-main-page');
     }
   };
 
@@ -209,7 +210,8 @@ const Login = () => {
       console.log('User is not logged in')
     } else if (status === 'authenticated') {
       console.log('User is logged in:', session)
-      router.push('/main-page');
+      // router.push('/main-page');
+      router.push('/new-main-page');
     }
   }, [status, session])
 

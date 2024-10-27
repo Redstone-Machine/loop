@@ -1,13 +1,16 @@
 import { usePageSetup } from '../hooks/usePageSetup';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import React from 'react';
-import { useState, useEffect, useContext, act } from 'react';
+import { useState, useEffect, useContext, act, useRef } from 'react';
 import useSWR, { mutate } from 'swr'
 import axios from 'axios';
 
+
 import Link from 'next/link'
-import { min } from 'lodash';
+import { min, random } from 'lodash';
+
+import { PageLoadContext } from '../contexts/PageLoadContext';
 // import { text } from 'stream/consumers';
 
 
@@ -23,6 +26,8 @@ const NewMainPage = () => {
     const { userId, userName, session, status, userLanguage, userTheme, theme, router, setThemeColor, themeColor } = usePageSetup();
     const { data: loops, error: loopsError } = useSWR(`/api/getAllLoopsById?userId=${userId}`, fetcher)
 
+
+    const intl = useIntl();
 
 
     console.log('loops', loops)
@@ -46,6 +51,55 @@ const NewMainPage = () => {
 
     const [loopFriends, setLoopFriends] = useState(null);
     const [loopFriendError, setLoopFriendError] = useState(null);
+
+    const scrollableRefs = useRef([]);
+
+    useEffect(() => {
+        // Sätt scrollbar width till 0px när komponenten monteras
+        scrollableRefs.current.forEach((scrollableElement) => {
+            if (scrollableElement) {
+                scrollableElement.style.setProperty('--scrollbar-width', '0px');
+            }
+        });
+
+
+        const handleScroll = (scrollableElement) => {
+            console.log('Scrolling...');
+            scrollableElement.style.setProperty('--scrollbar-width', '9px');
+            clearTimeout(scrollableElement.scrollTimeout);
+            scrollableElement.scrollTimeout = setTimeout(() => {
+                scrollableElement.style.setProperty('--scrollbar-width', '0px');
+                console.log('Scrollbar hidden');
+            }, 1000); // Justera timeout efter behov
+        };
+
+        const addScrollListeners = () => {
+            scrollableRefs.current.forEach((scrollableElement) => {
+                if (scrollableElement) {
+                    scrollableElement.addEventListener('scroll', () => handleScroll(scrollableElement));
+                    scrollableElement.style.setProperty('--scrollbar-width', '0px');
+                }
+            });
+
+        };
+
+        const observer = new MutationObserver(() => {
+            addScrollListeners();
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Rensa observer när komponenten avmonteras
+        return () => {
+            observer.disconnect();
+            scrollableRefs.current.forEach((scrollableElement) => {
+                if (scrollableElement) {
+                    scrollableElement.removeEventListener('scroll', () => handleScroll(scrollableElement));
+                }
+            });
+        };
+    }, []);
+    
   
     useEffect(() => {
         if (Array.isArray(loops)) {
@@ -105,6 +159,42 @@ const NewMainPage = () => {
         setThemeColor('#3de434');
     
     }, []);
+
+
+
+
+    const { setIsPageLoaded } = useContext(PageLoadContext);
+
+    useEffect(() => {
+      console.log('useEffect for page load ran');
+      
+      const handlePageLoad = () => {
+        console.log('Page is loaded');
+        
+        // Vänta tills nästa renderingscykel är klar
+        new Promise(resolve => requestAnimationFrame(resolve)).then(() => {
+          // Vänta tills alla typsnitt har laddats
+          document.fonts.ready.then(() => {
+            setTimeout(() => {
+              setIsPageLoaded(true);
+            }, 500);
+          });
+        });
+      };
+    
+      console.log('Document readyState:', document.readyState);
+      if (document.readyState === 'complete') {
+        // If the page is already loaded, call the handler immediately
+        handlePageLoad();
+      } else {
+        // Otherwise, wait for the load event
+        window.addEventListener('load', handlePageLoad);
+      }
+    
+      return () => {
+        window.removeEventListener('load', handlePageLoad);
+      };
+    }, [setIsPageLoaded]);
     
 
 
@@ -167,7 +257,7 @@ const NewMainPage = () => {
             percentageWidth = 0.65 * window.innerWidth - 2; // Använd 65% av fönsterbredden annars
             loopBackgroundWidthVar = 160;
             // setLoopBackgroundWidth(160);
-            loopBackgroundWidthWithMargin = loopBackgroundWidthVar + 20;
+            loopBackgroundWidthWithMargin = loopBackgroundWidthVar + 20 + 2;
         }
 
 
@@ -208,6 +298,155 @@ const NewMainPage = () => {
     useEffect(() => {
         document.body.style.margin = '0';
     }, []);
+
+
+
+    const getTitleText = () => {
+        const now = new Date();
+        const month = now.getMonth();
+        const date = now.getDate();
+        const hours = now.getHours();
+        const year = now.getYear();
+    
+        const randomShowUsername = Math.floor(Math.random() * 2);
+
+        const yearReal = year + 1900;
+
+        // Kontrollera om det är jul (december)
+        if (month === 11 && date === 24) {
+            if (randomShowUsername === 0) {
+                return intl.formatMessage({ id: 'title.christmas.username', defaultMessage: 'God Jul, {userName}!' }, { userName });
+            } else {
+                return intl.formatMessage({ id: 'title.christmas', defaultMessage: 'God Jul!' });
+            }
+        }
+    
+        // Kontrollera om det är halloween (31 oktober)
+        if (month === 9 && date === 31) {
+            if (randomShowUsername === 0) {
+                return intl.formatMessage({ id: 'title.halloween', defaultMessage: 'Glad Halloween, {userName}!' }, { userName });
+            } else {
+                return intl.formatMessage({ id: 'title.halloween', defaultMessage: 'Glad Halloween!' });
+            }
+        }
+    
+        // Kontrollera om det är påsk (enkel kontroll för april)
+        if (year === 125 && month === 4 && date === 20) {
+            if (randomShowUsername === 0) {
+                return intl.formatMessage({ id: 'title.easter.username', defaultMessage: 'Glad Påsk, {userName}!' }, { userName });
+            } else {
+                return intl.formatMessage({ id: 'title.easter', defaultMessage: 'Glad Påsk!' });
+            }
+        }
+
+        if ( month === 11 && date === 31) {
+            if (randomShowUsername === 0) {
+                return intl.formatMessage({ id: 'title.newyear.username', defaultMessage: 'Nytt år' }, { userName });
+            } else {
+                return intl.formatMessage({ id: 'title.newyear', defaultMessage: 'Nytt år' });
+            }
+        }
+
+        if ( month === 1 && date === 14) {
+            if (randomShowUsername === 0) {
+                return intl.formatMessage({ id: 'title.valentine.username', defaultMessage: 'Hjärta dag' }, { userName });
+            } else {
+                return intl.formatMessage({ id: 'title.valentine', defaultMessage: 'Hjärta dag' });
+            }
+        }
+
+        if ( month === 0 && date === 1) {
+            if (randomShowUsername === 0) {
+                return intl.formatMessage({ id: 'title.firstdaynewyear.username', defaultMessage: 'Nytt år' }, { userName, yearReal });
+            } else {
+                return intl.formatMessage({ id: 'title.firstdaynewyear', defaultMessage: 'Nytt år' });
+            }
+        }
+
+        if ( month === 9 && date === 4) {
+            if (randomShowUsername === 0) {
+                return intl.formatMessage({ id: 'title.cinnamonbunday.username', defaultMessage: 'Kanelbulle' }, { userName });
+            } else {
+                return intl.formatMessage({ id: 'title.cinnamonbunday', defaultMessage: 'Kanelbulle' });
+            }
+        }
+
+
+
+
+        const randomNumber = Math.floor(Math.random() * 4);
+        const randomTitle = Math.floor(Math.random() * 5);
+
+        if (randomNumber > 1) {
+    
+            // Kontrollera tid på dygnet
+            if ( 3 < hours && hours < 10) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.morning.username', defaultMessage: 'God Morgon, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.morning', defaultMessage: 'God Morgon!' });
+                }
+            } else if (hours < 12) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.prenoon.username', defaultMessage: 'God Förmiddag, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.prenoon', defaultMessage: 'God Förmiddag!' });
+                }
+            } else if (hours < 18) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.afternoon.username', defaultMessage: 'God Eftermiddag, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.afternoon', defaultMessage: 'God Eftermiddag!' });
+                }
+            } else if (hours < 22) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.evening.username', defaultMessage: 'God Kväll, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.evening', defaultMessage: 'God Kväll!' });
+                }
+            } else {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.night.username', defaultMessage: 'Nattsuddare, {userName}?' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.night', defaultMessage: 'Nattsuddare?' });
+                }
+            }
+
+        } else {
+            if (randomTitle === 0) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.random1.username', defaultMessage: 'Välkommen, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.random1', defaultMessage: 'Välkommen!' });
+                }
+            } else if (randomTitle === 1) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.random2.username', defaultMessage: 'Hej, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.random2', defaultMessage: 'Hej!' });
+                }
+            } else if (randomTitle === 2) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.random3.username', defaultMessage: 'Trevligt att se dig, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.random3', defaultMessage: 'Trevligt att se dig!' });
+                } 
+            } else if (randomTitle === 3) {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.random4.username', defaultMessage: 'Vad kul att du är här, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.random4', defaultMessage: 'Vad kul att du är här!' });
+                }
+            } else {
+                if (randomShowUsername === 0) {
+                    return intl.formatMessage({ id: 'title.random5.username', defaultMessage: 'Välkommen till Loop, {userName}!' }, { userName });
+                } else {
+                    return intl.formatMessage({ id: 'title.random5', defaultMessage: 'Välkommen till Loop, {userName}!' }, { userName });
+                }
+            }
+        }
+      };
+
 
 
     const OuterContainerLoop = {
@@ -339,8 +578,9 @@ const NewMainPage = () => {
     }
 
     const textUnderLoop = {
-        fontFamily: "'SF Pro', sans-serif",
-        fontSize: '1.5rem',
+        // fontFamily: "'SF Pro', sans-serif",
+        fontFamily: "'Brush-Font', sans-serif",
+        fontSize: '2rem',
         marginBlockStart: '0px',
         marginBlockEnd: '0px',
         height: '1lh',
@@ -350,15 +590,21 @@ const NewMainPage = () => {
 
 
     const title = {
-        fontFamily: "'SF Pro', sans-serif",
-        fontSize: '2.5rem',
-        fontWeight: 'bold',
+        fontFamily: "'Brush-Font', sans-serif",
+        fontSize: '3.8rem',
+        // fontWeight: 'bold',
+        letterSpacing: '0.08em',
         marginBlockStart: '0px',
         marginBlockEnd: '0px',
         paddingTop: '1.5rem',
         paddingLeft: phoneLayout ? '0.5rem' : '3rem',
         paddingBottom: '0.5rem',
         textAlign: phoneLayout ? 'center' : 'start',
+        color: themeColor,
+        opacity: 0.85,
+        // filter: 'brightness: (0.3)',
+
+
     }
 
     const extraSpace = {
@@ -382,9 +628,9 @@ const NewMainPage = () => {
     return (
         <> 
         <div style={OuterContainer}>           
-            <div style={OuterContainerLoop}>
+            <div ref={(el) => (scrollableRefs.current[0] = el)} className="scrollable" style={OuterContainerLoop}>
             <div>
-                <h1 style={title}>Välkommen till Loop</h1>
+                <h1 style={title}>{getTitleText()}</h1>
             </div>
 
 
@@ -395,7 +641,7 @@ const NewMainPage = () => {
                 {loops
                     ? loops.length > 0
                         ? loops.map(loop => (
-                            <div key={loop.id} style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}>
+                            <div key={loop.id} className="loop-wrapper" style={loopWrapper} onClick={() => navigate(`/loop/${loop.id}`)}>
                                 
                             {loopFriends[loop.id]?.map((friend, index) => (
                               <div key={friend.id} style={{ position: 'relative' }}>
@@ -459,12 +705,12 @@ const NewMainPage = () => {
                             
                                 </div>
                                 {/* <Link style={{ color: loop?.color, backgroundColor: '#ededed' }} href={`/loop/${loop.id}`}> */}
-                                <p
+                                <p 
                                     style={{
                                         ...textUnderLoop,
                                         color: loop?.color,
                                     }}
-                                    className="no-select"
+                                    className="no-select under-loop-text"
                                 >
                                     {loop.name}
                                 </p>
@@ -505,7 +751,7 @@ const NewMainPage = () => {
 
             { !phoneLayout && (
 
-                <div style={OuterContainerFriends}>
+                <div ref={(el) => (scrollableRefs.current[1] = el)} className="scrollable" style={OuterContainerFriends}>
                     <div style={gridStyle}>
                 
                         {friends.map(friend => {

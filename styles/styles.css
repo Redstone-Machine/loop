@@ -502,8 +502,35 @@ html, body {
   background-color: var(--loopColor);
   transition: ease-out 0.2s;
 }
-.loop-background:hover {
+
+.loop-background {
+  transition: background-color 0.2s ease-out;
+}
+
+.under-loop-text {
+  transition: color 0.2s ease-out;
+}
+
+.friend-img-large,
+.friend-img-medium,
+.friend-img-small {
+  transition: filter 0.2s ease-out;
+}
+
+.loop-wrapper:hover .loop-background {
   background-color: grey;
+}
+
+.loop-wrapper:hover .under-loop-text {
+  color: grey !important;
+  transition: ease-out 0.2s;
+}
+
+.loop-wrapper:hover .friend-img-large,
+.loop-wrapper:hover .friend-img-medium,
+.loop-wrapper:hover .friend-img-small {
+  filter: brightness(0.5); /* Gör profilbilderna gråare */
+  transition: ease-out 0.2s;
 }
 
 .plus-icon-loop {
@@ -544,7 +571,18 @@ html, body {
     src: url('/fonts/SF-Pro.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    /* font-display: swap; */
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: 'Brush-Font';
+    src: url('/fonts/Brush-Font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
     font-display: swap;
+
+
   }
 
   
@@ -571,4 +609,21 @@ html, body {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     cursor: default;
+  }
+
+  .scrollable {
+    overflow-y: auto; /* Gör elementet scrollbart */
+    --scrollbar-opacity: 0;
+  }
+  
+  .scrollable::-webkit-scrollbar {
+    /* width: 9px; Justera bredden efter behov */
+    /* opacity: var(--scrollbar-opacity); */
+    width: var(--scrollbar-width);
+    /* transition: width 0.3s; */
+  }
+  
+  .scrollable::-webkit-scrollbar-thumb {
+    background-color: rgba(130, 130, 130, 0.5); /* Justera färgen efter behov */
+    border-radius: 6px; /* Justera radien efter behov */
   }

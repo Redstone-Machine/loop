@@ -82,6 +82,44 @@ export default {
   // loop
     loopTitle: 'Create a Loop',
 
+  
+  // titles
+
+    "title.christmas": "Mary Christmas",
+    "title.christmas.username": "Marry Christmas {userName}",
+    "title.halloween": "Trick or treat?",
+    "title.halloween.username": "Happy halloween {userName}",
+    "title.easter": "Happy Easter",
+    "title.easter.username": "Happy Easter {userName}",
+    "title.newyear": "Happy New Year",
+    "title.newyear.username": "Happy New Year {userName}",
+    "title.valentine": "Happy Valentine's Day",
+    "title.valentine.username": "Happy Valentine's Day {userName}",
+    "title.firstdaynewyear": "Are you ready for {yearReal}?",
+    "title.firstdaynewyear.username": "Are you ready for {yearReal} {userName}?",
+    "title.cinnamonbunday": "Har du ätit en kanelbulle idag?",
+    "title.cinnamonbunday.username": "Glad kanelbullens dag {userName}", 
+    "title.morning": "God Morning",
+    "title.morning.username": "God Morning {userName}",
+    "title.prenoon": "God Morning",
+    "title.prenoon.username": "God Morning {userName}",
+    "title.afternoon": "God Afternoon",
+    "title.afternoon.username": "God Afternoon {userName}",
+    "title.evening": "God Evening",
+    "title.evening.username": "God Evening {userName}",
+    "title.night": "Är det en nattsuddare här?",
+    "title.night.username": "Välkommen in här på kvällskvisten {userName}",
+    "title.random1": "Welcome in to the Loop",
+    "title.random1.username": "Welcome in to the Loop {userName}",
+    "title.random2": "Hello",
+    "title.random2.username": "Hello {userName}",
+    "title.random3": "Nice to see you",
+    "title.random3.username": "Nice to see you {userName}",
+    "title.random4": "Welcome to Loop",
+    "title.random4.username": "Welcome to Loop {userName}",
+    "title.random5": "Eat, Sleep, then Loop it",
+    "title.random5.username": "Eat, Sleep, then Loop it",
+
 
 
 
