@@ -133,25 +133,25 @@ const NewMainPage = () => {
 
 
 
-    useEffect(() => {
-      if (friends) {
-        const newPositions = {};
-        friends.forEach(friend => {
-          const centerTop = 50; // 50% från toppen
-          const centerLeft = 50; // 50% från vänster
+    // useEffect(() => {
+    //   if (friends) {
+    //     const newPositions = {};
+    //     friends.forEach(friend => {
+    //       const centerTop = 50; // 50% från toppen
+    //       const centerLeft = 50; // 50% från vänster
   
-          // Lägg till en slumpmässig förskjutning
-          const randomTop = centerTop + (Math.random() * 45 - 35); // Slumpmässig förskjutning mellan -30% och 30%
-          const randomLeft = centerLeft + (Math.random() * 35 - 25); // Slumpmässig förskjutning mellan -30% och 30%
+    //       // Lägg till en slumpmässig förskjutning
+    //       const randomTop = centerTop + (Math.random() * 45 - 35); // Slumpmässig förskjutning mellan -30% och 30%
+    //       const randomLeft = centerLeft + (Math.random() * 35 - 25); // Slumpmässig förskjutning mellan -30% och 30%
   
-          newPositions[friend.id] = {
-            top: randomTop,
-            left: randomLeft,
-          };
-        });
-        setPositions(newPositions);
-      }
-    }, [friends]);
+    //       newPositions[friend.id] = {
+    //         top: randomTop,
+    //         left: randomLeft,
+    //       };
+    //     });
+    //     setPositions(newPositions);
+    //   }
+    // }, [friends]);
 
 
     useEffect(() => {
