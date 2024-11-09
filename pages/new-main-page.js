@@ -1,7 +1,7 @@
 import { usePageSetup } from '../hooks/usePageSetup';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useState, useEffect, useContext, act, useRef } from 'react';
 import useSWR, { mutate } from 'swr'
 import axios from 'axios';
@@ -24,13 +24,13 @@ const NewMainPage = () => {
 
 
     const { userId, userName, session, status, userLanguage, userTheme, theme, router, setThemeColor, themeColor } = usePageSetup();
-    const { data: loops, error: loopsError } = useSWR(`/api/getAllLoopsById?userId=${userId}`, fetcher)
 
+    const { data: loops, error: loopsError } = useSWR(userId ? `/api/getAllLoopsById?userId=${userId}` : null, fetcher);
 
+    const [keyCompReady, setKeyCompReady] = useState(false);
     const intl = useIntl();
 
-
-    console.log('loops', loops)
+    // console.log('loops', loops)
 
     // console.log('loopFriends', loopFriends)
 
@@ -155,6 +155,7 @@ const NewMainPage = () => {
 
 
     useEffect(() => {
+        console.log('useEffect theme color ran');
 
         setThemeColor('#3de434');
     
@@ -174,11 +175,13 @@ const NewMainPage = () => {
         // Vänta tills nästa renderingscykel är klar
         new Promise(resolve => requestAnimationFrame(resolve)).then(() => {
           // Vänta tills alla typsnitt har laddats
-          document.fonts.ready.then(() => {
-            setTimeout(() => {
-              setIsPageLoaded(true);
-            }, 500);
-          });
+            if (keyCompReady) {
+            document.fonts.ready.then(() => {
+                setTimeout(() => {
+                setIsPageLoaded(true);
+                }, 100);
+            });
+            }
         });
       };
     
@@ -194,7 +197,7 @@ const NewMainPage = () => {
       return () => {
         window.removeEventListener('load', handlePageLoad);
       };
-    }, [setIsPageLoaded]);
+    }, [setIsPageLoaded, keyCompReady]);
     
 
 
@@ -447,6 +450,8 @@ const NewMainPage = () => {
         }
       };
 
+      const titleText = useMemo(getTitleText, [intl, userName]);
+
 
 
     const OuterContainerLoop = {
@@ -618,19 +623,34 @@ const NewMainPage = () => {
         // objectFit: 'contain',
     }
 
+    useEffect(() => {
+        if (userId && loops && friends) {
+            setKeyCompReady(true);
+        }
+    }, [userId, loops, friends]);
+
     
     if (friendError) return <div>Error loading friends.</div>;
-    if (!friends) return <div>Loading...</div>;
+    // if (!friends) return <div>Loading...</div>;
 
     if (loopsError || loopFriendError) return <div>Error loading data</div>;
-    if (!loops || !loopFriends || Object.keys(loopFriends).length === 0) return <div>Loading...</div>;
+    if (!loops || !loopFriends || !friends || Object.keys(loopFriends).length === 0) {
+
+    return (
+        <div className="spinner-container">
+            <div className="spinner"></div>
+        </div>
+    );
+    } 
+
+
 
     return (
         <> 
         <div style={OuterContainer}>           
             <div ref={(el) => (scrollableRefs.current[0] = el)} className="scrollable" style={OuterContainerLoop}>
             <div>
-                <h1 style={title}>{getTitleText()}</h1>
+                <h1 style={title}>{titleText}</h1>
             </div>
 
 

@@ -10,11 +10,11 @@ export default function GoBackButton({ color = "black", width="50px", height="50
             
             <path id="Line-copy" fill="none"
             stroke={color}
-            stroke-width="75" stroke-linecap="round" stroke-linejoin="round" d="M 80.997604 500.00415 L 822.998413 927.003418"
+            strokeWidth="75" strokeLinecap="round" strokeLinejoin="round" d="M 80.997604 500.00415 L 822.998413 927.003418"
             />
             <path id="Line-copy-2" fill="none"
             stroke={color}
-            stroke-width="75" stroke-linecap="round" stroke-linejoin="round" d="M 80.997604 500.00415 L 823.005371 73.003113"
+            strokeWidth="75" strokeLinecap="round" strokeLinejoin="round" d="M 80.997604 500.00415 L 823.005371 73.003113"
             />
 
         

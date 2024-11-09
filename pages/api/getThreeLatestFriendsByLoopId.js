@@ -97,12 +97,12 @@ export default async function getUsersFromLoopByLoopId(req, res) {
         // }))
     ];
 
-    console.log('combinedList:', combinedList);
+    // console.log('combinedList:', combinedList);
 
     // Sortera den kombinerade listan baserat på lastMessageAt
     const sortedUsers = combinedList.sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
 
-    console.log('sortedUsers:', sortedUsers);
+    // console.log('sortedUsers:', sortedUsers);
     // Ta de tre senaste användarna
     const latestThreeUsers = sortedUsers.slice(0, 3);
 

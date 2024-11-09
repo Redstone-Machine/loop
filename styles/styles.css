@@ -9,6 +9,30 @@
 
 
 
+  /* global.css eller en CSS-modul */
+  /* Lägg till detta i din globala CSS-fil eller CSS-modul */
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Full höjd på viewporten */
+  }
+
+  .spinner {
+    border: 8px solid #77777727; /* Light grey */
+    border-top: 8px solid #6c6c6c; /* Blue */
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    animation: spin 1.3s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+
   /* styles.css
 html, body {
   height: 100%;

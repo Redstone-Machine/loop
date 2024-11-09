@@ -389,10 +389,12 @@ const Navbar = ({ activePage, activeInsidePage, theme, language }) => {
   }, [chatProfileId, userId]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const img = new window.Image();
-      img.src = chatProfilePictureUrl;
-      img.onload = () => setChatProfileImageLoaded(true);
+    if (chatProfilePictureUrl) {
+      if (typeof window !== 'undefined') {
+        const img = new window.Image();
+        img.src = chatProfilePictureUrl;
+        img.onload = () => setChatProfileImageLoaded(true);
+      }
     }
   }, [chatProfilePictureUrl]);
 
@@ -1529,7 +1531,9 @@ const menuStyle = {
       {!showLowerMenubar && !phoneLayout && (
         <div style={lowerMenubar}>
           <div style={lowerMenubarBackground}>
-            <LowerMenubarBackground background_color={theme === 'light' ? 'white' : 'black'} stroke_color="#AAAAAA" draggable="false" width="auto" height="auto" />
+            {/* <LowerMenubarBackground background_color={theme === 'light' ? 'white' : 'black'} stroke_color="#AAAAAA" draggable="false" width="auto" height="auto" /> */}
+            <LowerMenubarBackground background_color={theme === 'light' ? 'white' : 'black'} stroke_color="#AAAAAA" draggable="false" width="100%" height="100%" />
+
           {/* <img src="/navbar_background/lower_navbar_background_smal.svg" alt="Bakgrund" style={lowerMenubar} draggable="false" /> */}
           </div>
 
